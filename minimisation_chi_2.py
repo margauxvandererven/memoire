@@ -1,13 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from wavelen_work import *
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MultipleLocator, ScalarFormatter
 from scipy.interpolate import interp1d
 from scipy.interpolate import griddata
 from scipy.optimize import curve_fit
 from scipy.optimize import minimize
 import os
 import re
+
+
+def on_click(event):
+    if event.xdata is not None and event.ydata is not None:
+        coords = f"{event.xdata:.2f}"
+        print(coords)
+        # Copier les coordonnées dans le presse-papiers
+        import pyperclip
+        pyperclip.copy(coords)
 
 
 def get_nearest(x_query, x_vals):
@@ -118,139 +127,121 @@ def zone_chi2(path, synthetics, stardata, k, spectral_lines,chi_final, name=None
             plt.savefig(save, dpi=400)
 
 
-def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, name=None, start=None, end=None, plot=None, save=None):
+def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final,start, end, name=None, plot=None, save=None, size_police=None, axes=None):
     if k < 18500:
         j="h"
     else :
         j="k"
     normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
-    wavelength_index = get_nearest(k, np.array(normal["z_wavelen"]))
-    tolerance = 0.05
-    index_closest_with_tolerance = next((i for i, x in enumerate(normal['flux_normalised'][wavelength_index:]) if abs(x - 1) <= tolerance), None)
-    # Longueurs d'onde observées
-    observed_wavelengths = np.array(normal['z_wavelen'][wavelength_index - index_closest_with_tolerance +1 : wavelength_index + index_closest_with_tolerance ])
-    # print(observed_wavelengths[0], observed_wavelengths[-1])
-    # Flux observé : portion autour de l'indice central
-    observed = np.array(normal['flux_normalised'][wavelength_index - index_closest_with_tolerance+1:wavelength_index + index_closest_with_tolerance ])
-    
-    if start is not None and end is not None:
-        observed_wavelengths = np.array(normal['z_wavelen'][get_nearest(start,np.array(normal['z_wavelen'])):get_nearest(end,np.array(normal['z_wavelen']))])
-        observed = np.array(normal['flux_normalised'][get_nearest(start,np.array(normal['z_wavelen'])):get_nearest(end,np.array(normal['z_wavelen']))])
+    wavelength_observed = np.array(normal['z_wavelen'])
+    flux_observed = np.array(normal['flux_normalised'])
 
-    chi_final[k]=[observed_wavelengths[0], observed_wavelengths[-1]]
+    mask_observed = (wavelength_observed >= start) & (wavelength_observed <= end)
+    wavelength_observed_filtered = wavelength_observed[mask_observed]
+    flux_observed_filtered = flux_observed[mask_observed]
+
+    chi_final[k]=[start, end]
     
-    taille = (observed_wavelengths[-1]-observed_wavelengths[0])/2
-    # Création de la liste pour stocker les spectres 
     synthetic_spectra = []
-    observed_spectra =[]
-    observed_spectra_w =[]
+    observed_spectra_interpolated =[]
+    observed_spectra_w_interpolated =[]
     synthetic_spectra_w = []
-
-    # Calcul des spectres synthétiques
-    for syntha in synthetics:
-            
-            synt_flux = zoom_syntspec(path, syntha, k, taille)["synt_flux"]
-            synt_flux_w = zoom_syntspec(path, syntha, k, taille)["synt_wavelen"]
-            synthetic_spectra.append(synt_flux)
-            synthetic_spectra_w.append(synt_flux_w)
-
-            interp_func = interp1d(observed_wavelengths, observed, kind='cubic')
-            xre = np.linspace(observed_wavelengths[0], observed_wavelengths[-1], len(synt_flux))
-            yre = interp_func(xre)
-
-            observed_spectra.append(yre)
-            observed_spectra_w.append(xre)
-
-    # Conversion en tableau numpy
-    observed_spectra = np.array(observed_spectra)
-    synthetic_spectra = np.array(synthetic_spectra)
-    # results = np.array(results)
-
-    #Calcul des valeurs de chi carré
     chi_squared_values = []
-    for i in range(len(observed_spectra)): 
-        chi_squared_values.append(chi_squared(synthetic_spectra[i], observed_spectra[i]))
+
+    for syntha in synthetics:
+            synt_flux = np.array(zoom_syntspec(path, syntha, k, 10)["synt_flux"])
+            synt_w = np.array(zoom_syntspec(path, syntha, k, 10)["synt_wavelen"])
+
+            mask_synthetic = (synt_w >= start) & (synt_w <= end)
+
+            wavelength_synthetic_filtered = synt_w[mask_synthetic]
+            flux_synthetic_filtered = synt_flux[mask_synthetic]
+
+            synthetic_spectra.append(flux_synthetic_filtered)
+            synthetic_spectra_w.append(wavelength_synthetic_filtered)
+
+            interpolator = interp1d(wavelength_observed_filtered, flux_observed_filtered, kind='linear', fill_value="extrapolate")
+            flux_observed_interpolated = interpolator(wavelength_synthetic_filtered)
+
+            chi2 = chi_squared(flux_synthetic_filtered, flux_observed_interpolated)
+            chi_squared_values.append(chi2)
+
+            observed_spectra_interpolated.append(flux_observed_interpolated)
+            observed_spectra_w_interpolated.append(wavelength_synthetic_filtered)
+
 
     items = list(synthetics.items())
 
-    #Affichage des résultats
-    # for i, chi_squared_value in enumerate(chi_squared_values):
-    #     element = items[i]
-    #     print(f"Chi-carré pour le spectre synthétique de la raie {k} pour {element[1]} : {chi_squared_value}")
-
-#tracé du graphe
     if plot is True:
         f = plt.figure(figsize=(12,8))
         gs = f.add_gridspec(2, hspace=0.2)
         ax = gs.subplots(sharex=False, sharey=True)
+        cid = f.canvas.mpl_connect('button_press_event', on_click)
 
         ax[0].set_xlim(k-10,k+10)
         ax[1].set_xlim(k-2,k+2)
-        ax[0].set_ylim(0., 1.4)
-        ax[1].set_ylim(0.4, 1.4)
-        ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = 10)
+        ax[0].set_ylim(0.0, 1.4)
+        ax[1].set_ylim(0.0, 1.4)
+        if size_police is None:
+            size_police = 10
+
+        if axes is True:
+            ax[0].set_ylabel("Flux normalisé", fontsize  = size_police)
+            ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = size_police)
 
         ax[0].xaxis.set_major_locator(MultipleLocator(5))
         ax[0].xaxis.set_minor_locator(MultipleLocator(1))
         ax[1].xaxis.set_major_locator(MultipleLocator(1))
         ax[1].xaxis.set_minor_locator(MultipleLocator(0.1))
 
-        # Récupération de toutes les longueurs d'onde dans une liste unique avec les éléments associés
         all_wavelengths = []
         for element, wavelengths in spectral_lines.items():
             for wavelength in wavelengths:
                 all_wavelengths.append((wavelength, element))
 
-        # Tri de la liste des longueurs d'onde
-        all_wavelengths.sort()  # Trie par longueur d'onde en ordre croissant
+        all_wavelengths.sort()  
 
-        # Boucle pour tracer les lignes et afficher les éléments
         text_height_base = 1.2
-        text_height = text_height_base  # Initialisation de la hauteur actuelle
+        text_height = text_height_base  
 
         for i, (z, element) in enumerate(all_wavelengths):
-            # Détection de la proximité avec la longueur d'onde précédente
             if i > 0 and abs(z - all_wavelengths[i - 1][0]) < 0.7:
-                text_height += 0.07  # Si trop proche du précédent, augmenter la hauteur de 0.05
+                text_height += 0.07  
             else:
-                text_height = text_height_base  # Réinitialisation de la hauteur si suffisamment éloigné
+                text_height = text_height_base  
 
-            # Vérification des conditions pour tracer les lignes
             if k - 11 <= z <= k + 11:
-                # Tracé de la ligne verticale
-                ax[0].axvline(x=z, ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-                # Ajout du texte de l'élément avec hauteur adaptée
-                ax[0].text(z, text_height, s=element, color='black', fontsize=10, ha='center')
+                ax[0].axvline(x=z, ymin=0.7, ymax=0.75, color='black', linewidth=1)
+                ax[0].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
             
             if k - 3 <= z <= k + 3:
-                # Tracé de la ligne verticale
-                ax[1].axvline(x=z,   ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-                # Ajout du texte de l'élément avec hauteur adaptée
-                ax[1].text(z, text_height, s=element, color='black', fontsize=10, ha='center')
-        for ax in ax :
-            ax.scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=5,facecolors='none', color='black', label="Spectre observé : " + stardata.get("starname"))
-            
+                ax[1].axvline(x=z,   ymin=0.7, ymax=0.75, color='black', linewidth=1)
+                ax[1].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
+        
+        for ax_ in ax :
+            ax_.scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=8,facecolors='none', color='black', 
+                    #    label="Spectre observé : " + stardata.get("starname")
+                       )
             if name is not None:
-                ax.axvline(x=k,   ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-                ax.text(k, 1.2, s=name, color='black', fontsize=10, ha='center')
+                ax_.axvline(x=k,   ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
+                ax_.text(k, 1.2, s=name, color='black', fontsize=size_police, ha='center')
             
             for synth in synthetics : 
                 AX2 = syntspec(path+synth)
-                ax.plot(AX2['wavelen'], AX2['flux'], linewidth = 1, label="Synth : "+synthetics.get(synth))
-
-            # ax.plot(observed_spectra_w[0],observed_spectra[0])
-
-            ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
-            ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
-            ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
-            
-            ax.tick_params(axis = 'both', labelsize = 10)
-            ax.legend(loc = "lower left", fontsize = 10)
-            ax.axvspan(observed_wavelengths[0], observed_wavelengths[-1], color='bisque', alpha=0.3)
-            ax.set_ylabel("Flux normalisé", fontsize  = 10)
+                ax_.plot(AX2['wavelen'], AX2['flux'], linewidth = 1.5, label=synthetics.get(synth))
+            ax_.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
+            ax_.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
+            ax_.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
+            ax_.xaxis.get_major_formatter().set_scientific(False)
+            ax_.xaxis.get_major_formatter().set_useOffset(False)
+            ax_.tick_params(axis = 'both', labelsize = size_police)
+            ax_.axvspan(start, end, color='bisque', alpha=0.2)
+        ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='whitesmoke', markerscale=0.2,edgecolor='whitesmoke',numpoints=5)
+        plt.tight_layout()
         plt.show()
         if save is not None:
-            plt.savefig(save, dpi=400)
+            plt.savefig(save + '.png', dpi=400, transparent=True)
+            # plt.savefig(save + '.pgf', backend='pgf')
 
     return {"chi_squared_values":chi_squared_values}
 
