@@ -1,0 +1,14 @@
+# Python virtual environment
+mon_env/
+*/__pycache__/
+
+# Fichiers systèmes
+.DS_Store
+.vscode/
+
+# Fichiers de logs
+nohup.out
+*.log
+
+# Fichiers volumineux
+*.ipynb_checkpoints/
