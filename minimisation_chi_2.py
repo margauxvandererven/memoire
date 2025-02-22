@@ -18,6 +18,118 @@ def on_click(event):
         import pyperclip
         pyperclip.copy(coords)
 
+# def analyse_chi2(chi_values=None, plot_lines=None, plot_mini=None, plot_abu=None, save=None, size_police=None):
+#     if chi_values is None:
+
+
+def plot_zone_chi2(k, path, synthetics, observed, spectral_lines, axes=None, size_police=None, save=None, start=None, end=None, name=None):
+
+    f = plt.figure(figsize=(12,10))
+    gs = f.add_gridspec(2, hspace=0.2)
+    ax = gs.subplots(sharex=False, sharey=True)
+    cid = f.canvas.mpl_connect('button_press_event', on_click)
+    colors = ['#3e92f7', '#db2f2f', '#faaa2e', '#d62728', '#9467bd']
+    plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
+    line_styles = [
+    {'linestyle': '-', 'linewidth': 2},      # ligne continue épaisse
+    {'linestyle': '--', 'linewidth': 2},     # tirets épais
+    {'linestyle': '-.', 'linewidth': 2},     # point-tiret épais
+    {'linestyle': ':', 'linewidth': 2.5},    # pointillés épais
+    {'linestyle': '-', 'linewidth': 1.5}     # ligne continue fine
+    ]
+    ax[0].set_xlim(k-10,k+10)
+    ax[1].set_xlim(k-2,k+2)
+    ax[0].set_ylim(0.0, 1.4)
+    ax[1].set_ylim(0.0, 1.4)
+    if size_police is None:
+        size_police = 10
+
+    if axes == (True, None):
+        ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = size_police)
+    elif axes == (None, True):
+        ax[0].set_ylabel("Flux normalisé", fontsize  = size_police)
+        ax[1].set_ylabel("Flux normalisé", fontsize  = size_police)
+    elif axes == (True, True):
+        ax[0].set_ylabel("Flux normalisé", fontsize  = size_police)
+        ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = size_police)
+        ax[1].set_ylabel("Flux normalisé", fontsize  = size_police)
+    else:
+        pass
+
+    ax[0].xaxis.set_major_locator(MultipleLocator(5))
+    ax[0].xaxis.set_minor_locator(MultipleLocator(1))
+    ax[1].xaxis.set_major_locator(MultipleLocator(1))
+    ax[1].xaxis.set_minor_locator(MultipleLocator(0.1))
+
+    all_wavelengths = []
+    for element, wavelengths in spectral_lines.items():
+        for wavelength in wavelengths:
+            all_wavelengths.append((wavelength, element))
+
+    all_wavelengths.sort()  
+
+    text_height_base = 1.2
+    text_height = text_height_base  
+
+    for i, (z, element) in enumerate(all_wavelengths):
+        if i > 0 and abs(z - all_wavelengths[i - 1][0]) < 0.7:
+            text_height += 0.07  
+        else:
+            text_height = text_height_base  
+
+        if k - 11 <= z <= k + 11:
+            ax[0].axvline(x=z, ymin=0.75, ymax=0.8, color='black', linewidth=1.)
+            ax[0].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
+        
+        if k - 3 <= z <= k + 3:
+            ax[1].axvline(x=z,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
+            ax[1].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
+    
+    ax[0].scatter(observed['z_wavelen'], observed['flux_normalised'], marker='o',s=14, 
+        facecolors='none', 
+        color='black', 
+        linewidths=1.5
+    #    label="Spectre observé : " + stardata.get("starname")
+        )
+    ax[1].scatter(observed['z_wavelen'], observed['flux_normalised'], marker='o',s=18, 
+        facecolors='none', 
+        color='black',
+        linewidths=2 
+    #    label="Spectre observé : " + stardata.get("starname")
+        )
+    
+    for i, synth in enumerate(synthetics) : 
+        AX2 = syntspec(path+synth)
+        ax[0].plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=2.4
+        # **line_styles[i % len(line_styles)],
+        )
+        ax[1].plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=3
+        # **line_styles[i % len(line_styles)],
+        )
+
+    for ax_ in ax :
+
+        if name is not None:
+            ax_.axvline(x=k,   ymin=0.7, ymax=0.8, color='black', linewidth=1.)
+            ax_.text(k, 1.2, s=name, color='black', fontsize=size_police, ha='center')
+        ax_.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
+        ax_.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
+        ax_.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
+        ax_.xaxis.get_major_formatter().set_scientific(False)
+        ax_.xaxis.get_major_formatter().set_useOffset(False)
+        ax_.tick_params(axis = 'both', labelsize = size_police)
+        if start is not None and end is not None:
+            ax_.axvspan(start, end, color='lightgray', alpha=0.15)
+            ax_.axvline(x=start, ymin=0, ymax=1.4, color='gray', linewidth=1)
+            ax_.axvline(x=end, ymin=0, ymax=1.4, color='gray', linewidth=1)
+        ax_.tick_params(axis='x', pad=11)
+    ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5)
+    plt.show()
+    if save is not None:
+        plt.savefig("rédaction/images/chi2/"+ save + '.pdf', dpi=400, transparent=True, bbox_inches
+                    ='tight')
+        # plt.savefig(save + '.pgf', backend='pgf')
+
 
 def get_nearest(x_query, x_vals):
     nearest_index = np.argmin(np.abs(x_vals - x_query))
@@ -27,107 +139,8 @@ def get_nearest(x_query, x_vals):
 def chi_squared(synth, observed):
     return np.sum((synth - observed) ** 2 / observed)
 
-def zone_chi2(path, synthetics, stardata, k, spectral_lines,chi_final, name=None, start=None, end=None, plot=None, save=None):
-    if k < 18500:
-        j="h"
-    else :
-        j="k"
-    normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
-    wavelength_index = get_nearest(k, np.array(normal["z_wavelen"]))
-    tolerance = 0.05
-    index_closest_with_tolerance = next((i for i, x in enumerate(normal['flux_normalised'][wavelength_index:]) if abs(x - 1) <= tolerance), None)
-    # Longueurs d'onde observées
-    observed_wavelengths = np.array(normal['z_wavelen'][wavelength_index - index_closest_with_tolerance +1 : wavelength_index + index_closest_with_tolerance ])
-    # print(observed_wavelengths[0], observed_wavelengths[-1])
-    # Flux observé : portion autour de l'indice central
-    observed = np.array(normal['flux_normalised'][wavelength_index - index_closest_with_tolerance+1:wavelength_index + index_closest_with_tolerance ])
-    
-    if start is not None and end is not None:
-        observed_wavelengths = np.array(normal['z_wavelen'][get_nearest(start,np.array(normal['z_wavelen'])):get_nearest(end,np.array(normal['z_wavelen']))])
-        observed = np.array(normal['flux_normalised'][get_nearest(start,np.array(normal['z_wavelen'])):get_nearest(end,np.array(normal['z_wavelen']))])
 
-    chi_final[k]=[observed_wavelengths[0], observed_wavelengths[-1]]
-    
-    taille = (observed_wavelengths[-1]-observed_wavelengths[0])/2
-    # Création de la liste pour stocker les spectres 
-    synthetic_spectra = []
-    observed_spectra =[]
-    observed_spectra_w =[]
-    synthetic_spectra_w = []
-
-#tracé du graphe
-    if plot is True:
-        f = plt.figure(figsize=(8,4))
-        gs = f.add_gridspec(1, hspace=0.2)
-        ax = gs.subplots(sharex=False, sharey=True)
-
-        ax.set_xlim(k-3,k+3)
-        ax.set_ylim(0., 1.4)
-        ax.set_xlabel("Longueur d'onde (Å)", fontsize  = 10)
-
-        ax.xaxis.set_major_locator(MultipleLocator(5))
-        ax.xaxis.set_minor_locator(MultipleLocator(1))
-
-        # Récupération de toutes les longueurs d'onde dans une liste unique avec les éléments associés
-        all_wavelengths = []
-        for element, wavelengths in spectral_lines.items():
-            for wavelength in wavelengths:
-                all_wavelengths.append((wavelength, element))
-
-        # Tri de la liste des longueurs d'onde
-        all_wavelengths.sort()  # Trie par longueur d'onde en ordre croissant
-
-        # Boucle pour tracer les lignes et afficher les éléments
-        text_height_base = 1.2
-        text_height = text_height_base  # Initialisation de la hauteur actuelle
-
-        for i, (z, element) in enumerate(all_wavelengths):
-            # Détection de la proximité avec la longueur d'onde précédente
-            if i > 0 and abs(z - all_wavelengths[i - 1][0]) < 0.7:
-                text_height += 0.07  # Si trop proche du précédent, augmenter la hauteur de 0.05
-            else:
-                text_height = text_height_base  # Réinitialisation de la hauteur si suffisamment éloigné
-
-            # Vérification des conditions pour tracer les lignes
-            if k - 11 <= z <= k + 11:
-                # Tracé de la ligne verticale
-                ax.axvline(x=z, ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-                # Ajout du texte de l'élément avec hauteur adaptée
-                ax.text(z, text_height, s=element, color='black', fontsize=10, ha='center')
-            
-            if k - 3 <= z <= k + 3:
-                # Tracé de la ligne verticale
-                ax.axvline(x=z,   ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-                # Ajout du texte de l'élément avec hauteur adaptée
-                ax.text(z, text_height, s=element, color='black', fontsize=10, ha='center')
-        
-        ax.scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=5,facecolors='none', color='black', label="Spectre observé : " + stardata.get("starname"))
-        
-        if name is not None:
-            ax.axvline(x=k,   ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-            ax.text(k, 1.2, s=name, color='black', fontsize=10, ha='center')
-        
-        for synth in synthetics : 
-            AX2 = syntspec(path+synth)
-            ax.plot(AX2['wavelen'], AX2['flux'], linewidth = 1, label="Synth : "+synthetics.get(synth))
-
-        # ax.plot(observed_spectra_w[0],observed_spectra[0])
-
-        ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
-        ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
-        ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
-        
-        ax.tick_params(axis = 'both', labelsize = 10)
-        ax.legend(loc = "lower left", fontsize = 10)
-        ax.axvspan(observed_wavelengths[0], observed_wavelengths[-1], color='bisque', alpha=0.3)
-        ax.set_ylabel("Flux normalisé", fontsize  = 10)
-        plt.show()
-
-        if save is not None:
-            plt.savefig(save, dpi=400)
-
-
-def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final,start, end, name=None, plot=None, save=None, size_police=None, axes=None):
+def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, name=None, plot=None, save=None, size_police=None, axes=(None,None)):
     if k < 18500:
         j="h"
     else :
@@ -169,79 +182,8 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final,start, end, na
             observed_spectra_interpolated.append(flux_observed_interpolated)
             observed_spectra_w_interpolated.append(wavelength_synthetic_filtered)
 
-
-    items = list(synthetics.items())
-
     if plot is True:
-        f = plt.figure(figsize=(12,8))
-        gs = f.add_gridspec(2, hspace=0.2)
-        ax = gs.subplots(sharex=False, sharey=True)
-        cid = f.canvas.mpl_connect('button_press_event', on_click)
-
-        ax[0].set_xlim(k-10,k+10)
-        ax[1].set_xlim(k-2,k+2)
-        ax[0].set_ylim(0.0, 1.4)
-        ax[1].set_ylim(0.0, 1.4)
-        if size_police is None:
-            size_police = 10
-
-        if axes is True:
-            ax[0].set_ylabel("Flux normalisé", fontsize  = size_police)
-            ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = size_police)
-
-        ax[0].xaxis.set_major_locator(MultipleLocator(5))
-        ax[0].xaxis.set_minor_locator(MultipleLocator(1))
-        ax[1].xaxis.set_major_locator(MultipleLocator(1))
-        ax[1].xaxis.set_minor_locator(MultipleLocator(0.1))
-
-        all_wavelengths = []
-        for element, wavelengths in spectral_lines.items():
-            for wavelength in wavelengths:
-                all_wavelengths.append((wavelength, element))
-
-        all_wavelengths.sort()  
-
-        text_height_base = 1.2
-        text_height = text_height_base  
-
-        for i, (z, element) in enumerate(all_wavelengths):
-            if i > 0 and abs(z - all_wavelengths[i - 1][0]) < 0.7:
-                text_height += 0.07  
-            else:
-                text_height = text_height_base  
-
-            if k - 11 <= z <= k + 11:
-                ax[0].axvline(x=z, ymin=0.7, ymax=0.75, color='black', linewidth=1)
-                ax[0].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
-            
-            if k - 3 <= z <= k + 3:
-                ax[1].axvline(x=z,   ymin=0.7, ymax=0.75, color='black', linewidth=1)
-                ax[1].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
-        
-        for ax_ in ax :
-            ax_.scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=8,facecolors='none', color='black', 
-                    #    label="Spectre observé : " + stardata.get("starname")
-                       )
-            if name is not None:
-                ax_.axvline(x=k,   ymin=0.7, ymax=0.75, color='black', linewidth=0.5)
-                ax_.text(k, 1.2, s=name, color='black', fontsize=size_police, ha='center')
-            
-            for synth in synthetics : 
-                AX2 = syntspec(path+synth)
-                ax_.plot(AX2['wavelen'], AX2['flux'], linewidth = 1.5, label=synthetics.get(synth))
-            ax_.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
-            ax_.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
-            ax_.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
-            ax_.xaxis.get_major_formatter().set_scientific(False)
-            ax_.xaxis.get_major_formatter().set_useOffset(False)
-            ax_.tick_params(axis = 'both', labelsize = size_police)
-            ax_.axvspan(start, end, color='bisque', alpha=0.2)
-        ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='whitesmoke', markerscale=0.2,edgecolor='whitesmoke',numpoints=5)
-        plt.tight_layout()
-        plt.show()
-        if save is not None:
-            plt.savefig(save + '.png', dpi=400, transparent=True)
-            # plt.savefig(save + '.pgf', backend='pgf')
+        plot_zone_chi2(k, path, synthetics, normal, spectral_lines, size_police=size_police, save=save, start=start, end=end, name=name, axes=axes)
 
     return {"chi_squared_values":chi_squared_values}
 
@@ -249,44 +191,45 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final,start, end, na
 def quadratic(x, a, b, c):
     return a * x**2 + b * x + c
 
-def chi_plot_ABU(abu, chi_squared,element, k, raie, raie_OH):
-    # plt.switch_backend('pgf')
+def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, plot=None, save=None):
     abu = np.array(abu)
-    # Perform quadratic fitting
     params, _ = curve_fit(quadratic, abu, chi_squared)
-    a, b, c = params  # coefficients of the quadratic fit
+    a, b, c = params  
     fit_x = np.linspace(abu.min(), abu.max(), 100)
     fit_y = quadratic(fit_x, a, b, c)
 
-    # Find minimum of the quadratic fit
-    min_log_e = -b / (2 * a)  # Vertex of the parabola
+    min_log_e = -b / (2 * a)  
     min_chi_squared = quadratic(min_log_e, a, b, c)
 
-    # Plot
-    f = plt.figure(figsize=(8, 6))
-    gs = f.add_gridspec(1, hspace=0.2)
-    ax = gs.subplots(sharex=False, sharey=True)
-    ax.scatter(abu, chi_squared, color="darkblue", marker="x", label=f"Raie de {raie} en {k} Å")  # Data points
-    ax.plot(fit_x, fit_y, color="lightgray")  # Quadratic fit line
-    ax.scatter(min_log_e, min_chi_squared, color="red", marker="x", label=f"Minimum en {min_log_e:.2f}")  # Minimum point
-    ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
-    ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
-    ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
-    ax.tick_params(axis = 'both', labelsize = 16)
-    # Labeling
-    ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
-    ax.set_ylabel(r"$\chi^2$", fontsize=16)
-    plt.legend(loc="upper left", fontsize=16)
-    plt.show()
-    # plt.savefig('graphique_test.pgf')
-    raie_OH[k] = min_log_e
+    if plot is not None:
+        f = plt.figure(figsize=(8, 6))
+        gs = f.add_gridspec(1, hspace=0.2)
+        ax = gs.subplots(sharex=False, sharey=True)
+        ax.scatter(abu, chi_squared, color="darkblue", marker="x", label=f"Raie de {raie} en {k} Å")  # Data points
+        ax.plot(fit_x, fit_y, color="lightgray")  # Quadratic fit line
+        ax.scatter(min_log_e, min_chi_squared, color="red", marker="x", label=f"Minimum en {min_log_e:.2f}")  # Minimum point
+        ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
+        ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
+        ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
+        ax.tick_params(axis = 'both', labelsize = 16)
+        # Labeling
+        ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
+        ax.set_ylabel(r"$\chi^2$", fontsize=16)
+        plt.legend(loc="upper left", fontsize=16)
+        plt.show()
+    if save is not None:
+        plt.savefig(save, dpi=400, transparent=True, bbox_inches='tight')
 
-def interpolated_chi_squared(x, abundances, macroturbulences, chi_squared_values):
+    chi_final.get(k).append(min_log_e)
+    chi_final.get(k).append(min_chi_squared)
+
+
+def interpolated_chi_squared(x, data1, data2, chi_squared_values):
     ab, mt = x
-    return griddata((abundances, macroturbulences), chi_squared_values, (ab, mt), method='cubic')
+    return griddata((data1, data2), chi_squared_values, (ab, mt), method='cubic')
 
 # Fonction de minimisation et visualisation
-def double_chi(abundances, macroturbulences, chi_squared_values):
+def double_chi(abundances, macroturbulences, chi_squared_values, size_police=None, save=None):
     ab_min, ab_max = min(abundances), max(abundances)
     mt_min, mt_max = min(macroturbulences), max(macroturbulences)
 
@@ -310,19 +253,27 @@ def double_chi(abundances, macroturbulences, chi_squared_values):
     min_chi_squared_value = result.fun
 
     print("Meilleure abondance estimée :", best_abundance)
-    print("Meilleure macroturbulence estimée :", best_macroturbulence)
+    print("Meilleur ratio C/O estimée :", best_macroturbulence)
     print("Valeur minimale de χ² estimée :", min_chi_squared_value)
 
+    if size_police is None:
+        size_police = 10
     # Visualisation
     plt.figure(figsize=(10, 8))
-    plt.contourf(grid_ab, grid_mt, grid_chi_squared, levels=20, cmap='magma')
-    plt.colorbar(label='$\chi^2$')
-    plt.scatter(abundances, macroturbulences, c=chi_squared_values, cmap='magma', edgecolor='orange', label='Données')
-    plt.plot(best_abundance, best_macroturbulence, 'rx', markersize=10, label='Min $\chi^2$ interpolé')
-    plt.xlabel("Abondance")
-    plt.ylabel("Macroturbulence")
-    plt.legend()
+    plt.contourf(grid_ab, grid_mt, grid_chi_squared, levels=250, cmap='RdYlBu_r', alpha=0.8,                # Étendre les couleurs
+    antialiased=True)
+    cbar=plt.colorbar(label='$\chi^2$')
+    plt.scatter(abundances, macroturbulences, c='white',marker='x')
+    plt.plot(best_abundance, best_macroturbulence, color='red',marker='+', markersize=12)
+    plt.xlabel("log $\\epsilon_{\\mathrm{O}}$", fontsize=size_police)
+    plt.ylabel("C/O", fontsize=size_police)
+    plt.tick_params(labelsize = size_police)
+    cbar.ax.tick_params(labelsize=size_police)
+    cbar.set_label('$\chi^2$', fontsize=size_police)
+    # plt.legend()
     plt.show()
+    if save is not None:
+        plt.savefig("rédaction/images/chi2/"+save+".pdf", dpi=400, transparent=True, bbox_inches='tight')
 
 
 def plot_chi_squared_MAC(path, stardata,lines_BD22, raie_propre, dossier_element, chi_final):
@@ -423,24 +374,25 @@ def plot_chi2_simple_ABU(path, dossier_element, stardata, raie_propre, lines_BD2
         for k in raie_propre[raie]:
             chi_2(target_path, synth, stardata, k, lines_BD22,start,end, plot=True)
 
-def abu_plot(raies_element, element_abu, save=None):
+def abu_plot(raies_element, element_abu, save=None, size_police=None):
     x_vals = list(raies_element.keys())
-    y_vals = list(raies_element.values())
+    y_vals = [val[-2] for val in raies_element.values()]
 
-    f = plt.figure(figsize=(10, 5))
+    f = plt.figure(figsize=(10, 7))
     gs = f.add_gridspec(1)
     ax = gs.subplots(sharex=False, sharey=True)
-    
+    if size_police is None:
+        size_police = 10
     # Scatter plot for raies
-    ax.scatter(x_vals, y_vals, color="darkblue", label=f"$\\log_{{\\epsilon_{{{element_abu}}}}}$", marker="x")
-    ax.set_xlabel("$\\lambda$ (Å)", fontsize=12)
-    ax.set_ylabel(f"$\\log_{{\\epsilon_{{{element_abu}}}}}$", fontsize=12)
+    ax.scatter(x_vals, y_vals, color="darkblue", marker="x")
+    ax.set_xlabel("$\\lambda$ [Å]", fontsize=size_police)
+    ax.set_ylabel(f"$\\log {{\\epsilon_{{{element_abu}}}}}$", fontsize=size_police)
     
     # Set tick parameters
     ax.xaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
     ax.xaxis.set_tick_params(direction='in', length=5, which='minor', top=True, bottom=True)
     ax.yaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
-    
+    ax.tick_params(axis = 'both', labelsize = size_police)
     # Set limits
     # ax.set_xlim(14700, 18000)
     # ax.set_ylim(8.5, 8.7)
@@ -460,7 +412,7 @@ def abu_plot(raies_element, element_abu, save=None):
     filtered_std = round(np.std(filtered_y_vals), 2)
 
     # Plot horizontal line for the filtered mean
-    ax.hlines(y=y_mean, xmin=14500, xmax=23500, color="red", linestyle="--", linewidth=1, label=f"Moyenne = {y_mean:.2f}")
+    ax.hlines(y=y_mean, xmin=14500, xmax=23500, color="indianred", linestyle="--", linewidth=1, label=f"$\mu$ = {y_mean:.2f}")
 
     # Plot original shaded error band
     ax.fill_between(
@@ -471,12 +423,13 @@ def abu_plot(raies_element, element_abu, save=None):
         alpha=0.1, 
         label=f"$\sigma$ = ±{y_std:.2f}"
     )
-
+    ax.set_xlim(14500, 23500)
     # Display legend
-    plt.legend()
+    plt.legend(fontsize=size_police)
     plt.show()
     if save is not None:
-        plt.savefig(save, dpi=400)
+        plt.savefig("rédaction/images/plot_abu/"+ save + '.pdf', dpi=400, transparent=True, bbox_inches
+                        ='tight')
 
     # Return filtered mean and standard deviation
     return filtered_mean, filtered_std

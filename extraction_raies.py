@@ -51,7 +51,7 @@ def extraction_raies(pathtofichiertxt,pathsynth, stardata):
 
             if 14600 < float(split[0]) < 18400 : 
                 normal = normalisation(redshift_wavelen(stardata.get("wavelen_h"), stardata.get("v_h")),stardata.get("flux_h"),float(split[0]))
-                AX = syntspec(pathsynth + "atomic")
+                AX = syntspec(pathsynth + "atomic") #pas cohérent car dépend de abu des éléments
                 y_nearest = get_nearest_y(float(split[0]), np.array(normal['z_wavelen']), np.array(normal['flux_normalised']))
                 y_nearest_synth = get_nearest_y(float(split[0]), np.array(AX['wavelen']), np.array(AX['flux']))
                 if y_nearest < 0.95 and y_nearest_synth < 0.95 : 

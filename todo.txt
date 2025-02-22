@@ -1,0 +1,54 @@
+finir Y I
+
+
+la mactroturbulence à été déterminée avec plusieurs raies profondes - 8.6km/s^2
+
+l'abondance de CNO, déterminée par itération, 
+round 1: 
+modèle pris modèle 
+16OH-> quelques plots
+plus de raies de 12C16O - > quelques plots
+
+
+checker la normalisation
+garder asplund 2007  : changer les param pour refaire Oxygène sur 16OH, nohup pour faire les synthèses
+aller chercjer les raies visibles sur pc35
+demander papier pour log g
+faire Ti II, Ti I pour le log g 
+demander les plots bacchus
+tester le Cerium pour just_blend
+
+finir raies atomiques -> mettre le log gf dans tableau
+bande de CO pour ratio C/O -> j'ai
+
+finir 
+
+hors etl avec  convert v2
+
+table 6 shetye 2018 pour un exemple tableau d'abondance 
+
+
+terminer raies atomiques 
+regarder raies de HF
+regarder pour changer dans tsfitpy abondance à asplund : les synthèses sont réalisées avec asplund2007 dans TSFitPy et montrée après avec les abondances Magg 2022. 
+refaire C, N, O
+refaire métallicité
+-> Teff, log g 
+
+faire log g 
+teff supp les trop profondes et incohérente
+
+transferer raies visible sur pc 46
+
+
+
+mettre une condition sur le tracé du plot minimisation chi2 
+enregistrer les valeurs de chi2 pour pas devoir recalculer
+
+regarder quelles synthsèes doit être refaites
+faire une fiche de paramètres ? 
+
+écrire tout ce qui est déjà fait, 
+clean les codes 
+
+faire des synthèses avec C/O plus petit

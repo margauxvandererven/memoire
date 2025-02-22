@@ -1,0 +1,5 @@
+Host PC46
+    HostName 10.149.144.46
+    User student
+    ForwardX11 yes
+    ForwardX11Trusted yes
