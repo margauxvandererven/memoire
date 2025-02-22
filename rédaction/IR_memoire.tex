@@ -1,3 +1,4 @@
+% !TEX root = IR_memoire.tex
 \documentclass{article}
 \usepackage[utf8]{inputenc} % Encodage pour les caractères spéciaux
 \usepackage[T1]{fontenc}  
@@ -240,7 +241,7 @@ Les autres abondances sont scale à partir de \cite{grevesse_solar_2007}.
 	\begin{tabular}{ccccccc}
         \hline
 		\hline
-        Élément & $\lambda$ (Å) & $\lambda_{min}$ (Å) & $\lambda_{max}$ (Å)& v$_{\mathrm{macro}}$ ($km s^{-1}$) & log $\varepsilon$ & $\chi^2$\\
+        Élément & $\lambda$ (Å) & $\lambda_{\mathrm{min}}$ (Å) & $\lambda_{\mathrm{max}}$ (Å)& v$_{\mathrm{macro}}$ ($km s^{-1}$) & log $\varepsilon$ & $\chi^2$\\
         \hline
     Fe I & 15964.865 &&& 8.58 && \\
     % raie de bande H
@@ -256,13 +257,26 @@ Les autres abondances sont scale à partir de \cite{grevesse_solar_2007}.
 \end{table}
 
 \section{Abondance CNO}
+il n'y a pas de raies atomiques de C, N, O dans l'infrarouge, donc nous regarderons les molécules de OH pour l'abondance d'oxygène, de CO pour l'abondance de carbone et de CN pour l'abondance de carbone. 
 \subsection{1 step} 
-Abondance d'oxygène avec raie de OH, Cabu=8.44 (litt) et Nabu=7.38 (litt) 
+Nous partons des paramètres stellaires de la littérature. [C/Fe]=0.35, [N/Fe]=-0.1, C/O=0.75
+ log(C/O) = log$\epsilon_C$-log$\epsilon_O$
+
+si on prend abu solaire de Magg 2022, 
+[X/Fe] = log$\epsilon_*$ - log$\epsilon_{sun}$ - [Fe/H]
+log$\epsilon_*$ = [X/Fe] + log$\epsilon_{sun}$ + [Fe/H]
+= -0.1 + 7.98 -0.3 = 7.58 pour azote
+log$\epsilon_{sun_N}$ = 7.98
+log$\epsilon_{sun_O}$ = 8.77
+log$\epsilon_{sun_C}$ = 8.56
+log$\epsilon_*$ pour C = 0.35 + 8.56 - 0.3
+
+Abondance d'oxygène avec raie de OH, Cabu=8.44 (litt) et Nabu=7.38 (litt) Asplund. 
 avec un ratio de 12C/13C à 40 (valeur standard pour géantes)
 
-\begin{center}
-  \includegraphics[width=10cm]{../output/OH/first/abu_O.png}
-\end{center} 
+% \begin{center}
+%   \includegraphics[width=10cm]{../output/OH/first/abu_O.png}
+% \end{center} 
 
 -> Oabu = 8.60 $\pm$ 0.02 et avec exclusion 8.59 $\pm$ 0.01
 
@@ -298,37 +312,37 @@ Les paramètres fixés sont en noir et le paramètre déterminé en bleu.
 \label{itération_CNO}
 \end{table}
 
-% \newpage
-% \begin{figure}[htbp]
-%   \centering
+\newpage
+\begin{figure}[htbp]
+  \centering
   
-%   % Première image (graphique 1)
-%   \begin{subfigure}[b]{0.45\textwidth}
-%       \centering
-%       \scalebox{0.45}{\input{graphique_test.pgf}}  % Insérer le fichier PGF du premier graphique
-%   \end{subfigure}
-%   \hfill
-%   % Deuxième image (graphique 2)
-%   \begin{subfigure}[b]{0.45\textwidth}
-%       \centering
-%       \scalebox{0.45}{\input{graphique_test.pgf}} % Insérer le fichier PGF du deuxième graphique
-%   \end{subfigure}
+  % Première image (graphique 1)
+  \begin{subfigure}[b]{0.49\textwidth}  % Augmenter la largeur à 0.48\textwidth
+      \centering
+      \includegraphics[width=\textwidth]{../test4.pdf}  % Insérer le fichier PNG du premier graphique
+  \end{subfigure}
+  \hfill
+  % Deuxième image (graphique 2)
+  \begin{subfigure}[b]{0.49\textwidth}  % Augmenter la largeur à 0.48\textwidth
+      \centering
+      \includegraphics[width=\textwidth]{../test4.pdf}  % Insérer le fichier PNG du deuxième graphique
+  \end{subfigure}
   
-%   \vskip\baselineskip  % Espace vertical entre les lignes de graphiques
+  \vskip 0.3\baselineskip  % Réduire l'espace vertical entre les lignes de graphiques
 
-%   % Troisième image (graphique 3)
-%   \begin{subfigure}[b]{0.45\textwidth}
-%       \centering
-%       \scalebox{0.45}{\input{graphique_test.pgf}} % Insérer le fichier PGF du troisième graphique
-%   \end{subfigure}
-%   \hfill
-%   % Quatrième image (graphique 4)
-%   \begin{subfigure}[b]{0.45\textwidth}
-%       \centering
-%       \scalebox{0.45}{\input{graphique_test.pgf}} % Insérer le fichier PGF du quatrième graphique
-%   \end{subfigure}
-  
-% \end{figure}
+  % Troisième image (graphique 3)
+  \begin{subfigure}[b]{0.49\textwidth}  % Augmenter la largeur à 0.48\textwidth
+      \centering
+      \includegraphics[width=\textwidth]{../test4.pdf}  % Insérer le fichier PNG du troisième graphique
+  \end{subfigure}
+  \hfill
+  % Quatrième image (graphique 4)
+  \begin{subfigure}[b]{0.49\textwidth}  % Augmenter la largeur à 0.48\textwidth
+      \centering
+      \includegraphics[width=\textwidth]{../test4.pdf}  % Insérer le fichier PNG du quatrième graphique
+  \end{subfigure}
+  \textbf{Notes.}  Variation de la gravité de surface de l'étoile. 
+\end{figure}
 
 \section{Métallicité}
 
@@ -336,15 +350,29 @@ log $\varepsilon_{\rm Fe}$ = 7.21
 solaire 7.45 
 donc [Fe/H] = -0.24 à l'ETL 
 
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=10cm]{images/plot_abu/abu_Fe.pdf}
+  \end{center}
+  % \caption{Abondance de Fe en fonction de la température effective.}
+  \textbf{Notes.}  Abondance de Fe en fonction de la longueur d'onde. Dispersion forte, on regarde en détail les raies de Fe I.
+  \label{fig:abu_Fe}
+\end{figure}
+en 16198.56 frot blendée, on l'élimine.
+16645.874 pareil, on l'élimine.
 
 \section{Teff}
 pente de quasi 0 donc 4000K bonne Teff à l'ETL 
+
+
 
 \section{logg}
 on test plusieurs log g avec différents modèles, +1, +2, +0, +3, +4 -> best fit +1 à l'ETL 
 sur des raies profondes principalement de Mg et Ca (à tester encore)
 checker avec les isochrones et les tracés évolutifs 
 l'un suppose l'âge de l'étoile l'autre sa masse
+
+
 
 \section{vitesse de micro}
 regarder avec eqwuidt la largeur équivalente sinon regarder avec les synthèses et plot python
@@ -355,6 +383,64 @@ pas possible de faire de hors etl pour les molécules, même pas pour tous les a
 \section{abondance d'éléments lourds}
 regarder ce que je peux identifier
 
+Ca I, Mg I, Al I, Si I, K I, Ca I, Sc I, Ti II, Ti II, V I, Mn I, Fe I, Co I, Ni I, Cu I,
+Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II.  
+
+\section{détermination d'abondance}
+\begin{table}[h!]
+  \vspace{0.3cm}
+\begin{center}
+	\begin{tabular}{cccccccc}
+		\hline
+    \hline
+        &$\lambda$ & log \textit{gf}&& $\lambda{\rm min}$ & $\lambda{\rm max}$ & $\chi^2$ & log $\varepsilon$ \\
+        \hline
+        Na I & 19452.98& -0.65 && 19451.82 & 19453.88 & & \\
+        & 19505.74& -1.13 && 19504.79 & 19506.51 & & \\
+        & 19776.77& -0.39 && 19775.41 & 19777.84 & & \\
+        & 19853.09& 0.40 && 19851.97 & 19854.25 & & \\
+        & 19862.19& -1.14 && 19861.22 & 19863.30 & & \\
+        \hline
+      % Na I  & 14767.54 & 14767.03 & 14767.90 & \\
+      %   & 14779.69 & 14779.18 & 14780.25 & \\
+      %   & 15992.44 & 15991.92 & 15992.86 & \\
+      %   & 16373.85 & 16373.32 & 16374.39 & \\
+      %   & 16388.86 & 16388.27 & 16389.43 & \\
+      %   & 17227.65 & 17227.24 & 17228.07 & \\
+      %   & 17227.75 & 17227.24 & 17228.07 & \\
+      %   & 18027.85 & 18027.51 & 18028.37 & \\
+      %   & 18027.96 & 18027.51 & 18028.37 & \\
+      %   & 19796.85 & 19796.46 & 19797.16 & \\
+      %   & 21323.78 & 21323.38 & 21324.19 & \\
+      %   & 21335.02 & 21334.50 & 21335.56 & \\
+      %   & 21452.22 & 21451.42 & 21453.03 & \\
+      %   & 21452.38 & 21451.42 & 21453.03 & \\
+      %   & 22056.36 & 22055.24 & 22057.55 & \\
+      %   & 22083.62 & 22082.62 & 22084.68 & \\
+      %   & 23348.37 & 23347.42 & 23349.23 & \\
+      %   & 23378.96 & 23377.93 & 23380.27 & \\
+      %   & 23379.13 & 23377.93 & 23380.27 & \\
+      %   \hline
+      % Ce II  & 15277.61 & 15277.30 & 15278.00 & \\
+      %   & 15784.79 & 15784.33 & 15785.41 & \\
+      %  & 15829.83 & 15829.50 & 15830.43 & \\
+      %   & 15958.39 & 15975.91 & 15958.70 & \\
+      %   & 15977.12 & 15976.49 & 15977.73 & \\
+      %   & 16327.32 & 16326.83 & 16327.84 & \\
+      %   & 16376.46 & 16376.00 & 16377.00 & \\
+      %  & 16595.23 & 16594.70 & 16595.88 & \\
+      %  & 16722.60 & 16721.95 & 16722.92 & \\
+      % Ce III  & 15956.79 & 15956.39 & 15957.00 & \\
+      %   & 16128.75 & 16128.38 & 16129.00 & \\
+      \hline
+     Al I & &&& \\
+
+
+    \end{tabular}
+\end{center} 
+\textbf{Notes.}  
+\label{élément_lourds}
+\end{table}
 \clearpage
 
 \bibliographystyle{abbrvnat}
