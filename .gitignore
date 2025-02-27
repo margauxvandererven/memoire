@@ -11,4 +11,4 @@ nohup.out
 *.log
 
 # Fichiers volumineux
-*.ipynb_checkpoints/
+*.ipynb_checkpoints/BD-221742.ipynb
