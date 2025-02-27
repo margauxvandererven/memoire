@@ -47,5 +47,5 @@ stardatab = {
 
 path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/syntspec/"+starname+"b/" # chemin vers le dossier des spectres synthétiques
 
-with open("extraction_raies.txt", "r") as fichier:
+with open("extraction_raies_BD-221742_new.txt", "r") as fichier:
     lines_BD22 = json.load(fichier)

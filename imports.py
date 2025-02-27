@@ -1,22 +1,19 @@
-# Matplotlib configuration
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-# Data manipulation
 import numpy as np
 from scipy.interpolate import griddata, interp1d
 from scipy.optimize import minimize
+from sklearn.linear_model import LinearRegression
 
-# Custom modules
 from stardata_BD22 import *
 from zoom_raies import *
 from minimisation_chi_2 import *
 import pot_exc
+from Teff_clean import *
 from scipy.signal import find_peaks
-
-# Plotting style
+from utilities import *
 from tueplots import fonts
 plt.rcParams.update(fonts.neurips2021())
 
-# Other utilities
 from pprint import pprint

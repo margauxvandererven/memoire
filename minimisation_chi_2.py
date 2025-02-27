@@ -424,8 +424,10 @@ def plot_chi2_simple_ABU(path, dossier_element, stardata, raie_propre, lines_BD2
             chi_2(target_path, synth, stardata, k, lines_BD22,start,end, plot=True)
 
 def abu_plot(raies_element, element_abu, save=None, size_police=None):
-    x_vals = list(raies_element.keys())
-    y_vals = [val[-2] for val in raies_element.values()]
+    x_vals = np.array([np.float64(line) for line in raies_element.keys()])
+    # print(x_vals)
+    y_vals = np.array([val[-2] for val in raies_element.values()])
+    # print(y_vals)
     # y_vals= list(raies_element.values())
     f = plt.figure(figsize=(10, 7))
     gs = f.add_gridspec(1)

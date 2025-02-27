@@ -1,7 +1,7 @@
 from imports import *
-
-mol=[]
-lines_BD221742 = {}
+from collections import defaultdict
+# mol=[]
+# lines_BD221742 = {}
 
 
 
@@ -16,29 +16,32 @@ lines_BD221742 = {}
 
 # base_path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/Linelists/Sophie_IGRINS/"
 
-def get_ew_atom(data, ew_limit, Teff, particular_element=None):
-    base_path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/Linelists/Sophie_IGRINS/"
-    files = {
-    "9000-15000_10042024.bsyn": particular_element,
-    "turbo_atoms.20180901_TS2020_transitions_mod_xx_ABO.txt": particular_element.upper() if particular_element and isinstance(particular_element, str) else particular_element,
-    "17000-25000_10042024.bsyn": particular_element}
 
-    for file, atom in files.items():
+
+def get_ew_atom(ew_limit, Teff, particular_element=None):
+    base_path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/Linelists/Sophie_IGRINS/"
+    files = ["9000-15000_10042024.bsyn",
+        "turbo_atoms.20180901_TS2020_transitions_mod_xx_ABO.txt",
+        "17000-25000_10042024.bsyn"]
+    data = []
+    for file in files:
+        # print(f"Processing file: {file}")
         with open(base_path + file, "r", encoding="utf8") as f:
             for line in f:
                 parts = line.split()
                 if len(parts) > 5:
+                    element_name = parts[11][1].upper() + parts[11][2:].lower() + " " + parts[12]
                     # Cas 1: particular_element spécifié
-                    if particular_element and particular_element in line:
-                        # print(parts)
+                    if particular_element and particular_element==element_name:
+                        # print(f"Found line with {atom}: {line.strip()}")
                         wavelength, excitation_potential, loggf = map(float, parts[:3])
                         ew = 10**(loggf - (5040 / Teff) * excitation_potential)
                         element_name = parts[11][1].upper() + parts[11][2:].lower() + " " + parts[12]
-                        if ew_limit < ew < 1e-9 and wavelength > 14500:
+                        if ew > ew_limit and wavelength > 14500:
                             data.append((wavelength, excitation_potential, ew, loggf, element_name))
                     
                     # Cas 2: pas de particular_element spécifié
-                    elif not particular_element:
+                    elif particular_element is None:
                         wavelength, excitation_potential, loggf = map(float, parts[:3])
                         ew = 10**(loggf - (5040 / Teff) * excitation_potential)
                         element_name = parts[11][1].upper() + parts[11][2:].lower() + " " + parts[12]
@@ -50,35 +53,33 @@ def get_ew_atom(data, ew_limit, Teff, particular_element=None):
         "excitation_potential": [d[1] for d in data],
         "ew": [d[2] for d in data],
         "loggf": [d[3] for d in data],
-        "element": [d[4] for d in data]
+        "element": [d[4] for d in data],
+        "data": data
     }
 
-print(get_ew_atom(data=[], ew_limit=1e-10, Teff=4000, particular_element="Fe I")["wavelength"])
+data = get_ew_atom(ew_limit=1e-8, Teff=4000, particular_element="Fe I")["data"]
+# print(data)
 
-
-
-
-
-# get_ew(mol, files, base_path, 1e-10, Teff)
-# pprint(mol)
+# print(data)
+# lines_BD221742={}
 # for d in data:
-#      lines_BD221742[d[3]] = []
+#      lines_BD221742[d[4]] = []
 # for d in data:
-#     lines_BD221742.get(d[3]).append(d[0])
+#     lines_BD221742.get(d[4]).append(d[0])
+
+# pprint(lines_BD221742)
 
 
-# from collections import defaultdict
-
-# # Initialisation du dictionnaire
+# Initialisation du dictionnaire
 # lines_BD221742 = defaultdict(list)
 
-# # Trier les données par d[3] (élément) puis par d[0] (wavelength)
-# data_sorted = sorted(data, key=lambda x: (x[3], x[0]))
+# # Trier les données par d[4] (élément) puis par d[0] (wavelength)
+# data_sorted = sorted(data, key=lambda x: (x[4], x[0]))
 
 # # Dictionnaire temporaire pour stocker la meilleure valeur de d[2] par élément et par plage de d[0]
 # best_values = {}
 
-# for wavelength, excitation_potential, ew, element in data_sorted:
+# for wavelength, excitation_potential, ew, loggf, element in data_sorted:
 #     # Vérifier s'il existe déjà une valeur proche dans la liste
 #     if element in best_values:
 #         close_wavelengths = [w for w in best_values[element] if abs(w - wavelength) < 0.2]
@@ -93,12 +94,15 @@ print(get_ew_atom(data=[], ew_limit=1e-10, Teff=4000, particular_element="Fe I")
 #     else:
 #         best_values[element] = {wavelength: ew}  # Initialiser pour cet élément
 
-# # Convertir best_values en dictionnaire {d[3]: [d[0]]}
+# # Convertir best_values en dictionnaire {d[4]: [d[0]]}
 # for element, wavelengths in best_values.items():
 #     lines_BD221742[element] = list(wavelengths.keys())
 
 # # Affichage du dictionnaire final
-# # pprint(lines_BD221742)
+# pprint(lines_BD221742)
+
+# with open("extraction_raies_"+stardata.get("starname")+"_new.txt", "w") as fichier:
+#     json.dump(lines_BD221742, fichier, indent=4, ensure_ascii=False)
 
 
 def latex_table(dictionnaire, element):
@@ -112,3 +116,44 @@ def latex_table(dictionnaire, element):
     latex_table += "\\end{tabular}\n\\end{table}"
 
     print(latex_table)
+
+
+def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
+    """
+    lines_data : {line:[start, end, exc pot, log gf]}
+    chi_final_data : {line:[start, end, log $\epsilon$, $\chi2$]}
+    """
+    element_abu="Fe"
+    x_vals = []
+    y_vals = []
+    for i in lines_data:
+        x_vals.append(lines_data.get(i)[2])
+        y_vals.append(chi_final_data.get(i)[2])
+
+    x_vals= np.array(x_vals).reshape(-1, 1)
+    y_vals=np.array(y_vals)
+
+    f = plt.figure(figsize=(10, 5))
+    gs = f.add_gridspec(1)
+    ax = gs.subplots(sharex=False, sharey=True)
+
+    ax.scatter(x_vals, y_vals, color="darkblue", label=f"$\\log_{{\\epsilon_{{{element_abu}}}}}$", marker="x")
+    ax.set_xlabel("$\chi_{exc}$ (eV)", fontsize=size_police)
+    ax.set_ylabel(f"$\\log_{{\\epsilon_{{{element_abu}}}}}$", fontsize=size_police)
+
+    ax.xaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
+    ax.xaxis.set_tick_params(direction='in', length=5, which='minor', top=True, bottom=True)
+    ax.yaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
+
+    model = LinearRegression()
+    model.fit(x_vals, y_vals)
+    X_line = np.linspace(min(x_vals), max(x_vals), 100).reshape(-1, 1) 
+    Y_line = model.predict(X_line) 
+    slope = model.coef_[0]  
+    intercept = model.intercept_ 
+    ax.plot(X_line, Y_line, color='indianred', label=f'y = {slope:.2f}x + {intercept:.2f}')
+    # plt.legend()
+    plt.show()
+    if save:
+        plt.savefig(save+".pdf", dpi=400)
+    return f'y = {slope:.2f}x + {intercept:.2f}'
