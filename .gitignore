@@ -12,3 +12,5 @@ nohup.out
 
 # Fichiers volumineux
 *.ipynb_checkpoints/BD-221742.ipynb
+
+BD-221742.ipynb

@@ -12,6 +12,7 @@ from stardata_BD22 import *
 from zoom_raies import *
 from minimisation_chi_2 import *
 import pot_exc
+from scipy.signal import find_peaks
 
 # Plotting style
 from tueplots import fonts

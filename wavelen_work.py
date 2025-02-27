@@ -3,15 +3,31 @@ import numpy as np
 def syntspec(pathtofile):
     """
     Lecture des fichiers synthétiques
+    
+    Returns:
+        dict: Contient les clés suivantes:
+            - 'wavelen': liste des longueurs d'onde
+            - 'flux': liste des flux
+            - 'header': liste des lignes de commentaires (commençant par ;)
     """
-    file = open(pathtofile)
     wavelen = []
     flux = []
-    for line in file:
-        i = line.split() 
-        wavelen.append(float(i[0]))
-        flux.append(float(i[1]))
-    return {'wavelen' : wavelen, 'flux' : flux }
+    header = []
+    with open(pathtofile) as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith(';'):
+                header.append(line[1:].strip())  # Enlève le ; et les espaces
+            else:
+                i = line.split()
+                if len(i) >= 2:
+                    wavelen.append(float(i[0]))
+                    flux.append(float(i[1]))             
+    return {
+        'wavelen': wavelen, 
+        'flux': flux,
+        'header': header
+    }
 
 
 def redshift_wavelen(wavelen, v):

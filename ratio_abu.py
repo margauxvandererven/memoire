@@ -9,5 +9,5 @@ def ratio_O(ratio):
     print("16O : ", p_1, " & 17O : ", p_2)
 
 # ratio_O(100)
-ratio_C(40)
+ratio_C(12)
 # 12meilleur

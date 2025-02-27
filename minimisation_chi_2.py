@@ -18,17 +18,46 @@ def on_click(event):
         import pyperclip
         pyperclip.copy(coords)
 
-# def analyse_chi2(chi_values=None, plot_lines=None, plot_mini=None, plot_abu=None, save=None, size_police=None):
-#     if chi_values is None:
+def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines, abu_to_plot=None, name=None,):
+    """
+    raies : dictionnaire des raies {raie:[start, end]}
+    ABU : liste des abondances à tester
+    chi_final : dictionnaire pour stocker les résultats {raie: [start, end, abu, min chi2]}
+    variable : paramètre libre à minimiser
+    abu_to_plot : liste des abondances à plotter
+    name : nom de la raie
+    """
+    chi_final={}
+    path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
+    for wavelength in raies:
+        range=str(wavelength-11)+"-"+str(wavelength+11)
+        synth={}
+        for abu in ABU:
+            synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+        if abu_to_plot:
+            synth_plot={}
+            for abu2 in abu_to_plot:
+                synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                synth_plot["../../syntspec/BD-221742b/toutsans_"+name]= "sans "+name
+            plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=raies.get(wavelength)[0],end=raies.get(wavelength)[1])
+        
+        chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(wavelength)[0],end=raies.get(wavelength)[1])["chi_squared_values"]
+        chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final)
+    
+    return {"chi_final" : chi_final, "plot_abu" : abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)}
 
 
-def plot_zone_chi2(k, path, synthetics, observed, spectral_lines, axes=None, size_police=None, save=None, start=None, end=None, name=None):
-
+def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, size_police=None,size_trace=(None,None), save=None, start=None, end=None, name=None):
+    if k < 18500:
+        j="h"
+    else :
+        j="k"
+    normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
     f = plt.figure(figsize=(12,10))
     gs = f.add_gridspec(2, hspace=0.2)
     ax = gs.subplots(sharex=False, sharey=True)
     cid = f.canvas.mpl_connect('button_press_event', on_click)
-    colors = ['#3e92f7', '#db2f2f', '#faaa2e', '#d62728', '#9467bd']
+    colors = ['#3e92f7',  '#faaa2e','#db2f2f','#a39cf3', '#92c124']
     plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
     line_styles = [
     {'linestyle': '-', 'linewidth': 2},      # ligne continue épaisse
@@ -40,19 +69,28 @@ def plot_zone_chi2(k, path, synthetics, observed, spectral_lines, axes=None, siz
     ax[0].set_xlim(k-10,k+10)
     ax[1].set_xlim(k-2,k+2)
     ax[0].set_ylim(0.0, 1.4)
-    ax[1].set_ylim(0.0, 1.4)
+    ax[1].set_ylim(0.2, 1.4)
     if size_police is None:
         size_police = 10
+    if size_trace[0] is not None:
+        linewidth_trace=size_trace[0]
+    else:
+        linewidth_trace=2.4
+    if size_trace[1] is not None:
+        marker_size=size_trace[1]
+    else:
+        marker_size=14
 
+    
     if axes == (True, None):
-        ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = size_police)
+        ax[1].set_xlabel("$\lambda$ [Å]", fontsize  = size_police)
     elif axes == (None, True):
-        ax[0].set_ylabel("Flux normalisé", fontsize  = size_police)
-        ax[1].set_ylabel("Flux normalisé", fontsize  = size_police)
+        ax[0].set_ylabel("F$_{\mathrm{norm}}$", fontsize  = size_police)
+        ax[1].set_ylabel("F$_{\mathrm{norm}}$", fontsize  = size_police)
     elif axes == (True, True):
-        ax[0].set_ylabel("Flux normalisé", fontsize  = size_police)
-        ax[1].set_xlabel("Longueur d'onde (Å)", fontsize  = size_police)
-        ax[1].set_ylabel("Flux normalisé", fontsize  = size_police)
+        ax[0].set_ylabel("F$_{\mathrm{norm}}$", fontsize  = size_police)
+        ax[1].set_xlabel("$\lambda$ [Å]", fontsize  = size_police)
+        ax[1].set_ylabel("F$_{\mathrm{norm}}$", fontsize  = size_police)
     else:
         pass
 
@@ -77,21 +115,21 @@ def plot_zone_chi2(k, path, synthetics, observed, spectral_lines, axes=None, siz
         else:
             text_height = text_height_base  
 
-        if k - 11 <= z <= k + 11:
+        if k - 10 <= z <= k + 10:
             ax[0].axvline(x=z, ymin=0.75, ymax=0.8, color='black', linewidth=1.)
             ax[0].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
         
-        if k - 3 <= z <= k + 3:
+        if k - 2 <= z <= k + 2:
             ax[1].axvline(x=z,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
             ax[1].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
     
-    ax[0].scatter(observed['z_wavelen'], observed['flux_normalised'], marker='o',s=14, 
+    ax[0].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=marker_size, 
         facecolors='none', 
         color='black', 
         linewidths=1.5
     #    label="Spectre observé : " + stardata.get("starname")
         )
-    ax[1].scatter(observed['z_wavelen'], observed['flux_normalised'], marker='o',s=18, 
+    ax[1].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=marker_size+4, 
         facecolors='none', 
         color='black',
         linewidths=2 
@@ -100,17 +138,17 @@ def plot_zone_chi2(k, path, synthetics, observed, spectral_lines, axes=None, siz
     
     for i, synth in enumerate(synthetics) : 
         AX2 = syntspec(path+synth)
-        ax[0].plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=2.4
+        ax[0].plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=linewidth_trace
         # **line_styles[i % len(line_styles)],
         )
-        ax[1].plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=3
+        ax[1].plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=linewidth_trace+0.6
         # **line_styles[i % len(line_styles)],
         )
 
     for ax_ in ax :
 
         if name is not None:
-            ax_.axvline(x=k,   ymin=0.7, ymax=0.8, color='black', linewidth=1.)
+            ax_.axvline(x=k,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
             ax_.text(k, 1.2, s=name, color='black', fontsize=size_police, ha='center')
         ax_.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
         ax_.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
@@ -123,7 +161,8 @@ def plot_zone_chi2(k, path, synthetics, observed, spectral_lines, axes=None, siz
             ax_.axvline(x=start, ymin=0, ymax=1.4, color='gray', linewidth=1)
             ax_.axvline(x=end, ymin=0, ymax=1.4, color='gray', linewidth=1)
         ax_.tick_params(axis='x', pad=11)
-    ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5)
+    ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5, ncol=2)
+    plt.tight_layout()
     plt.show()
     if save is not None:
         plt.savefig("rédaction/images/chi2/"+ save + '.pdf', dpi=400, transparent=True, bbox_inches
@@ -183,7 +222,8 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
             observed_spectra_w_interpolated.append(wavelength_synthetic_filtered)
 
     if plot is True:
-        plot_zone_chi2(k, path, synthetics, normal, spectral_lines, size_police=size_police, save=save, start=start, end=end, name=name, axes=axes)
+        plot_zone_chi2(k, path, synthetics, normal, spectral_lines, size_police=size_police,
+                        save=save, start=start, end=end, name=name, axes=axes)
 
     return {"chi_squared_values":chi_squared_values}
 
@@ -201,6 +241,11 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, plot=Non
     min_log_e = -b / (2 * a)  
     min_chi_squared = quadratic(min_log_e, a, b, c)
 
+    # if min_chi_squared < 0:
+    #     print(f"Attention : Chi² négatif détecté pour la raie {k} Å")
+    #     print(f"Chi² minimum calculé : {min_chi_squared}")
+    #     min_chi_squared = 0
+
     if plot is not None:
         f = plt.figure(figsize=(8, 6))
         gs = f.add_gridspec(1, hspace=0.2)
@@ -213,9 +258,10 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, plot=Non
         ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
         ax.tick_params(axis = 'both', labelsize = 16)
         # Labeling
-        ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
+        # ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
+        ax.set_xlabel(element, fontsize=16)
         ax.set_ylabel(r"$\chi^2$", fontsize=16)
-        plt.legend(loc="upper left", fontsize=16)
+        # plt.legend(loc="upper left", fontsize=16)
         plt.show()
     if save is not None:
         plt.savefig(save, dpi=400, transparent=True, bbox_inches='tight')
@@ -229,7 +275,7 @@ def interpolated_chi_squared(x, data1, data2, chi_squared_values):
     return griddata((data1, data2), chi_squared_values, (ab, mt), method='cubic')
 
 # Fonction de minimisation et visualisation
-def double_chi(abundances, macroturbulences, chi_squared_values, size_police=None, save=None):
+def double_chi(abundances, macroturbulences, chi_squared_values,line, data, size_police=None, save=None):
     ab_min, ab_max = min(abundances), max(abundances)
     mt_min, mt_max = min(macroturbulences), max(macroturbulences)
 
@@ -251,6 +297,9 @@ def double_chi(abundances, macroturbulences, chi_squared_values, size_police=Non
     best_abundance = result.x[0]
     best_macroturbulence = result.x[1]
     min_chi_squared_value = result.fun
+
+    data[line]=[best_abundance
+    , best_macroturbulence, min_chi_squared_value]
 
     print("Meilleure abondance estimée :", best_abundance)
     print("Meilleur ratio C/O estimée :", best_macroturbulence)
@@ -377,7 +426,7 @@ def plot_chi2_simple_ABU(path, dossier_element, stardata, raie_propre, lines_BD2
 def abu_plot(raies_element, element_abu, save=None, size_police=None):
     x_vals = list(raies_element.keys())
     y_vals = [val[-2] for val in raies_element.values()]
-
+    # y_vals= list(raies_element.values())
     f = plt.figure(figsize=(10, 7))
     gs = f.add_gridspec(1)
     ax = gs.subplots(sharex=False, sharey=True)

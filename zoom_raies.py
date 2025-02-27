@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, ScalarFormatter
 from wavelen_work import *
-
+from scipy.signal import find_peaks
 # lines = {
 #     "S": [15478.48, 22507.60],
 #     "Na": [16373.87 , 16388.85 , 22056.43 , 22083.66  , 23379.14],
@@ -28,20 +28,77 @@ from wavelen_work import *
 #     "Mg" : [21059.76, 21060.89, 21458.87]
 # }
 
+def find_peaks_element(path, fichier1, fichier2, plot=None):
+    fluxA = np.array(syntspec(path+fichier1)['flux'])
+    fluxB = np.array(syntspec(path+fichier2)['flux'])
+    wavelength = syntspec(path+fichier1)['wavelen']
+
+    residu = fluxA - fluxB
+    # print(residu)
+
+    ta = []
+    for i in range(len(residu)):
+        if np.abs(residu[i]) > 0.01:
+            ta.append(wavelength[i])
+
+    # print(len(ta))
+
+    longueur_onde = np.array(syntspec(path+fichier1)['wavelen'])
+    flux = 1-np.abs(residu)
+
+    minima, _ = find_peaks(-flux, prominence=0.05)
+    if plot:
+        plt.figure(figsize=(8, 5))
+        plt.plot(longueur_onde, flux, label="Spectre")
+        plt.plot(longueur_onde[minima], flux[minima], "ro", label="Pics d'absorption")
+        plt.xlabel("Longueur d'onde (nm)")
+        plt.ylabel("Flux")
+        plt.title("Détection des pics d'absorption")
+        plt.legend()
+        plt.show()
+
+    return {"minima" : longueur_onde[minima]}
+
+
+
+def validate_wavelengths(wavelengths, path, synthetics, stardata,taille_zoom, spectral_lines):
+    """
+    Permet de valider interactivement une liste de longueurs d'onde.
+    
+    Returns:
+        list: Liste des longueurs d'onde validées
+    """
+    validated_wavelengths = []
+    
+    for k in wavelengths:
+        is_valid = zoom_lines({"":[k]},path, synthetics, stardata, taille_zoom, spectral_lines, interactive=True
+        )
+        
+        if is_valid:
+            validated_wavelengths.append(k)
+            print(f"Raie {k} Å ajoutée à la liste")
+        else:
+            print(f"Raie {k} Å ignorée")
+            
+    return validated_wavelengths
+
 
 def on_click(event):
     if event.xdata is not None and event.ydata is not None:
         coords = f"{event.xdata:.2f}"
         print(coords)
+        # if wavelength_range:
+        #     wavelength_range.append(coords)
         # Copier les coordonnées dans le presse-papiers
         import pyperclip
         pyperclip.copy(coords)
 
-# Connexion de la fonction à l'événement clic
+
+
 
 # fonction permettant de tracer plusieurs plot à la suite suivant l'analyse demandée
 
-def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spectral_lines, save):
+def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spectral_lines, save, range=None):
     """
     Ouvre et trace le spectre observé normalisé. Trace les spectres synthétiques "synthetics". Le tout centré sur les raies séléctionnées
     avec une largeur demandée (taille)
@@ -101,7 +158,23 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         ax.set_ylim(0., 1.3)
         # ax.axhline(y=0.3,xmin= k - 10,xmax= k+10, color='red', linewidth=0.5)
         ax.legend(loc='lower right')
-        cid = f.canvas.mpl_connect('button_press_event', on_click)
+        if range is not None:
+            def on_click_range(event):
+                if event.xdata is not None:
+                    wavelength = round(event.xdata, 3)
+                    if k not in range:
+                        range[k] = [wavelength]
+                    elif len(range[k]) < 2:
+                        range[k].append(wavelength)
+                        range[k].sort()
+                        print(f"Plage pour {k} Å : {range[k]}")
+
+            print(f"\nSélection de la plage pour la raie {k} Å")
+            print("Cliquez deux fois pour définir le début et la fin de la plage")
+                        
+            f.canvas.mpl_connect('button_press_event', on_click_range)
+        else:
+            cid = f.canvas.mpl_connect('button_press_event', on_click)
         plt.show()
         if save:
             plt.savefig(save, dpi=200)
@@ -134,11 +207,13 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         ax[l].legend(loc='lower right')
         cid = f.canvas.mpl_connect('button_press_event', on_click)
         plt.show()
+        
         if save:
             plt.savefig(save, dpi=200)
+         
 
 
-def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, save=None) :
+def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, save=None, interactive=False, raies_validees=None, range=None) :
     """
     lines : raies que l'on souhaite observer
     path : chemin vers spectres synthétiques
@@ -146,6 +221,7 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, s
     stardata : données de l'étoile
     taille_zoom : taille du zoom sur chaque raie
     """
+    # raies_validees = []
     for i in list(lines.keys()):
         n = len(lines.get(i))
         y_size = n*3
@@ -155,11 +231,10 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, s
         for k in lines.get(i):
             l = lines.get(i).index(k)
             if  k < 18500 : 
-                plot_lines(ax,f,l, path, synthetics, stardata, n, k, i, "h", "", taille_zoom, spectral_lines, save)
+                plot_lines(ax,f,l, path, synthetics, stardata, n, k, i, "h", "", taille_zoom, spectral_lines, save, range)
             else:
-                plot_lines(ax,f,l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save)
-
-            # plt.savefig("/Users/margauxvandererven/Documents/unif2023-2024/spectre_IR/output/"+stardata.get("starname")+"/"+i)
+                plot_lines(ax,f,l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save, range)
+        
 
 
 def zoom_lines_analyse(ax, path, synthetics, molecules, stardata, j, m, k, i) : 

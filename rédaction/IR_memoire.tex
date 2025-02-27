@@ -1,13 +1,12 @@
-% !TEX root = IR_memoire.tex
 \documentclass{article}
 \usepackage[utf8]{inputenc} % Encodage pour les caractères spéciaux
 \usepackage[T1]{fontenc}  
-
 \usepackage{graphicx}
 \usepackage[margin=1.8cm]{geometry}
 \usepackage{fancyhdr}
 \usepackage{pgf}
 \usepackage{lmodern}
+\usepackage{bold-extra}
 \usepackage{pgfplots}
 \usepackage{tikz}
 \usepackage{todonotes}
@@ -17,7 +16,7 @@
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage[T1]{fontenc}
 \usepackage{natbib} 
-\usepackage[french]{babel}
+\usepackage[english]{babel}
 \usepackage{hyperref}
 \usepackage{lipsum}  
 \usepackage{subcaption}
@@ -38,22 +37,22 @@
 
 \setcitestyle{authoryear,open={},close={}, color = 'blue'}
 
-\hypersetup{colorlinks,linkcolor={black},citecolor={black},urlcolor={black}}  
+\hypersetup{colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue}}  
 
 \DeclareCaptionFormat{custom}
 {%
-    \textcs{#1{.}} \small{#3}
+    \textbf{#1{.}} \small{#3}
 }
 \captionsetup{format=custom}
 
 \renewcommand{\contentsname}{Contenu}
 
 \titleformat{\section}
-  {\Large\bf\sc}{\thesection}{1em}{}
+  {\Large\bfseries\scshape}{\thesection}{1em}{}
 \titleformat{\subsection}
-  {\large\sc}{\thesubsection}{1em}{}
+  {\large\scshape}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}
-  {\sc}{\thesubsubsection}{1em}{}
+  {\scshape}{\thesubsubsection}{1em}{}
 
 %\setlength{\arrayrulewidth}{1mm}
 %\setlength{\tabcolsep}{9pt}
@@ -136,12 +135,12 @@ Sciences Physiques}\par\vspace{0.8cm}
 \clearpage
 
 % \pagestyle{main}
-\section{Introduction}
+\section{\sc Introduction}
 
-\section{Débroussailler}
+\section{\sc Débroussailler}
 
 
-\section{Molécules}
+\section{\sc Molécules}
 
 Synthèse avec modèle : 
 
@@ -157,8 +156,71 @@ Synthèse avec modèle :
   \end{tabular}
   \end{center}
   \textbf{Notes.} 4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00
+  \caption{Modèles de MARCS utilisés pour les synthèses.}
   \label{MARCS}
-  \end{table}
+  \end{table} 
+TODO: parler des modèles MARCS et de la grille de modèles.
+
+Les listes de raies nous ont été fournies par Thomas Masseron, la provenance détaillée est donnée en Table \ref{origine_mol}. \par
+
+ \begin{table}[h!]
+  \vspace{0.3cm}
+ \begin{center}
+	\begin{tabular}{cc}
+        \hline
+		\hline
+        Molécules & Auteur \\
+        \hline
+        $^{16}$OH & Brooke \\
+        $^{56}$FeH & Dulick + Hargreaves \\
+        $^{28}$SiO & Barton exomol \\
+        $^{28}$SiH & Yurchenko2017(EXOMOL) \\
+        HCl & HITRAN \\
+        $^{12}$CH & Masseron2014 \\
+        $^{13}$CH & Masseron2014 \\
+        AlH & Yurchenko 2018(EXOMOL) \\
+        $^{12}$C$^{14}$N & Sneden web \\
+        $^{13}$C$^{14}$N & Sneden web \\
+        YO & HITRAN \\
+        HF & PGopher \\
+        $^{12}$C$^{16}$O & HITRAN (Li 2018) \\
+        $^{13}$C$^{17}$O & HITRAN (Li 2018) \\
+        $^{48}$TiO & toto Exomol \\
+        H$^{12}$CN & Exomol \\
+        H$^{13}$CN & Exomol \\
+        $^{52}$CrH & Burrows 2002 \\
+        ZrO & toto Exomol \\
+        $^{13}$C$^{13}$C & EXOMOL\\
+        $^{12}$C$^{13}$C & EXOMOL\\
+        $^{12}$C$^{12}$C & EXOMOL\\
+        MgH & Yadin (EXOMOL) \\
+        C$_2$H$_2$ & HITRAN \\
+        VO & VOMYT \\
+        $^{14}$NH &  Brooke edited by EXOMOL \\
+        H$_2$O & Barber \& Tennyson \\
+        $^{20}$CaH & Yadin (EXOMOL) \\
+    \end{tabular}
+\end{center} 
+\caption{Provenance détaillée des listes de raies moléculaires.}
+\label{origine_mol}
+\textbf{Notes.}
+\end{table}
+
+ Les listes de raies atomiques ont la forme suivante :  \newline
+
+ longeur d'onde (Å) -\ excitation (eV) -\ log gf -\ log gf -\ fdamp -\ gup \newline
+%  - gamma_rad - gamma_stark - s,p,d,f (upper level) - s,p,d,f (lower level) - largeur eqwuidt - error sur eqw - text - lower level number in NLTE model -  same for upper  - lower level id - upper level id" (cf. docs de turbospectrum)" \\ 
+
+% ... in the fourth column of the line list (called fdamp):
+% * 1) use ABO theory (Anstee, Barklem, O'Mara) for collisional damping with H,
+% *    with data taken from line list: fdamp contains sigma.alpha.
+% *    This number is available starting with VALD3 version of the VALD database.
+% *    See : http://www.astro.uu.se/~barklem/howto.html
+% * 2) if (1) not available check if something can be computed in the anstee.f
+% *    routine using generic broadening recipes from the ABO formalism
+% * 3) if (2) not available, check in linelist for a gamma6 at 10000K
+% * 4) if nothing else worked, compute Unsoeld approximation, using a fudge factor
+% *    read from column 4.
 
 
 \begin{table}[h!]
@@ -227,7 +289,17 @@ Synthèse avec modèle :
 \label{contribution_mol}
 \end{table}
 
-\section{TS}
+on garde du coup 3 listes de raies atomiques et 14 listes de raies moléculaires.
+
+\section{\sc TS}
+
+\section{\sc Minimisation \texorpdfstring{$\chi^2$}{chi-squared}}
+
+$$\chi^2 = \sum \frac{(\text{synth\'etique}-\text{observ\'e})}{\text{observ\'e}}$$
+
+on fait passer une fonction quadratique sur les valeurs de chi2 et on regarde le minimum.
+si deux valeurs, on interpole une grille et on regarde le minimum.
+TODO: mettre plot pour expliquer la minimisation. 
 
 \section{Macroturbulence}
 Nous commençons par déterminer la macroturbulence à l'aide de raies propres dans le bande H et K. Nous effectuons des synthèses avec le modèle A de la Table~\ref{MARCS} et les abondances CNO et paramètres stellaires de la littérature \cite{shetye_s_2018}. Nous procédons par minimisation $\chi^2$ sur différentes raies propres avec comme paramètre libre l'abondance de l'élément et la macroturubulence. 
@@ -256,9 +328,9 @@ Les autres abondances sont scale à partir de \cite{grevesse_solar_2007}.
 \label{macro}
 \end{table}
 
-\section{Abondance CNO}
+\section{\sc Abondance CNO}
 il n'y a pas de raies atomiques de C, N, O dans l'infrarouge, donc nous regarderons les molécules de OH pour l'abondance d'oxygène, de CO pour l'abondance de carbone et de CN pour l'abondance de carbone. 
-\subsection{1 step} 
+
 Nous partons des paramètres stellaires de la littérature. [C/Fe]=0.35, [N/Fe]=-0.1, C/O=0.75
  log(C/O) = log$\epsilon_C$-log$\epsilon_O$
 
@@ -271,17 +343,34 @@ log$\epsilon_{sun_O}$ = 8.77
 log$\epsilon_{sun_C}$ = 8.56
 log$\epsilon_*$ pour C = 0.35 + 8.56 - 0.3
 
-Abondance d'oxygène avec raie de OH, Cabu=8.44 (litt) et Nabu=7.38 (litt) Asplund. 
+Abondance d'oxygène avec raie de OH, Cabu=8.44 (litt) et Nabu=7.38 (litt) \cite{grevesse_solar_2007}
 avec un ratio de 12C/13C à 40 (valeur standard pour géantes)
+Données d'entrée :
+0.35 +8.39 - 0.3 = 8.44 pour C
+-0.1 +7.78 - 0.3 = 7.38 pour N
+Paramètres variables : 
+Oabu
+macro 8.6 
 
-% \begin{center}
-%   \includegraphics[width=10cm]{../output/OH/first/abu_O.png}
-% \end{center} 
+% \begin{minipage}
+%   \begin{figure}
+%     \begin{center}
+%       \includegraphics[width=10cm]{images/plot_abu/O_abu_first.pdf}
+%     \end{center} 
+%     \textbf{Notes.}  Abondance de O en fonction de la longueur d'onde pour la première itération. Abondance de C et N fixée à partir de la littérature. v$_{macro}$ 8.6 $km s^{-1}$. v$_{micro}$ 1.7 $km s^{-1}$. Modèle A de \ref{MARCS}
+%   \end{figure}
+% \end{minipage}
+% \begin{minipage}
+%   J'aimerais écrir ici 
+% \end{minipage}
 
--> Oabu = 8.60 $\pm$ 0.02 et avec exclusion 8.59 $\pm$ 0.01
+
+-> Oabu = 8.60 $\pm$ 0.01 voir Table \ref{itération_CNO}. 
+
 
 Puis on repasse sur les raies de CO pour checker C avec donc Oabu = 8.59 et Nabu = 7.38 (litt)
 tjrs ratio 12C/13C. 
+
 
 \begin{table}[h!]
   \vspace{0.3cm}
@@ -291,7 +380,7 @@ tjrs ratio 12C/13C.
 		\hline
         log $\varepsilon_{\rm O}$ & log $\varepsilon_{\rm C}$ & log $\varepsilon_{\rm N}$ & $^{12}$C/$^{13}$C & Element\\
         \hline
-    \textcolor{darkblue}{8.59 $\pm$ 0.01} & 8.44 & 7.38 & 40 & $^{16}$OH \\
+    \textcolor{darkblue}{8.60 $\pm$ 0.01} & 8.44 & 7.38 & 40 & $^{16}$OH \\
     % raie de bande H
     8.59 & \textcolor{darkblue}{7.82 $\pm$ 0.03} & 7.38 & 40 & $^{12}$C$^{16}$O \\
     8.59 & 7.82 & 7.38 & \textcolor{darkblue}{20} & $^{13}$C$^{17}$O \\
@@ -532,49 +621,39 @@ Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II.
   \begin{table}[h!]
     %\caption{Listes de molécules et contribution de chacune d'elle dans la bande H et K}
     
-    \begin{minipage}[t]{.4\linewidth}
     \begin{center}
       \vfill
-        \begin{tabular}{ccc}
+        \begin{tabular}{ccccccc}
         \hline
         \hline
-        $^{16}$OH & $\lambda_{\mathrm{min}}$ & $\lambda_{\mathrm{max}}$ \\
+        $^{16}$OH &log \textit{gf}&& $\lambda_{\mathrm{min}}$ & $\lambda_{\mathrm{max}}$ & log $\varepsilon_{O_1}$& $\chi^2_1$\\
         \hline
-        14613.49 & 14612.95 & 14613.96 \\
-        14661.08 & 14660.58 & 14661.51 \\
-        15002.17 & 15001.76 & 15002.54 \\
-        15003.15 & 15002.69 & 15003.54 \\
-        15130.89 & 15130.41 & 15131.42 \\
-        15266.20 & 15265.56 & 15266.65 \\
-        15278.53 & 15278.11 & 15279.12 \\
-        15391.13 & 15390.57 & 15391.74 \\
-        15409.18 & 15408.54 & 15409.70 \\
-        15428.45 & 15427.98 & 15428.91 \\
-        15429.64 & 15428.99 & 15430.07 \\
-        15505.69 & 15505.13 & 15506.52 \\
-        15568.78 & 15568.25 & 15569.26 \\
-        15651.91 & 15651.36 & 15652.29 \\
-        15719.68 & 15719.13 & 15720.14 \\
-        15755.53 & 15754.91 & 15755.92 \\
-        15756.52 & 15756.15 & 15756.85 \\
-        16052.77 & 16052.25 & 16053.03 \\
-        16247.89 & 16247.51 & 16248.21 \\
-        16312.72 & 16311.87 & 16313.35 \\
-        16347.49 & 16347.27 & 16347.89 \\
-        16368.13 & 16367.49 & 16368.65 \\
-        16448.05 & 16447.49 & 16448.50 \\
-        16662.19 & 16661.81 & 16662.73 \\
-        16729.78 & 16729.50 & 16730.04 \\
-        16904.29 & 16903.69 & 16904.62 \\
-        17096.38 & 17095.77 & 17096.70 \\
-        17104.72 & 17104.29 & 17105.22 \\
-        17239.75 & 17239.29 & 17240.15 \\
-        17322.25 & 17321.94 & 17322.71 \\
-        17423.86 & 17423.32 & 17424.33 \\
-        17618.89 & 17618.35 & 17619.43 \\
-        17772.70 & 17772.01 & 17773.10 \\
-        17818.48 & 17818.10 & 17818.95 \\
-        17825.20 & 17824.60 & 17825.61 \\
+        14661.14 & -5.99& & 14660.60&14661.59& 8.61&0.015\\
+15002.15 & -5.65& & 15001.67&15002.67& 8.62&0.002\\
+15003.12 & -5.65& & 15002.67&15003.64& 8.61&0.002\\
+15130.92 & -5.57& & 15130.32&15131.53& 8.62&0.002\\
+15266.17 & -5.50& & 15265.54&15266.76& 8.61&0.002\\
+15278.52 & -5.45& & 15278.03&15279.16& 8.59&0.009\\
+15391.20 & -5.51& & 15390.49&15391.93& 8.60&0.001\\
+15409.17 & -5.43& & 15408.47&15409.77& 8.60&0.002\\
+15428.40 & -5.42& & 15427.96&15429.06& 8.61&0.001\\
+15429.69 & -5.15& & 15429.03&15430.13& 8.60&0.001\\
+15505.75 & -5.38& & 15504.80&15506.66& 8.59&0.005\\
+15568.78 & -5.34& & 15568.17&15569.43& 8.60&0.005\\
+15651.90 & -5.20& & 15651.33&15652.41& 8.59&0.003\\
+15719.69 & -5.32& & 15719.09&15720.36& 8.60&0.001\\
+15755.52 & -5.17& & 15754.86&15756.04& 8.57&0.005\\
+15756.53 & -5.17& & 15756.06&15757.10& 8.58&0.003\\
+16052.77 & -4.98& & 16052.15&16053.29& 8.58&0.006\\
+16247.88 & -5.18& & 16247.50&16248.78& 8.57&0.006\\
+16312.92 & -5.08& & 16311.80&16313.42& 8.58&0.003\\
+16347.49 & -5.00& & 16347.12&16348.07& 8.62&0.001\\
+16368.14 & -4.86& & 16367.51&16368.76& 8.59&0.004\\
+16662.20 & -5.07& & 16661.77&16662.85& 8.61&0.001\\
+16729.78 & -4.79& & 16729.47&16730.32& 8.58&0.004\\
+16904.28 & -4.71& & 16903.62&16904.82& 8.59&0.005\\
+17322.25 & -4.63& & 17321.83&17322.84& 8.62&0.003\\
+17423.86 & -4.50& & 17423.35&17424.43& 8.59&0.004\\
         \hline
         \end{tabular} \par
         \vspace{1cm}
@@ -594,9 +673,8 @@ Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II.
           \hline
           \end{tabular}
     \end{center} 
-    \end{minipage} 
     \hspace{2.0cm}
-    \begin{minipage}[t]{.4\linewidth}
+ 
     \begin{center}
       \vfill
       \begin{tabular}{ccc}
@@ -628,7 +706,7 @@ Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II.
         \hline
         \end{tabular}
       \end{center}
-    \end{minipage}
+  
     \vspace{0.3cm}
     
     \textbf{Notes.}
