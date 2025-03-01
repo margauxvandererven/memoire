@@ -10,7 +10,7 @@ from stardata_BD22 import *
 from zoom_raies import *
 from minimisation_chi_2 import *
 import pot_exc
-from Teff_clean import *
+# from Teff_clean import *
 from scipy.signal import find_peaks
 from utilities import *
 from tueplots import fonts

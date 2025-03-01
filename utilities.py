@@ -57,7 +57,7 @@ def get_ew_atom(ew_limit, Teff, particular_element=None):
         "data": data
     }
 
-data = get_ew_atom(ew_limit=1e-8, Teff=4000, particular_element="Fe I")["data"]
+# data = get_ew_atom(ew_limit=1e-10, Teff=4000)["data"]
 # print(data)
 
 # print(data)
@@ -117,43 +117,3 @@ def latex_table(dictionnaire, element):
 
     print(latex_table)
 
-
-def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
-    """
-    lines_data : {line:[start, end, exc pot, log gf]}
-    chi_final_data : {line:[start, end, log $\epsilon$, $\chi2$]}
-    """
-    element_abu="Fe"
-    x_vals = []
-    y_vals = []
-    for i in lines_data:
-        x_vals.append(lines_data.get(i)[2])
-        y_vals.append(chi_final_data.get(i)[2])
-
-    x_vals= np.array(x_vals).reshape(-1, 1)
-    y_vals=np.array(y_vals)
-
-    f = plt.figure(figsize=(10, 5))
-    gs = f.add_gridspec(1)
-    ax = gs.subplots(sharex=False, sharey=True)
-
-    ax.scatter(x_vals, y_vals, color="darkblue", label=f"$\\log_{{\\epsilon_{{{element_abu}}}}}$", marker="x")
-    ax.set_xlabel("$\chi_{exc}$ (eV)", fontsize=size_police)
-    ax.set_ylabel(f"$\\log_{{\\epsilon_{{{element_abu}}}}}$", fontsize=size_police)
-
-    ax.xaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
-    ax.xaxis.set_tick_params(direction='in', length=5, which='minor', top=True, bottom=True)
-    ax.yaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
-
-    model = LinearRegression()
-    model.fit(x_vals, y_vals)
-    X_line = np.linspace(min(x_vals), max(x_vals), 100).reshape(-1, 1) 
-    Y_line = model.predict(X_line) 
-    slope = model.coef_[0]  
-    intercept = model.intercept_ 
-    ax.plot(X_line, Y_line, color='indianred', label=f'y = {slope:.2f}x + {intercept:.2f}')
-    # plt.legend()
-    plt.show()
-    if save:
-        plt.savefig(save+".pdf", dpi=400)
-    return f'y = {slope:.2f}x + {intercept:.2f}'
