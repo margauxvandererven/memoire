@@ -8,7 +8,7 @@ from scipy.optimize import curve_fit
 from scipy.optimize import minimize
 import os
 import re
-
+import json
 
 def on_click(event):
     if event.xdata is not None and event.ydata is not None:
@@ -18,7 +18,7 @@ def on_click(event):
         import pyperclip
         pyperclip.copy(coords)
 
-def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines, abu_to_plot=None, name=None,):
+def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation=None, abu_to_plot=None, name=None,save=None):
     """
     raies : dictionnaire des raies {raie:[start, end]}
     ABU : liste des abondances à tester
@@ -30,6 +30,10 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines, abu_to_plot
     chi_final={}
     path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
     for wavelength in raies:
+        start=raies.get(str(wavelength))[0]
+        end=raies.get(str(wavelength))[1]
+
+        wavelength=np.float64(wavelength)
         range=str(wavelength-11)+"-"+str(wavelength+11)
         synth={}
         for abu in ABU:
@@ -39,13 +43,60 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines, abu_to_plot
             for abu2 in abu_to_plot:
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
                 synth_plot["../../syntspec/BD-221742b/toutsans_"+name]= "sans "+name
-            plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=raies.get(wavelength)[0],end=raies.get(wavelength)[1])
-        
-        chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(wavelength)[0],end=raies.get(wavelength)[1])["chi_squared_values"]
-        chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final)
-    
-    return {"chi_final" : chi_final, "plot_abu" : abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)}
+            plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
+        if minimisation is not None: 
+            chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
+            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final)
+    if minimisation is not None:
+        abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)
+        if save:
+            with open(save, "w") as fichier:
+                json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
 
+
+def analyse_chi2_CO(raies, ABU, variable,round,stardata,spectral_lines,minimisation=None, abu_to_plot=None, name=None,save=None):
+    """
+    raies : dictionnaire des raies {raie:[start, end]}
+    ABU : liste des abondances à tester
+    chi_final : dictionnaire pour stocker les résultats {raie: [start, end, abu, min chi2]}
+    variable : paramètre libre à minimiser
+    abu_to_plot : liste des abondances à plotter
+    name : nom de la raie
+    """
+    chi_final={}
+    path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
+    for wavelength in raies:
+        start=raies.get(str(wavelength))[0]
+        end=raies.get(str(wavelength))[1]
+
+        wavelength=np.float64(wavelength)
+        if wavelength < 18500:
+            range="15525-17275"
+        else: 
+            range="23050-24800"
+        synth={}
+        for abu in ABU:
+            synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+str(abu)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+        if abu_to_plot:
+            synth_plot={}
+            for abu2 in abu_to_plot:
+                synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+str(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                if wavelength < 18500:
+                    synth_plot["../../syntspec/BD-221742b/sans_CO_mol"]= "sans "+name
+                else :
+                    synth_plot["../../syntspec/BD-221742b/sans_CO_mol2"]= "sans "+name
+
+            plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
+        
+        if minimisation is not None:
+            chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
+            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final)
+    
+    if minimisation is not None:
+        abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)
+        if save:
+            with open(save, "w") as fichier:
+                json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
 
 def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, size_police=None,size_trace=(None,None), save=None, start=None, end=None, name=None):
     if k < 18500:
@@ -53,6 +104,7 @@ def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, siz
     else :
         j="k"
     normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
+    
     f = plt.figure(figsize=(12,10))
     gs = f.add_gridspec(2, hspace=0.2)
     ax = gs.subplots(sharex=False, sharey=True)
@@ -105,23 +157,31 @@ def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, siz
             all_wavelengths.append((wavelength, element))
 
     all_wavelengths.sort()  
-
+  
     text_height_base = 1.2
     text_height = text_height_base  
 
+    raies_filtrees=[]
     for i, (z, element) in enumerate(all_wavelengths):
-        if i > 0 and abs(z - all_wavelengths[i - 1][0]) < 0.7:
+        closest_index = (np.abs(np.array(normal['z_wavelen']) - z)).argmin()
+        if normal['flux_normalised'][closest_index] <= 0.9:
+            raies_filtrees.append((z, element))
+        else:
+            pass
+
+    for i, (z, element) in enumerate(raies_filtrees):
+        if i > 0 and abs(z - raies_filtrees[i - 1][0]) < 0.7:
             text_height += 0.07  
         else:
             text_height = text_height_base  
 
         if k - 10 <= z <= k + 10:
             ax[0].axvline(x=z, ymin=0.75, ymax=0.8, color='black', linewidth=1.)
-            ax[0].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
-        
+            ax[0].text(z, text_height, s=element, color='black', fontsize=size_police-4, ha='center')
+            # print(normal['flux_normalised'][closest_index])
         if k - 2 <= z <= k + 2:
             ax[1].axvline(x=z,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
-            ax[1].text(z, text_height, s=element, color='black', fontsize=size_police, ha='center')
+            ax[1].text(z, text_height, s=element, color='black', fontsize=size_police-4, ha='center')
     
     ax[0].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=marker_size, 
         facecolors='none', 
@@ -146,10 +206,6 @@ def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, siz
         )
 
     for ax_ in ax :
-
-        if name is not None:
-            ax_.axvline(x=k,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
-            ax_.text(k, 1.2, s=name, color='black', fontsize=size_police, ha='center')
         ax_.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
         ax_.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
         ax_.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
