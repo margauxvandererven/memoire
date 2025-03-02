@@ -9,7 +9,7 @@ from sklearn.linear_model import LinearRegression
 from stardata_BD22 import *
 from zoom_raies import *
 from minimisation_chi_2 import *
-import pot_exc
+# import pot_exc
 # from Teff_clean import *
 from scipy.signal import find_peaks
 from utilities import *

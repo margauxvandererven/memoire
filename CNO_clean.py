@@ -27,12 +27,7 @@ O_ABU = [
         8.63,
     ]
 round="first"
-analyse_chi2({
-        "14661.144": [
-            14660.6,
-            14661.59,
-            -5.989
-        ]}, O_ABU, "O", round,stardata,lines_BD22,
+analyse_chi2(OH_raies, O_ABU, "O", round,stardata,lines_BD22,
              abu_to_plot=[8.57, 8.60,8.63],name="OH", 
             #   save="results/OH_"+round+".txt"
               )

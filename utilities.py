@@ -1,21 +1,5 @@
 from imports import *
 from collections import defaultdict
-# mol=[]
-# lines_BD221742 = {}
-
-
-
-# files = {
-#     "9000-15000_10042024.bsyn": element,
-#     "turbo_atoms.20180901_TS2020_transitions_mod_xx_ABO.txt": element.upper(),
-#     "17000-25000_10042024.bsyn": element,
-#     # "12C16O_14500-25000.bsyn": "CO", 
-#     # "13C17O_14500-25000.bsyn": "CO", 
-
-# }
-
-# base_path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/Linelists/Sophie_IGRINS/"
-
 
 
 def get_ew_atom(ew_limit, Teff, particular_element=None):
@@ -57,52 +41,48 @@ def get_ew_atom(ew_limit, Teff, particular_element=None):
         "data": data
     }
 
-# data = get_ew_atom(ew_limit=1e-10, Teff=4000)["data"]
-# print(data)
+data = get_ew_atom(ew_limit=1e-9, Teff=4000)["data"]
 
-# print(data)
 # lines_BD221742={}
 # for d in data:
 #      lines_BD221742[d[4]] = []
 # for d in data:
 #     lines_BD221742.get(d[4]).append(d[0])
 
-# pprint(lines_BD221742)
-
 
 # Initialisation du dictionnaire
-# lines_BD221742 = defaultdict(list)
+lines_BD221742 = defaultdict(list)
 
-# # Trier les données par d[4] (élément) puis par d[0] (wavelength)
-# data_sorted = sorted(data, key=lambda x: (x[4], x[0]))
+# Trier les données par d[4] (élément) puis par d[0] (wavelength)
+data_sorted = sorted(data, key=lambda x: (x[4], x[0]))
 
-# # Dictionnaire temporaire pour stocker la meilleure valeur de d[2] par élément et par plage de d[0]
-# best_values = {}
+# Dictionnaire temporaire pour stocker la meilleure valeur de d[2] par élément et par plage de d[0]
+best_values = {}
 
-# for wavelength, excitation_potential, ew, loggf, element in data_sorted:
-#     # Vérifier s'il existe déjà une valeur proche dans la liste
-#     if element in best_values:
-#         close_wavelengths = [w for w in best_values[element] if abs(w - wavelength) < 0.2]
+for wavelength, excitation_potential, ew, loggf, element in data_sorted:
+    # Vérifier s'il existe déjà une valeur proche dans la liste
+    if element in best_values:
+        close_wavelengths = [w for w in best_values[element] if abs(w - wavelength) < 0.2]
 
-#         if close_wavelengths:
-#             # Vérifier si la nouvelle valeur de d[2] (ew) est plus grande que celle existante
-#             closest_wavelength = close_wavelengths[0]
-#             if ew > best_values[element][closest_wavelength]:  
-#                 best_values[element][closest_wavelength] = ew  # Mise à jour avec le plus grand d[2]
-#         else:
-#             best_values[element][wavelength] = ew  # Ajouter un nouveau point si aucun proche n'existe
-#     else:
-#         best_values[element] = {wavelength: ew}  # Initialiser pour cet élément
+        if close_wavelengths:
+            # Vérifier si la nouvelle valeur de d[2] (ew) est plus grande que celle existante
+            closest_wavelength = close_wavelengths[0]
+            if ew > best_values[element][closest_wavelength]:  
+                best_values[element][closest_wavelength] = ew  # Mise à jour avec le plus grand d[2]
+        else:
+            best_values[element][wavelength] = ew  # Ajouter un nouveau point si aucun proche n'existe
+    else:
+        best_values[element] = {wavelength: ew}  # Initialiser pour cet élément
 
-# # Convertir best_values en dictionnaire {d[4]: [d[0]]}
-# for element, wavelengths in best_values.items():
-#     lines_BD221742[element] = list(wavelengths.keys())
+# Convertir best_values en dictionnaire {d[4]: [d[0]]}
+for element, wavelengths in best_values.items():
+    lines_BD221742[element] = list(wavelengths.keys())
 
 # # Affichage du dictionnaire final
 # pprint(lines_BD221742)
 
-# with open("extraction_raies_"+stardata.get("starname")+"_new.txt", "w") as fichier:
-#     json.dump(lines_BD221742, fichier, indent=4, ensure_ascii=False)
+with open("raies_"+stardata.get("starname")+"_new.txt", "w") as fichier:
+    json.dump(lines_BD221742, fichier, indent=4, ensure_ascii=False)
 
 
 def latex_table(dictionnaire, element):

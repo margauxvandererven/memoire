@@ -177,11 +177,11 @@ def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, siz
 
         if k - 10 <= z <= k + 10:
             ax[0].axvline(x=z, ymin=0.75, ymax=0.8, color='black', linewidth=1.)
-            ax[0].text(z, text_height, s=element, color='black', fontsize=size_police-4, ha='center')
+            ax[0].text(z, text_height, s=element, color='black', fontsize=size_police-5, ha='center')
             # print(normal['flux_normalised'][closest_index])
         if k - 2 <= z <= k + 2:
             ax[1].axvline(x=z,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
-            ax[1].text(z, text_height, s=element, color='black', fontsize=size_police-4, ha='center')
+            ax[1].text(z, text_height, s=element, color='black', fontsize=size_police-5, ha='center')
     
     ax[0].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=marker_size, 
         facecolors='none', 
