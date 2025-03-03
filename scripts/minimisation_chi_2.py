@@ -517,7 +517,9 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     # Recalculate the mean and standard deviation for filtered points
     filtered_mean = round(np.mean(filtered_y_vals), 2)
     filtered_std = round(np.std(filtered_y_vals), 2)
-
+    print("Mean of filtered points:", filtered_mean)
+    print("Standard deviation of filtered points:", filtered_std)
+    
     # Plot horizontal line for the filtered mean
     ax.hlines(y=y_mean, xmin=14500, xmax=23500, color="indianred", linestyle="--", linewidth=1, label=f"$\mu$ = {y_mean:.2f}")
 
@@ -535,7 +537,7 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     plt.legend(fontsize=size_police)
     
     if save is not None:
-        plt.savefig("rédaction/images/plot_abu/"+ save + '.pdf', dpi=400, transparent=True, bbox_inches
+        plt.savefig("../rédaction/images/plot_abu/"+ save + '.pdf', dpi=400, transparent=True, bbox_inches
                         ='tight')
     plt.show()
     # Return filtered mean and standard deviation
