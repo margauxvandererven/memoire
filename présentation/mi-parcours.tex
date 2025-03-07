@@ -8,6 +8,7 @@
 \usepackage[scale=2]{ccicons}
 \usepackage{graphicx}
 \usepackage{pgfplots}
+\usepackage{tikz}
 \usepgfplotslibrary{dateplot}
 
 \usepackage[table]{xcolor}
@@ -54,7 +55,7 @@
 
 
 
-\title{Mémoire master sciences physiques}
+% \title{Présentation de mi-parcours mémoire}
 \subtitle{Étude de spectres infrarouges de géantes rouges évoluées}
 % \date{\today}
 \date{}
@@ -74,7 +75,7 @@
             \begin{column}{0.6\textwidth}
                     T$_{\text{eff}}$ étoiles S $\sim$ T$_{\text{eff}}$ étoiles K et M \\
 
-                    Bande ZrO \& enrichissement en éléments s \\
+                    Bandes ZrO \& enrichissement en éléments s \\
     					\begin{itemize}
     						\item de type S intrinsèques (Tc rich)
     						\item de type S extrinsèques (Tc poor)
@@ -85,7 +86,7 @@
             \begin{column}{0.4\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{/Users/margauxvandererven/Documents/unif2023-2024/spectre_IR/rapport/figures/agb_structure.jpeg}
-    			% \caption{\textit{Structure interne d'une étoile AGB}}
+    			\textit{Structure interne d'une étoile AGB}
             \end{column}
     \end{columns}
 \end{frame}
@@ -112,7 +113,7 @@
 \begin{frame}[fragile]{Spectre observé}
 % \begin{columns}
 %     \begin{column}{0.3\textwidth}
-             Spectres infrarouges : \\
+             Spectre infrarouge : \\
              IGRINS (Immersion GRating INfrared Spectrometer) \\ 
              Haute résolution : R=$\frac{\lambda}{\Delta \lambda}$ $\sim$ 45000 \\
     					\begin{itemize}
@@ -120,14 +121,16 @@
     						\item Bande K (2.05 - 2.50 $\mu m$)
     						\item[]
     					\end{itemize}
-        $\rightarrow$ BD-2217$^{\circ}$42 (4000K) \\
+        % $\rightarrow$ BD-2217$^{\circ}$42 (4000K) \\
         \vfill
-        Normalisation \& correction redshift
+        Réduction, correction tellurique, première normalisation par Chris Sneden. \\
+        \vfill
+        Seconde normalisation et correction redshift par moi-même. \\
 %     \end{column}
 % \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Etoiles}
+\begin{frame}[fragile]{Série d'étoiles}
     % \begin{column}{0.7\textwidth}
         \begin{table}[h!]
         %     % \caption{Étoiles et paramètres d'atmosphère stellaire}
@@ -136,7 +139,7 @@
                 \begin{tabular}{cccccc}
                     \hline
                     \hline
-                     Étoile & Type spectral & $T_{\rm eff}$ (K) & log $g$ (cm $s^{-2}$) & $\xi_{\rm micro}$ (km s$^{-1}$) & [Fe/H] (dex) \\
+                     Étoile & Type spectral & T$_{\rm eff}$ (K) & log $g$ (cm $s^{-2}$) & $\xi_{\rm micro}$ (km s$^{-1}$) & [Fe/H] (dex) \\
                     \hline
                     HD 60197 & K3.5III:Ba3.5 & $3800\pm50^{(3)}$ & $2.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.60\pm0.20^{(3)}$\\
                     HD 63733 & 	S3.5/3 & $3700^{(1)}$ & $1.00^{(1)}$ & - & $-0.10\pm0.13^{(1)}$ \\
@@ -161,6 +164,7 @@
         %     % \textbf{Notes}. Le type spectral est majoritairement repris de SIMBAD ; la première lettre faisant référence au système Harvard (O,B,A, F, G, K, M), le chiffre arabe suivant à la nomenclature "early"/"late", le chiffre romain à la classe de luminosité, "Ba" pour étoile à baryum / "S" pour étoile de type S et la lettre minuscule faisant référence aux particularités du spectre (par exemple, "p" pour "particularité non spécifiée").
             
             % \textbf{Références}. $^{(1)}$\cite{shetye_s_2018}, $^{(2)}$\cite{shetye_s_2021} , $^{(3)}$\cite{karinkuzhi_when_2018}, $^{(4)}$\cite{shetye_observational_2019}.
+            \textbf{Références}. $^{(1)}$Shetye et al. 2018, $^{(2)}$Shetye et al. 2021 , $^{(3)}$Karinkuzhi et al. 2018, $^{(4)}$Shetye et al. 2019
         %     %     \label{param_stellaire}
             \end{table}
     % \end{column}
@@ -168,22 +172,36 @@
 
 \begin{frame}[fragile]{Spectre synthétique}
     \begin{columns}
-        \begin{column}{0.5\textwidth}
+        \begin{column}{0.52\textwidth}
             \begin{center}
-                TurboSpectrum v20 
+                \textbf{TurboSpectrum v20}  
                 \begin{itemize}
-                    \item [-] résoud l'équation de transfert radiatif avec méthode Feautrier
-                    \item [-] à la fois dans l'apporixmation LTE et non-LTE
-                    \item [-] à la fois pour pour la géométrie plan-parallel (log g $<$ 3.5) et sphérique (log g $>$ 3.5)
+                    \item [-] code qui résoud l'équation de transfert radiatif avec méthode Feautrier
+                    \item [-] à la fois dans l'apporixmation ETL et non-ETL
+                    \item [-] à la fois pour la géométrie plan-parallèle (log g $<$ 3.5) et sphérique (log g $>$ 3.5)
+                    \item [-] élargissement : profil de Voigt, effet Stark linéaire, théorie ABO
                 \end{itemize}
             \end{center}
         \end{column}
-        \begin{column}{0.5\textwidth}
+        \begin{column}{0.04\textwidth}
+            \begin{tikzpicture}
+                \draw[thick] (0,-1) -- (0,5);
+            \end{tikzpicture}
+        \end{column}
+        \begin{column}{0.44\textwidth}
             \begin{center}
-                MARCS 
+                \textbf{MARCS}
+               \begin{itemize}
+                \item [-] Model Atmospheres with a Radiative and Convective Scheme
+                \item [-] 1D à équilibre hydrostatique
+                \item [-] convection implémentée par théorie de longueur de mélange
+                \item [-] turbulences implémentées par paramètres simples (micro et macro-turbulence)
+               \end{itemize}
             \end{center}
         \end{column}
 \end{columns}
+\vfill 
+$\rightarrow$ Minimisation $\chi^2$ de chaque spectre synthétique avec le spectre observé
 \end{frame}
 
 % \metroset{titleformat frame=allcaps}
@@ -220,25 +238,55 @@
 % \metroset{titleformat frame=allcaps}
 \begin{frame}[fragile]{Abondances C, N, O}
 
-\textbf{Abondances} : 
-	\begin{table}
-    		\begin{tabular}{c|cccc}
-      		\toprule
-			\midrule
-       		&$[Fe/H]$ & $[C/Fe]$ & $[N/Fe]$&$ [O/Fe]$\\
-      		\midrule
-			\textit{Ce travail} & - & 0.41 &0.32 & 0.75  \\
-      		\textit{Shetye et al. (2018)} &-0.30$\pm$0.09& 0.35 &-0.1 &-  \\
-            \bottomrule
-    		\end{tabular}
-	  \end{table}
+Itération sur les abondances de C, N, O
+
+% \textbf{Abondances} : 
+% 	\begin{table}
+%     		\begin{tabular}{c|cccc}
+%       		\toprule
+% 			\midrule
+%        		&$[Fe/H]$ & $[C/Fe]$ & $[N/Fe]$&$ [O/Fe]$\\
+%       		\midrule
+% 			\textit{Ce travail} & - & 0.41 &0.32 & 0.75  \\
+%       		\textit{Shetye et al. (2018)} &-0.30$\pm$0.09& 0.35 &-0.1 &-  \\
+%             \bottomrule
+%     		\end{tabular}
+% 	  \end{table}
 
 \end{frame}
 
 \begin{frame}[fragile]{Paramètres stellaires}
-    dd
+    $[Fe/H]$ : abondance de fer \\
+
+    T$_{\rm eff}$ : respect de l'équation de Boltzmann $\rightarrow$  abondance d'un élément ne varie pas en fonction de son potentiel d'excitation \\
+
+
+    log g : respect de l'équation de Saha  $\rightarrow$ abondance d'un élément réagit comme abondance de l'élément ionisé \\ isochrone et tracés évolutifs
+
+
+    $\xi_{\text{micro}}$ : abondance ne varie pas en fonction de la largeur équivalente réduite \\
+
+
 \end{frame}
 
+\begin{frame}[fragile]{Raies atomiques}
+    Ca I, Mg I, Al I, Si I, K I, Ca I, Sc I, Ti II, Ti II, V I, Mn I, Fe I, Co I, Ni I, Cu I, Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II
+
+    Élements du pic du fer  : Mn I, Co I, Ni I, 
+\end{frame}
+
+\begin{frame}[fragile]{La suite ?}
+    \begin{itemize}
+        \item comparaison avec abondances déterminées dans le visible à partir de spectre HERMES
+        \item détermination  d'abondances d'éléments lourds ETL et non-ETL
+        \begin{itemize}
+            \item [-] besoin de listes non-ETL
+            \item [-] besoin d'interpoler modèles et coefficients d'écarts non-ETL
+        \end{itemize}
+        \item comparaison profil d'abondances avec modèles de nucléosynthèse
+        \item analyse d'une autre étoile ?
+    \end{itemize} 
+\end{frame}
 % \begin{frame}[fragile]{Références}
 %     % \bibliographystyle{plain}
 %     % \bibliography{bibtex.bib}

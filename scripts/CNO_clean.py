@@ -26,12 +26,13 @@ O_ABU = [
         8.62,
         8.63,
     ]
-round="second"
+round="first"
 analyse_chi2(OH_raies, O_ABU, "O", round,stardata,lines_BD22,
             #  abu_to_plot=[8.57, 8.60,8.63],
              minimisation=True,
+            #  abu_to_plot=[8.57, 8.60,8.63],
              name="OH", 
-              save="../results/OH_"+round+".txt"
+            #   save="../results/OH_"+round+".txt"
               )
 
 # with open("../results/OH_"+round+".txt", "r") as fichier:

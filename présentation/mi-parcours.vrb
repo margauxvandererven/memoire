@@ -1,2 +1,11 @@
-\frametitle{Paramètres stellaires}
-dd
+\frametitle{La suite ?}
+\begin{itemize}
+        \item comparaison avec abondances déterminées dans le visible à partir de spectre HERMES
+        \item détermination  d'abondances d'éléments lourds ETL et non-ETL
+        \begin{itemize}
+            \item [-] besoin de listes non-ETL
+            \item [-] besoin d'interpoler modèles et coefficients d'écarts non-ETL
+        \end{itemize}
+        \item comparaison profil d'abondances avec modèles de nucléosynthèse
+        \item analyse d'une autre étoile ?
+    \end{itemize}

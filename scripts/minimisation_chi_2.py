@@ -46,7 +46,7 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
         if minimisation is not None: 
             chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
-            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final)
+            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final, plot=True, save="/Users/margauxvandererven/Unif/memoire_local/présentation/images/OH_"+str(wavelength)+".pdf")
     if minimisation is not None:
         abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)
         if save:
@@ -314,13 +314,13 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, plot=Non
         ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
         ax.tick_params(axis = 'both', labelsize = 16)
         # Labeling
-        # ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
-        ax.set_xlabel(element, fontsize=16)
+        ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
+        # ax.set_xlabel(element, fontsize=16)
         ax.set_ylabel(r"$\chi^2$", fontsize=16)
         # plt.legend(loc="upper left", fontsize=16)
-        plt.show()
     if save is not None:
         plt.savefig(save, dpi=400, transparent=True, bbox_inches='tight')
+        plt.show()
 
     chi_final.get(k).append(min_log_e)
     chi_final.get(k).append(min_chi_squared)
