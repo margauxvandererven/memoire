@@ -1,24 +1,2 @@
-\frametitle{Contributions moléculaires}
-
-\begin{table}
-%    \caption{}
-    \begin{tabular}{c|ccc}
- }
-      \toprule
-	\midrule
-       &Molécules & Bande H (\%) & Bande K (\%)\\
-      \midrule
-      \cellcolor{green!15}\textbf{Cat. I}&\cellcolor{green!15}$^{12}$C$^{14}$N &\cellcolor{green!15} 82.47 & \cellcolor{green!15}76.33  \\
-      \small\cellcolor{green!15}($>$ 10\%)&\cellcolor{green!15}$^{13}$C$^{14}$N & \cellcolor{green!15}78.52 & \cellcolor{green!15}67.18  \\
-      \cellcolor{green!15}&\cellcolor{green!15}$^{12}$C$^{16}$O &\cellcolor{green!15}71.92 &\cellcolor{green!15}71.01   \\
-      \cellcolor{green!15}&\cellcolor{green!15}HF & \cellcolor{green!15}1.81 &\cellcolor{green!15}47.39   \\
-	  \cellcolor{green!15}&\cellcolor{green!15}$^{12}$C$^{12}$C &\cellcolor{green!15} 81.40 & \cellcolor{green!15}77.39  \\
-	\cellcolor{green!15}&\cellcolor{green!15}$^{12}$C$^{13}$C & \cellcolor{green!15}73.81  & \cellcolor{green!15}65.34   \\
-	\cellcolor{yellow!15}\textbf{Cat. II}&\cellcolor{yellow!15}$^{13}$C$^{13}$C &\cellcolor{yellow!15} 7.84  & \cellcolor{yellow!15}3.51  \\
-	\small\cellcolor{yellow!15}(1-10\%)&\cellcolor{yellow!15}$^{16}$OH &\cellcolor{yellow!15}2.20  &\cellcolor{yellow!15}0.56    \\
-	\cellcolor{yellow!15}&\cellcolor{yellow!15}$^{56}$FeH &\cellcolor{yellow!15} 2.96  &\cellcolor{yellow!15}0.08   \\
-	\cellcolor{yellow!15}&\cellcolor{yellow!15}$^{12}$CH & \cellcolor{yellow!15}5.97  & \cellcolor{yellow!15}8.55   \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
-\textbf{Cat. III} ($<$ 1\%) : $^{13}$C$^{17}$O, $^{13}$CH, $^{14}$NH, $^{48}$TiO, C$_{2}$H$_2$, HCl, H$_{2}$O, $^{20}$CaH, $^{28}$SiH, $^{28}$SiO, VO, YO, $^{48}$TiO, $^{24}$MgH, AlH, $^{52}$CrH, H$^{12}$CN, H$^{13}$CN, $^{90-94}$ZrO et $^{96}$ZrO
+\frametitle{Paramètres stellaires}
+dd

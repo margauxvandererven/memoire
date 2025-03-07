@@ -6,7 +6,7 @@
 
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
-
+\usepackage{graphicx}
 \usepackage{pgfplots}
 \usepgfplotslibrary{dateplot}
 
@@ -110,38 +110,43 @@
 
 % \metroset{titleformat frame=allcaps}
 \begin{frame}[fragile]{Spectre observé}
-\begin{columns}
-    \begin{column}{0.3\textwidth}
+% \begin{columns}
+%     \begin{column}{0.3\textwidth}
              Spectres infrarouges : \\
              IGRINS (Immersion GRating INfrared Spectrometer) \\ 
-             Haute résolution : R=$\frac{\lambda}{\Delta \lambda}$ $\sim$ 45000
+             Haute résolution : R=$\frac{\lambda}{\Delta \lambda}$ $\sim$ 45000 \\
     					\begin{itemize}
     						\item Bande H (1.45 - 1.80 $\mu m$)
     						\item Bande K (2.05 - 2.50 $\mu m$)
     						\item[]
     					\end{itemize}
         $\rightarrow$ BD-2217$^{\circ}$42 (4000K) \\
-
+        \vfill
         Normalisation \& correction redshift
-    \end{column}
-    \begin{column}{0.7\textwidth}
+%     \end{column}
+% \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Etoiles}
+    % \begin{column}{0.7\textwidth}
         \begin{table}[h!]
-            % \caption{Étoiles et paramètres d'atmosphère stellaire}
+        %     % \caption{Étoiles et paramètres d'atmosphère stellaire}
                 \begin{center}
+                \resizebox{\textwidth}{!}{
                 \begin{tabular}{cccccc}
                     \hline
                     \hline
                      Étoile & Type spectral & $T_{\rm eff}$ (K) & log $g$ (cm $s^{-2}$) & $\xi_{\rm micro}$ (km s$^{-1}$) & [Fe/H] (dex) \\
                     \hline
-                    BD-22$\degree$1742 & S3:*3& $4000^{(1)}$ & $1.00^{(1)}$ & - & $-0.30\pm0.09^{(1)}$ \\
                     HD 60197 & K3.5III:Ba3.5 & $3800\pm50^{(3)}$ & $2.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.60\pm0.20^{(3)}$\\
                     HD 63733 & 	S3.5/3 & $3700^{(1)}$ & $1.00^{(1)}$ & - & $-0.10\pm0.13^{(1)}$ \\
                     CR Cir & S6,2  & - & - & - & - \\
                     HD 123949 & K1pBa & $4378\pm80^{(3)}$ & $1.78\pm0.53^{(3)}$ & $1.37^{(3)}$ & $-0.31\pm0.13^{(3)}$ \\
-                    CD-29$\degree$5912 & S4,4 & $3600^{(4)}$ & $1.00^{(4)}$ & - & $-0.40\pm0.22^{(4)}$ \\
-                    BD-18$\degree$2608 & S & $3500^{(2)}$ & $1.00^{(2)}$ & - & $-0.31\pm0.16^{(2)}$ \\
+                    \cellcolor{red!15}BD-22$^{\circ}$1742 & \cellcolor{red!15}S3:*3& \cellcolor{red!15}$4000^{(1)}$ & \cellcolor{red!15}$1.00^{(1)}$ & \cellcolor{red!15}- & \cellcolor{red!15}$-0.30\pm0.09^{(1)}$ \\
+                    CD-29$^{\circ}$5912 & S4,4 & $3600^{(4)}$ & $1.00^{(4)}$ & - & $-0.40\pm0.22^{(4)}$ \\
+                    BD-18$^{\circ}$2608 & S & $3500^{(2)}$ & $1.00^{(2)}$ & - & $-0.31\pm0.16^{(2)}$ \\
                     HD 116869 & G8III:Ba1 & $4892\pm30^{(3)}$ & $2.59\pm0.07^{(3)}$ & $1.38\pm0.04^{(3)}$ & $-0.44\pm0.09^{(3)}$ \\
-                    HD 120620 & K0III (Ba$^{(3)}$) & $4831\pm13^{(3)}$  & $3.03\pm0.30^{(3)}$ & $1.11\pm0.05^{(3)}$ & $-0.30^\pm0.10{(3)}$ \\
+                    HD 120620 & K0III (Ba$^{(3)}$) & $4831\pm13^{(3)}$ & $3.03\pm0.30^{(3)}$ & $1.11\pm0.05^{(3)}$ & $-0.30\pm0.10^{(3)}$ \\
                     HD 121447 & K4III$^{(3)}$ (Ba$^{(3)}$) & $4000\pm50^{(3)}$ & $1.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.90\pm0.13^{(3)}$\\
                     HD 100503 & G/KpBa & $4000\pm50^{(3)}$ & $2.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.72\pm0.13^{(3)}$ \\
                     HD 119185 &  G8IIIpBa & - & - & - & - \\
@@ -151,15 +156,14 @@
                     V915 Aql  & S5+/2 & $3400^{(1)}$ & $0.00^{(1)}$ & - & $-0.50\pm0.15^{(1)}$ \\
                     HD 165774 & S4,6 & - & - & - & - \\
                     \hline
-                \end{tabular}
+                \end{tabular}}
                 \end{center}
-            % \textbf{Notes}. Le type spectral est majoritairement repris de SIMBAD ; la première lettre faisant référence au système Harvard (O,B,A, F, G, K, M), le chiffre arabe suivant à la nomenclature "early"/"late", le chiffre romain à la classe de luminosité, "Ba" pour étoile à baryum / "S" pour étoile de type S et la lettre minuscule faisant référence aux particularités du spectre (par exemple, "p" pour "particularité non spécifiée").
+        %     % \textbf{Notes}. Le type spectral est majoritairement repris de SIMBAD ; la première lettre faisant référence au système Harvard (O,B,A, F, G, K, M), le chiffre arabe suivant à la nomenclature "early"/"late", le chiffre romain à la classe de luminosité, "Ba" pour étoile à baryum / "S" pour étoile de type S et la lettre minuscule faisant référence aux particularités du spectre (par exemple, "p" pour "particularité non spécifiée").
             
-            \textbf{Références}. $^{(1)}$\cite{shetye_s_2018}, $^{(2)}$\cite{shetye_s_2021} , $^{(3)}$\cite{karinkuzhi_when_2018}, $^{(4)}$\cite{shetye_observational_2019}.
-                \label{param_stellaire}
+            % \textbf{Références}. $^{(1)}$\cite{shetye_s_2018}, $^{(2)}$\cite{shetye_s_2021} , $^{(3)}$\cite{karinkuzhi_when_2018}, $^{(4)}$\cite{shetye_observational_2019}.
+        %     %     \label{param_stellaire}
             \end{table}
-    \end{column}
-\end{columns}
+    % \end{column}
 \end{frame}
 
 \begin{frame}[fragile]{Spectre synthétique}
@@ -181,25 +185,25 @@
 \begin{frame}[fragile]{Contributions moléculaires}
   
 \begin{table}
-%    \caption{}
-    \begin{tabular}{c|ccc}
-      \toprule
-	\midrule
-       &Molécules & Bande H (\%) & Bande K (\%)\\
-      \midrule
-      \cellcolor{green!15}\textbf{Cat. I}&\cellcolor{green!15}$^{12}$C$^{14}$N &\cellcolor{green!15} 82.47 & \cellcolor{green!15}76.33  \\
-      \small\cellcolor{green!15}($>$ 10\%)&\cellcolor{green!15}$^{13}$C$^{14}$N & \cellcolor{green!15}78.52 & \cellcolor{green!15}67.18  \\
-      \cellcolor{green!15}&\cellcolor{green!15}$^{12}$C$^{16}$O &\cellcolor{green!15}71.92 &\cellcolor{green!15}71.01   \\
-      \cellcolor{green!15}&\cellcolor{green!15}HF & \cellcolor{green!15}1.81 &\cellcolor{green!15}47.39   \\
-	  \cellcolor{green!15}&\cellcolor{green!15}$^{12}$C$^{12}$C &\cellcolor{green!15} 81.40 & \cellcolor{green!15}77.39  \\
-	\cellcolor{green!15}&\cellcolor{green!15}$^{12}$C$^{13}$C & \cellcolor{green!15}73.81  & \cellcolor{green!15}65.34   \\
-	\cellcolor{yellow!15}\textbf{Cat. II}&\cellcolor{yellow!15}$^{13}$C$^{13}$C &\cellcolor{yellow!15} 7.84  & \cellcolor{yellow!15}3.51  \\
-	\small\cellcolor{yellow!15}(1-10\%)&\cellcolor{yellow!15}$^{16}$OH &\cellcolor{yellow!15}2.20  &\cellcolor{yellow!15}0.56    \\
-	\cellcolor{yellow!15}&\cellcolor{yellow!15}$^{56}$FeH &\cellcolor{yellow!15} 2.96  &\cellcolor{yellow!15}0.08   \\
-	\cellcolor{yellow!15}&\cellcolor{yellow!15}$^{12}$CH & \cellcolor{yellow!15}5.97  & \cellcolor{yellow!15}8.55   \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+    %    \caption{}
+        \begin{tabular}{c|ccc}
+            \toprule
+        \midrule
+            &Molécules & Bande H (\%) & Bande K (\%)\\
+            \midrule
+            \textbf{Cat. I}&$^{12}$C$^{14}$N & 82.47 & 76.33  \\
+            \small($>$ 10\%)&$^{13}$C$^{14}$N & 78.52 & 67.18  \\
+            &$^{12}$C$^{16}$O & 71.92 & 71.01   \\
+            &HF & 1.81 & 47.39   \\
+            &$^{12}$C$^{12}$C & 81.40 & 77.39  \\
+            &$^{12}$C$^{13}$C & 73.81  & 65.34   \\
+            \textbf{Cat. II}&$^{13}$C$^{13}$C & 7.84  & 3.51  \\
+            \small(1-10\%)&$^{16}$OH & 2.20  & 0.56    \\
+            &$^{56}$FeH & 2.96  & 0.08   \\
+            &$^{12}$CH & 5.97  & 8.55   \\
+            \bottomrule
+        \end{tabular}
+\end{table}
 \textbf{Cat. III} ($<$ 1\%) : $^{13}$C$^{17}$O, $^{13}$CH, $^{14}$NH, $^{48}$TiO, C$_{2}$H$_2$, HCl, H$_{2}$O, $^{20}$CaH, $^{28}$SiH, $^{28}$SiO, VO, YO, $^{48}$TiO, $^{24}$MgH, AlH, $^{52}$CrH, H$^{12}$CN, H$^{13}$CN, $^{90-94}$ZrO et $^{96}$ZrO
 \end{frame}
 
@@ -225,5 +229,10 @@
 \begin{frame}[fragile]{Paramètres stellaires}
     dd
 \end{frame}
+
+% \begin{frame}[fragile]{Références}
+%     % \bibliographystyle{plain}
+%     % \bibliography{bibtex.bib}
+% \end{frame}
 
 \end{document}
