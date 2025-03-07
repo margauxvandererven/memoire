@@ -12,7 +12,9 @@
 \usepgfplotslibrary{dateplot}
 
 \usepackage[table]{xcolor}
+\usepackage{xcolor}
 \usepackage{colortbl}
+\usepackage{tabularx}
 
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
@@ -73,9 +75,10 @@
 
     \begin{columns}
             \begin{column}{0.6\textwidth}
-                    T$_{\text{eff}}$ étoiles S $\sim$ T$_{\text{eff}}$ étoiles K et M \\
+                    T$_{\text{eff}}$ étoiles S $\sim$ T$_{\text{eff}}$ étoiles K et M 
 
-                    Bandes ZrO \& enrichissement en éléments s \\
+                    Bandes ZrO \& enrichissement en éléments s
+
     					\begin{itemize}
     						\item de type S intrinsèques (Tc rich)
     						\item de type S extrinsèques (Tc poor)
@@ -86,7 +89,7 @@
             \begin{column}{0.4\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{/Users/margauxvandererven/Documents/unif2023-2024/spectre_IR/rapport/figures/agb_structure.jpeg}
-    			\textit{Structure interne d'une étoile AGB}
+    			\textit{Structure interne d'une étoile AGB.} Tiré de Persson 2014.
             \end{column}
     \end{columns}
 \end{frame}
@@ -105,6 +108,8 @@
 
     \begin{center}
         \includegraphics[width=10cm]{images/medium.png} \\
+        (Käppeler et al. 2011.)
+        \vfill
         + de 50\% éléments plus lourds que le fer \\
     \end{center}
 \end{frame}
@@ -123,8 +128,10 @@
     					\end{itemize}
         % $\rightarrow$ BD-2217$^{\circ}$42 (4000K) \\
         \vfill
-        Réduction, correction tellurique, première normalisation par Chris Sneden. \\
-        \vfill
+        Correction : 
+
+        Réduction, correction tellurique, première normalisation par Chris Sneden. 
+        
         Seconde normalisation et correction redshift par moi-même. \\
 %     \end{column}
 % \end{columns}
@@ -178,7 +185,7 @@
                 \begin{itemize}
                     \item [-] code qui résoud l'équation de transfert radiatif avec méthode Feautrier
                     \item [-] à la fois dans l'apporixmation ETL et non-ETL
-                    \item [-] à la fois pour la géométrie plan-parallèle (log g $<$ 3.5) et sphérique (log g $>$ 3.5)
+                    \item [-] à la fois pour la géométrie plan-parallèle (log g $>$ 3.5) et sphérique (log g $<$ 3.5)
                     \item [-] élargissement : profil de Voigt, effet Stark linéaire, théorie ABO
                 \end{itemize}
             \end{center}
@@ -201,7 +208,7 @@
         \end{column}
 \end{columns}
 \vfill 
-$\rightarrow$ Minimisation $\chi^2$ de chaque spectre synthétique avec le spectre observé
+$\rightarrow$ Minimisation $\chi^2$ entre spectres synthétiques et spectre observé
 \end{frame}
 
 % \metroset{titleformat frame=allcaps}
@@ -238,20 +245,36 @@ $\rightarrow$ Minimisation $\chi^2$ de chaque spectre synthétique avec le spect
 % \metroset{titleformat frame=allcaps}
 \begin{frame}[fragile]{Abondances C, N, O}
 
-Itération sur les abondances de C, N, O
+Itération sur les abondances de C, N, O jusqu'à convergence
 
-% \textbf{Abondances} : 
-% 	\begin{table}
-%     		\begin{tabular}{c|cccc}
-%       		\toprule
-% 			\midrule
-%        		&$[Fe/H]$ & $[C/Fe]$ & $[N/Fe]$&$ [O/Fe]$\\
-%       		\midrule
-% 			\textit{Ce travail} & - & 0.41 &0.32 & 0.75  \\
-%       		\textit{Shetye et al. (2018)} &-0.30$\pm$0.09& 0.35 &-0.1 &-  \\
-%             \bottomrule
-%     		\end{tabular}
-% 	  \end{table}
+\begin{table}[h!]
+      \vspace{0.3cm}
+    \begin{center}
+    	\begin{tabular}{ccccc}
+            \hline
+    		\hline
+            log $\varepsilon_{\rm O}$ & log $\varepsilon_{\rm C}$ & log $\varepsilon_{\rm N}$ & $^{12}$C/$^{13}$C & Raie\\
+            \hline
+            \cellcolor{blue!15}{8.59 $\pm$ 0.01} & 8.44 & 7.38 & 40 & $^{16}$OH \\
+        % % raie de bande H
+        8.59 & \cellcolor{blue!15}{7.82 $\pm$ 0.03} & 7.38 & 40 & $^{12}$C$^{16}$O \\
+        8.59 & 7.82 & 7.38 & \cellcolor{blue!15}{20} & $^{13}$C$^{17}$O \\
+        \cellcolor{blue!15}{8.30 $\pm$ 0.02} & 7.82 & 7.38 & 20 & $^{16}$OH \\
+        8.30 & \cellcolor{blue!15}{7.89 $\pm$ 0.02} & 7.38 & 20 & $^{12}$C$^{16}$O \\
+        \cellcolor{blue!15}{8.33 $\pm$ 0.02} & 7.89 & 7.38 & 20 & $^{16}$OH \\
+        8.33 & \cellcolor{blue!15}{7.86 $\pm$ 0.03} & 7.38 & 20 & $^{12}$C$^{16}$O \\
+        8.33 & 7.86 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 20 & $^{12}$C$^{14}$N \\
+        8.33 & 7.86 & 7.84 & \cellcolor{blue!15}{12} & $^{13}$C$^{14}$N \\
+        \cellcolor{blue!15}{8.31 $\pm$ 0.01} & 7.86 & 7.84 & 12 & $^{16}$OH \\
+        8.31 & \cellcolor{blue!15}{7.88 $\pm$ 0.03} & 7.84 & 12 & $^{12}$C$^{16}$O \\
+        8.31 & 7.88 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 12 & $^{12}$C$^{14}$N \\
+        \end{tabular}
+    \end{center} 
+    % \textbf{Notes.} 
+    % Chaque synthèse est réalisée sur des raies de l'élement se trouvant en 4ème colonne. 
+    % Les paramètres fixés sont en noir et le paramètre déterminé en bleu. 
+    % \label{itération_CNO_ancien}
+    \end{table}
 
 \end{frame}
 
@@ -270,23 +293,112 @@ Itération sur les abondances de C, N, O
     % \begin{column}{0.7\textwidth}
 \begin{table}[h!]
     \begin{center}
-        \begin{tabular}{c|cc}
-            Paramètre & Détermination & Résultats
-            $[Fe/H]$ &  abondance de fer & 
-        \end{tabular}
+        \begin{tabularx}{\textwidth}{c|X|c|c}
+            Paramètre & Détermination & Ce travail & Littérature \\
+            \hline
+            &&\\
+            $[Fe/H]$ &  abondance de fer & -0.25 dex & -0.30 dex \\
+            &&\\
+            T$_{\rm eff}$ & respect de l'équation de Boltzmann $\rightarrow$  abondance d'un élément ne varie pas en fonction du potentiel d'excitation & 4000 $\pm$ ? K  & 4000 K\\
+            &&\\
+            log g & respect de l'équation de Saha  $\rightarrow$ abondance identique pour l'élément neutre et ses différents états d'ionisation & to do Ti lines & 1.00 km s$^{-1}$\\
+        \end{tabularx}
+    \end{center}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Paramètres stellaires suite}
+    % $[Fe/H]$ : abondance de fer 
+
+
+    % T$_{\rm eff}$ : respect de l'équation de Boltzmann $\rightarrow$  abondance d'un élément ne varie pas en fonction de son potentiel d'excitation 
+
+
+    % log g : respect de l'équation de Saha  $\rightarrow$ abondance identique pour l'élément neutre et ses différents états d'ionisation \\ isochrone et tracés évolutifs
+
+
+    % $\xi_{\text{micro}}$ : abondance ne varie pas en fonction de la largeur équivalente réduite 
+
+    % \begin{column}{0.7\textwidth}
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabularx}{\textwidth}{c|X|c|c}
+            Paramètre & Détermination & Ce travail& Littérature \\
+            \hline
+            &&\\
+            log g & isochrones (estimer âge) & 1.04 & 1.00 \\
+            &&\\
+            & tracés évolutifs (estimer masse) & to do & 1.00 \\
+            &&\\
+            & ailes raies fortes & 0.31 & 1.00 \\
+             &&\\
+            $\xi_{\text{micro}}$ & abondance ne varie pas en fonction de la largeur équivalente réduite & à vérifier \\
+        \end{tabularx}
     \end{center}
 \end{table}
 
 \end{frame}
 
 \begin{frame}[fragile]{Raies atomiques}
-    Ca I, Mg I, Al I, Si I, K I, Ca I, Sc I, Ti II, Ti II, V I, Mn I, Fe I, Co I, Ni I, Cu I, Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II
+    % Ca I, Mg I, Al I, Si I, K I, Sc I, Ti I, Ti II, V I, Mn I, Fe I, Co I, Ni I, Cu I, Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II
 
-    Élements du pic du fer  : Mn I, Co I, Ni I, 
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{c|c|c}
+            & Élement & Nb. raies\\
+            \hline
+            &&\\
+            Élements pic du fer & Sc I &115\\
+             & Ti I&63\\
+             & Ti II&7\\
+             & V I&76\\
+             & Cr I&20\\
+             & Mn I&55\\
+             &Fe I&81 \\
+            & Co I&69\\
+            & Ni I&58\\
+            Élements-$\alpha$ & Mg I&12 \\
+             & Si I&13 \\
+             & Ca I& 5\\
+        \end{tabular}
+    \end{center}
+\end{table}
+
+ % Élements du pic du fer  : Mn I, Co I, Ni I, 
+
+\end{frame}
+
+\begin{frame}[fragile]{Raies atomiques suite}
+    % Ca I, Mg I, Al I, Si I, K I, Sc I, Ti I, Ti II, V I, Mn I, Fe I, Co I, Ni I, Cu I, Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II
+
+    \begin{table}[h!]
+        \begin{center}
+            \begin{tabular}{c|c|c}
+                &Élement&Nb. raies\\
+                \hline
+                &&\\ 
+                Éléments Z impaire & Na I &19\\
+                 & Al I &7\\
+                 & K I &5 \\
+                Éléments s & Cu I & 5\\
+                 & Y I & 17\\
+                 & Zr I & 2\\
+                 & Ba I & 2\\
+                 & Ce II & 9\\
+                 & Ce III & 2\\
+                 & Nd II & 7\\
+                 & Yb II & 2\\
+            \end{tabular}
+        \end{center}
+    \end{table}
+ % Élements du pic du fer  : Mn I, Co I, Ni I, 
+
 \end{frame}
 
 \begin{frame}[fragile]{La suite ?}
     \begin{itemize}
+        \item finir détermination paramètres stellaires
         \item comparaison avec abondances déterminées dans le visible à partir de spectre HERMES
         \item détermination  d'abondances d'éléments lourds ETL et non-ETL
         \begin{itemize}
