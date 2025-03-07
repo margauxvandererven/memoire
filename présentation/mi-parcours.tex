@@ -72,7 +72,8 @@
 
     \begin{columns}
             \begin{column}{0.5\textwidth}
-                    T$_{\text{eff}}$ $\sim$ étoiles K et M \\
+                    T$_{\text{eff}}$ étoiles S $\sim$ T$_{\text{eff}}$ étoiles K et M \\
+
                     Bande ZrO \& enrichissement en éléments s \\
     					\begin{itemize}
     						\item de type S intrinsèques (Tc rich)
@@ -91,26 +92,89 @@
 
 % \metroset{titleformat frame=allcaps}
 \begin{frame}[fragile]{Processus s}
-    processus
+    % \begin{columns}
+    %     \begin{column}{0.3\textwidth}
+    %         +50\% éléments plus lourds que le fer \\
+    %     \end{column}
+    %     \begin{column}{0.7\textwidth}
+    %         \centering
+    %         \includegraphics[width=8cm]{images/medium.png}
+    %     \end{column}
+    % \end{columns}
+
+    \begin{center}
+        \includegraphics[width=10cm]{images/medium.png} \\
+        + de 50\% éléments plus lourds que le fer \\
+    \end{center}
 \end{frame}
 
 % \metroset{titleformat frame=allcaps}
 \begin{frame}[fragile]{Spectre observé}
 \begin{columns}
-    \begin{column}{0.5\textwidth}
-             Spectres infrarouges : IGRINS 
+    \begin{column}{0.3\textwidth}
+             Spectres infrarouges : \\
+             IGRINS (Immersion GRating INfrared Spectrometer) \\ 
+             Haute résolution : R=$\frac{\lambda}{\Delta \lambda}$ $\sim$ 45000
     					\begin{itemize}
     						\item Bande H (1.45 - 1.80 $\mu m$)
     						\item Bande K (2.05 - 2.50 $\mu m$)
     						\item[]
     					\end{itemize}
-        $\rightarrow$ BD-2217$^{\circ}$42 (4000K)
+        $\rightarrow$ BD-2217$^{\circ}$42 (4000K) \\
+
+        Normalisation \& correction redshift
+    \end{column}
+    \begin{column}{0.7\textwidth}
+        \begin{table}[h!]
+            % \caption{Étoiles et paramètres d'atmosphère stellaire}
+                \begin{center}
+                \begin{tabular}{cccccc}
+                    \hline
+                    \hline
+                     Étoile & Type spectral & $T_{\rm eff}$ (K) & log $g$ (cm $s^{-2}$) & $\xi_{\rm micro}$ (km s$^{-1}$) & [Fe/H] (dex) \\
+                    \hline
+                    BD-22$\degree$1742 & S3:*3& $4000^{(1)}$ & $1.00^{(1)}$ & - & $-0.30\pm0.09^{(1)}$ \\
+                    HD 60197 & K3.5III:Ba3.5 & $3800\pm50^{(3)}$ & $2.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.60\pm0.20^{(3)}$\\
+                    HD 63733 & 	S3.5/3 & $3700^{(1)}$ & $1.00^{(1)}$ & - & $-0.10\pm0.13^{(1)}$ \\
+                    CR Cir & S6,2  & - & - & - & - \\
+                    HD 123949 & K1pBa & $4378\pm80^{(3)}$ & $1.78\pm0.53^{(3)}$ & $1.37^{(3)}$ & $-0.31\pm0.13^{(3)}$ \\
+                    CD-29$\degree$5912 & S4,4 & $3600^{(4)}$ & $1.00^{(4)}$ & - & $-0.40\pm0.22^{(4)}$ \\
+                    BD-18$\degree$2608 & S & $3500^{(2)}$ & $1.00^{(2)}$ & - & $-0.31\pm0.16^{(2)}$ \\
+                    HD 116869 & G8III:Ba1 & $4892\pm30^{(3)}$ & $2.59\pm0.07^{(3)}$ & $1.38\pm0.04^{(3)}$ & $-0.44\pm0.09^{(3)}$ \\
+                    HD 120620 & K0III (Ba$^{(3)}$) & $4831\pm13^{(3)}$  & $3.03\pm0.30^{(3)}$ & $1.11\pm0.05^{(3)}$ & $-0.30^\pm0.10{(3)}$ \\
+                    HD 121447 & K4III$^{(3)}$ (Ba$^{(3)}$) & $4000\pm50^{(3)}$ & $1.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.90\pm0.13^{(3)}$\\
+                    HD 100503 & G/KpBa & $4000\pm50^{(3)}$ & $2.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.72\pm0.13^{(3)}$ \\
+                    HD 119185 &  G8IIIpBa & - & - & - & - \\
+                    HD 88562  & K1III (Ba$^{(3)}$)& $4000\pm50^{(3)}$ & $2.00\pm0.50^{(3)}$ & $2.00^{(3)}$ & $-0.53\pm0.12^{(3)}$\\
+                    V812 Oph  & S5+/2.5 & $3500^{(2)}$ & $1.00^{(2)}$ & - & $-0.37\pm0.13^{(2)}$\\
+                    19 Aql  & F0III-IV & - & - & - & -  \\
+                    V915 Aql  & S5+/2 & $3400^{(1)}$ & $0.00^{(1)}$ & - & $-0.50\pm0.15^{(1)}$ \\
+                    HD 165774 & S4,6 & - & - & - & - \\
+                    \hline
+                \end{tabular}
+                \end{center}
+            % \textbf{Notes}. Le type spectral est majoritairement repris de SIMBAD ; la première lettre faisant référence au système Harvard (O,B,A, F, G, K, M), le chiffre arabe suivant à la nomenclature "early"/"late", le chiffre romain à la classe de luminosité, "Ba" pour étoile à baryum / "S" pour étoile de type S et la lettre minuscule faisant référence aux particularités du spectre (par exemple, "p" pour "particularité non spécifiée").
+            
+            \textbf{Références}. $^{(1)}$\cite{shetye_s_2018}, $^{(2)}$\cite{shetye_s_2021} , $^{(3)}$\cite{karinkuzhi_when_2018}, $^{(4)}$\cite{shetye_observational_2019}.
+                \label{param_stellaire}
+            \end{table}
     \end{column}
 \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Spectre synthétique}
-    TS
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                TurboSpectrum v20 
+            \end{center}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                MARCS 
+            \end{center}
+        \end{column}
+\end{columns}
 \end{frame}
 
 % \metroset{titleformat frame=allcaps}
