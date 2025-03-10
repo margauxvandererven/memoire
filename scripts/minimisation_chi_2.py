@@ -244,6 +244,10 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
     wavelength_observed = np.array(normal['z_wavelen'])
     flux_observed = np.array(normal['flux_normalised'])
 
+    # common_grid = np.linspace(start, end, num=10000)
+    # interpolator_observed = interp1d(wavelength_observed, flux_observed, kind='linear', fill_value="extrapolate")
+    # flux_observed_interpolated = interpolator_observed(common_grid)
+
     mask_observed = (wavelength_observed >= start) & (wavelength_observed <= end)
     wavelength_observed_filtered = wavelength_observed[mask_observed]
     flux_observed_filtered = flux_observed[mask_observed]
