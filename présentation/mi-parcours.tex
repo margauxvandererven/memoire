@@ -75,16 +75,24 @@
 
     \begin{columns}
             \begin{column}{0.6\textwidth}
-                    T$_{\text{eff}}$ étoiles S $\sim$ T$_{\text{eff}}$ étoiles K et M 
+
+                    T$_{\text{eff}}$ étoiles S $\sim$ T$_{\text{eff}}$ étoiles M  \\
 
                     Bandes ZrO \& enrichissement en éléments s
+    
 
     					\begin{itemize}
-    						\item de type S intrinsèques (Tc rich)
+    						\item de type S intrinsèques (Tc rich) :
+    						\begin{itemize}
+                                \item [] $^{13}$C($\alpha$,n)$^{16}$O, $^{22}$Ne($\alpha$,n)$^{25}$Mg
+                            \end{itemize}
     						\item de type S extrinsèques (Tc poor)
-    						\item à baryum
     						\item[] 
     					\end{itemize} 
+                        \vspace{0.5cm}
+
+                        T$_{\text{eff}}$ étoiles à baryum $\sim$ T$_{\text{eff}}$ étoiles G-K \\
+                        Enrichissement en éléments s
             \end{column}
             \begin{column}{0.4\textwidth}
                 \centering
@@ -179,23 +187,7 @@
 
 \begin{frame}[fragile]{Spectre synthétique}
     \begin{columns}
-        \begin{column}{0.52\textwidth}
-            \begin{center}
-                \textbf{TurboSpectrum v20}  
-                \begin{itemize}
-                    \item [-] code qui résoud l'équation de transfert radiatif avec méthode Feautrier
-                    \item [-] à la fois dans l'apporixmation ETL et non-ETL
-                    \item [-] à la fois pour la géométrie plan-parallèle (log g $>$ 3.5) et sphérique (log g $<$ 3.5)
-                    \item [-] élargissement : profil de Voigt, effet Stark linéaire, théorie ABO
-                \end{itemize}
-            \end{center}
-        \end{column}
-        \begin{column}{0.04\textwidth}
-            \begin{tikzpicture}
-                \draw[thick] (0,-1) -- (0,5);
-            \end{tikzpicture}
-        \end{column}
-        \begin{column}{0.44\textwidth}
+        \begin{column}{0.48\textwidth}
             \begin{center}
                 \textbf{MARCS}
                \begin{itemize}
@@ -206,6 +198,23 @@
                \end{itemize}
             \end{center}
         \end{column}
+        \begin{column}{0.04\textwidth}
+            \begin{tikzpicture}
+                \draw[thick] (0,-1) -- (0,5);
+            \end{tikzpicture}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{center}
+                \textbf{TurboSpectrum v20}  
+                \begin{itemize}
+                    \item [-] code qui résoud l'équation de transfert radiatif avec méthode Feautrier
+                    \item [-] apporixmation ETL et non-ETL
+                    \item [-] géométrie plan-parallèle (log g $>$ 3.5) et sphérique (log g $<$ 3.5)
+                    \item [-] élargissement : profil de Voigt, effet Stark linéaire, théorie ABO
+                \end{itemize}
+            \end{center}
+        \end{column}
+
 \end{columns}
 \vfill 
 $\rightarrow$ Minimisation $\chi^2$ entre spectres synthétiques et spectre observé
@@ -278,6 +287,42 @@ Itération sur les abondances de C, N, O jusqu'à convergence
 
 \end{frame}
 
+
+\begin{frame}[fragile]{Abondances C, N, O}
+
+    Itération sur les abondances de C, N, O jusqu'à convergence
+    
+    \begin{table}[h!]
+          \vspace{0.3cm}
+        \begin{center}
+            \begin{tabular}{ccccc}
+                \hline
+                \hline
+                log $\varepsilon_{\rm O}$ & log $\varepsilon_{\rm C}$ & log $\varepsilon_{\rm N}$ & $^{12}$C/$^{13}$C & Raie\\
+                \hline
+                \cellcolor{blue!15}{8.59 $\pm$ 0.01} & 8.44 & 7.38 & 40 & $^{16}$OH \\
+            % % raie de bande H
+            8.59 & \cellcolor{blue!15}{7.82 $\pm$ 0.03} & 7.38 & 40 & $^{12}$C$^{16}$O \\
+            8.59 & 7.82 & 7.38 & \cellcolor{blue!15}{20} & $^{13}$C$^{17}$O \\
+            \cellcolor{blue!15}{8.30 $\pm$ 0.02} & 7.82 & 7.38 & 20 & $^{16}$OH \\
+            8.30 & \cellcolor{blue!15}{7.89 $\pm$ 0.02} & 7.38 & 20 & $^{12}$C$^{16}$O \\
+            \cellcolor{blue!15}{8.33 $\pm$ 0.02} & 7.89 & 7.38 & 20 & $^{16}$OH \\
+            8.33 & \cellcolor{blue!15}{7.86 $\pm$ 0.03} & 7.38 & 20 & $^{12}$C$^{16}$O \\
+            8.33 & 7.86 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 20 & $^{12}$C$^{14}$N \\
+            8.33 & 7.86 & 7.84 & \cellcolor{blue!15}{12} & $^{13}$C$^{14}$N \\
+            \cellcolor{blue!15}{8.31 $\pm$ 0.01} & 7.86 & 7.84 & 12 & $^{16}$OH \\
+            8.31 & \cellcolor{blue!15}{7.88 $\pm$ 0.03} & 7.84 & 12 & $^{12}$C$^{16}$O \\
+            8.31 & 7.88 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 12 & $^{12}$C$^{14}$N \\
+            \end{tabular}
+        \end{center} 
+        % \textbf{Notes.} 
+        % Chaque synthèse est réalisée sur des raies de l'élement se trouvant en 4ème colonne. 
+        % Les paramètres fixés sont en noir et le paramètre déterminé en bleu. 
+        % \label{itération_CNO_ancien}
+        \end{table} 
+    
+    \end{frame}
+
 \begin{frame}[fragile]{Paramètres stellaires}
     % $[Fe/H]$ : abondance de fer 
 
@@ -297,9 +342,9 @@ Itération sur les abondances de C, N, O jusqu'à convergence
             Paramètre & Détermination & Ce travail & Littérature \\
             \hline
             &&\\
-            $[Fe/H]$ &  abondance de fer & -0.25 dex & -0.30 dex \\
+            $[$Fe/H$]$ &  abondance de fer & -0.25 $\pm$ 0.10 dex & -0.30 dex \\
             &&\\
-            T$_{\rm eff}$ & respect de l'équation de Boltzmann $\rightarrow$  abondance d'un élément ne varie pas en fonction du potentiel d'excitation & 4000 $\pm$ ? K  & 4000 K\\
+            T$_{\rm eff}$ & respect de l'équation de Boltzmann $\rightarrow$  abondance d'un élément ne varie pas en fonction du potentiel d'excitation & 4000 $\pm$ 125 K  & 4000 K\\
             &&\\
             log g & respect de l'équation de Saha  $\rightarrow$ abondance identique pour l'élément neutre et ses différents états d'ionisation & to do Ti lines & 1.00 km s$^{-1}$\\
         \end{tabularx}
@@ -406,7 +451,6 @@ Itération sur les abondances de C, N, O jusqu'à convergence
             \item [-] besoin d'interpoler modèles et coefficients d'écarts non-ETL
         \end{itemize}
         \item comparaison profil d'abondances avec modèles de nucléosynthèse
-        \item analyse d'une autre étoile ?
     \end{itemize} 
 \end{frame}
 % \begin{frame}[fragile]{Références}
