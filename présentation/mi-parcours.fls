@@ -388,6 +388,15 @@ INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libr
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.dateplot.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.dateplot.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/pgf/utilities/pgfcalendar.sty
@@ -395,6 +404,9 @@ INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/pgf/utilities/pgfcalendar.sty
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/utilities/pgfcalendar.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/utilities/pgfcalendar.code.tex
 INPUT /usr/local/texlive/2024/texmf-dist/tex/generic/pgf/utilities/pgfcalendar.code.tex
+INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/graphics/dvipsnam.def
+INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/graphics/dvipsnam.def
+INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/graphics/dvipsnam.def
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/colortbl/colortbl.sty
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/colortbl/colortbl.sty
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/tools/array.sty
@@ -537,10 +549,6 @@ INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
 INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
-OUTPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
-INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
-INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
-INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
 OUTPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
 INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb
 INPUT /Users/margauxvandererven/Unif/memoire_local/présentation/mi-parcours.vrb

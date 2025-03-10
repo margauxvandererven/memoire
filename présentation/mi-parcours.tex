@@ -1,7 +1,7 @@
 \documentclass[10pt]{beamer}
 \usepackage[utf8]{inputenc}
 
-\usetheme[progressbar=frametitle]{metropolis}
+\usetheme{metropolis}
 \usepackage{appendixnumberbeamer}
 
 \usepackage{booktabs}
@@ -9,9 +9,10 @@
 \usepackage{graphicx}
 \usepackage{pgfplots}
 \usepackage{tikz}
+\usetikzlibrary{shapes.geometric, positioning, arrows.meta}
 \usepgfplotslibrary{dateplot}
 
-\usepackage[table]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{xcolor}
 \usepackage{colortbl}
 \usepackage{tabularx}
@@ -252,44 +253,100 @@ $\rightarrow$ Minimisation $\chi^2$ entre spectres synthétiques et spectre obse
 
 
 % \metroset{titleformat frame=allcaps}
+% \begin{frame}[fragile]{Abondances C, N, O}
+
+% Itération sur les abondances de C, N, O jusqu'à convergence
+
+% \begin{table}[h!]
+%       \vspace{0.3cm}
+%     \begin{center}
+%     	\begin{tabular}{ccccc}
+%             \hline
+%     		\hline
+%             log $\varepsilon_{\rm O}$ & log $\varepsilon_{\rm C}$ & log $\varepsilon_{\rm N}$ & $^{12}$C/$^{13}$C & Raie\\
+%             \hline
+%             \cellcolor{blue!15}{8.59 $\pm$ 0.01} & 8.44 & 7.38 & 40 & $^{16}$OH \\
+%         % % raie de bande H
+%         8.59 & \cellcolor{blue!15}{7.82 $\pm$ 0.03} & 7.38 & 40 & $^{12}$C$^{16}$O \\
+%         8.59 & 7.82 & 7.38 & \cellcolor{blue!15}{20} & $^{13}$C$^{17}$O \\
+%         \cellcolor{blue!15}{8.30 $\pm$ 0.02} & 7.82 & 7.38 & 20 & $^{16}$OH \\
+%         8.30 & \cellcolor{blue!15}{7.89 $\pm$ 0.02} & 7.38 & 20 & $^{12}$C$^{16}$O \\
+%         \cellcolor{blue!15}{8.33 $\pm$ 0.02} & 7.89 & 7.38 & 20 & $^{16}$OH \\
+%         8.33 & \cellcolor{blue!15}{7.86 $\pm$ 0.03} & 7.38 & 20 & $^{12}$C$^{16}$O \\
+%         8.33 & 7.86 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 20 & $^{12}$C$^{14}$N \\
+%         8.33 & 7.86 & 7.84 & \cellcolor{blue!15}{12} & $^{13}$C$^{14}$N \\
+%         \cellcolor{blue!15}{8.31 $\pm$ 0.01} & 7.86 & 7.84 & 12 & $^{16}$OH \\
+%         8.31 & \cellcolor{blue!15}{7.88 $\pm$ 0.03} & 7.84 & 12 & $^{12}$C$^{16}$O \\
+%         8.31 & 7.88 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 12 & $^{12}$C$^{14}$N \\
+%         \end{tabular}
+%     \end{center} 
+%     % \textbf{Notes.} 
+%     % Chaque synthèse est réalisée sur des raies de l'élement se trouvant en 4ème colonne. 
+%     % Les paramètres fixés sont en noir et le paramètre déterminé en bleu. 
+%     % \label{itération_CNO_ancien}
+%     \end{table}
+
+% \end{frame}
+
+
 \begin{frame}[fragile]{Abondances C, N, O}
+    \begin{columns}
+        \begin{column}{0.3\textwidth}
+            \vspace{1cm}
 
-Itération sur les abondances de C, N, O jusqu'à convergence
+            Itération sur les abondances de C, N, O jusqu'à convergence. 
+            
+            \vspace{2cm}
+            \begin{table}[h!]
+                \vspace{0.3cm}
+              \begin{center}
+                  \begin{tabular}{c|cccc}
+                    %   \hline
+                      \hline
+                      &log $\varepsilon_{\rm O}$ & log $\varepsilon_{\rm C}$ & log $\varepsilon_{\rm N}$ & $^{12}$C/$^{13}$C\\
+                      \hline
+                      Initial&- & 8.44 & 7.38 & 40 \\
+                    Final&8.31$\pm$ 0.01 & 7.88 & 7.84 $\pm$ 0.02 & 12 \\
+                  \end{tabular}
+              \end{center} 
+              \end{table}
+            
 
-\begin{table}[h!]
-      \vspace{0.3cm}
-    \begin{center}
-    	\begin{tabular}{ccccc}
-            \hline
-    		\hline
-            log $\varepsilon_{\rm O}$ & log $\varepsilon_{\rm C}$ & log $\varepsilon_{\rm N}$ & $^{12}$C/$^{13}$C & Raie\\
-            \hline
-            \cellcolor{blue!15}{8.59 $\pm$ 0.01} & 8.44 & 7.38 & 40 & $^{16}$OH \\
-        % % raie de bande H
-        8.59 & \cellcolor{blue!15}{7.82 $\pm$ 0.03} & 7.38 & 40 & $^{12}$C$^{16}$O \\
-        8.59 & 7.82 & 7.38 & \cellcolor{blue!15}{20} & $^{13}$C$^{17}$O \\
-        \cellcolor{blue!15}{8.30 $\pm$ 0.02} & 7.82 & 7.38 & 20 & $^{16}$OH \\
-        8.30 & \cellcolor{blue!15}{7.89 $\pm$ 0.02} & 7.38 & 20 & $^{12}$C$^{16}$O \\
-        \cellcolor{blue!15}{8.33 $\pm$ 0.02} & 7.89 & 7.38 & 20 & $^{16}$OH \\
-        8.33 & \cellcolor{blue!15}{7.86 $\pm$ 0.03} & 7.38 & 20 & $^{12}$C$^{16}$O \\
-        8.33 & 7.86 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 20 & $^{12}$C$^{14}$N \\
-        8.33 & 7.86 & 7.84 & \cellcolor{blue!15}{12} & $^{13}$C$^{14}$N \\
-        \cellcolor{blue!15}{8.31 $\pm$ 0.01} & 7.86 & 7.84 & 12 & $^{16}$OH \\
-        8.31 & \cellcolor{blue!15}{7.88 $\pm$ 0.03} & 7.84 & 12 & $^{12}$C$^{16}$O \\
-        8.31 & 7.88 & \cellcolor{blue!15}{7.84 $\pm$ 0.02} & 12 & $^{12}$C$^{14}$N \\
-        \end{tabular}
-    \end{center} 
-    % \textbf{Notes.} 
-    % Chaque synthèse est réalisée sur des raies de l'élement se trouvant en 4ème colonne. 
-    % Les paramètres fixés sont en noir et le paramètre déterminé en bleu. 
-    % \label{itération_CNO_ancien}
-    \end{table}
+        \end{column}
+        \begin{column}{0.7\textwidth}
+            \tikzstyle{block} = [draw, rectangle, 
+        minimum height=3em, minimum width=3em
+        ]
+        \tikzstyle{virtual} = [coordinate]
+        \begin{tikzpicture}[>=stealth,auto, node distance=1cm]
+            \node[block, fill=UnccOrange!30] (block1) {OH};
+            \node[block, right=of block1, fill=UnccGold] (block2) {O};
+            \node[block, below=of block2, fill=UnccOrange!30] (block3) {CO};
+            \node[block, right=of block3, fill=UnccGold] (block4) {C};
+            \node[block, below=of block4,fill=BrickRed!30] (block5) {$^{12}$C/$^{13}$C};
+            \node[block, right=of block4,fill=UnccOrange!30] (block6) {CN};
+            \node[block, below=of block6, fill=UnccGold] (block7) {N};
+            \node[block, below=of block7, fill=BrickRed!30] (block8) {$^{12}$C/$^{13}$C};
+            
+            \draw[->] (block1) -- (block2) ;
+            \draw[->] (block2) -- (block3);
+            \draw[->] (block3) -- (block4);
+            \draw[->] (block4.south) -- (block5.north) ;
+            \draw[->] (block5) -- (block4);
+            \draw[->] (block4) -- (block6);
+            \draw[->] (block6) -- (block7);
+            \draw[->] (block7) -- (block8);
+            \draw[->] (block8) -- (block7);
 
-\end{frame}
+            % \coordinate (midpoint) at ((block1)!0.5!(block2));
+            % \draw[->] (midpoint) -- ++(0,0.1);
 
-
-\begin{frame}[fragile]{Abondances C, N, O}
-organigramme    
+            % Modification des deux dernières flèches pour qu'elles contournent
+            \draw[->] (block8) -| ++(1.,7) -| (block1.north);
+            \draw[->] (block4.north)-| ++(0,2.35) -| (block1.north);
+        \end{tikzpicture}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Paramètres stellaires}
@@ -429,9 +486,11 @@ organigramme
 \end{frame}
 
 \begin{frame}[fragile]{Profil de Voigt}
-élargissement naturel des raies du à incertitude sur l'énergie des transitions -> profil de Lorentz de paramètre $gamma^{rad}$
+élargissement naturel des raies du à incertitude sur l'énergie des transitions -> profil de Lorentz de paramètre $\gamma^{rad}$
 
-élargissement du aux collisons, quand on utilise approximation d'impact (pertubateur arrive à grande vitesse et cause perturbation momentannée du train d'onde émis par atome excité) ->
+élargissement du aux collisons, quand on utilise approximation d'impact (pertubateur arrive à grande vitesse et cause perturbation momentannée du train d'onde émis par atome excité) -> profil de Lorentz de paramètre $\gamma^{coll}$
+
+--> convolution de deux profils de lorentz donne un profil de lorentz de $\gamma$ = $\gamma^{rad}$ + $\gamma^{coll}$
 \end{frame}
 
 \begin{frame}[fragile]{Effet Stark linéaire}
