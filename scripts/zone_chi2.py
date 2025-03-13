@@ -22,9 +22,33 @@ from PyQt6.QtCore import Qt
 
 #Ti
 # --------------
-raies = [14631.66, 14711.708, 15231.203, 15873.838, 16005.054,  17339.453, 
-        #  21812.562
-         ]
+# raies = [14631.66, 14711.708, 15231.203, 15873.838, 16005.054,  17339.453, 
+#         #  21812.562
+#          ]
+
+raies=[14631.66,
+14711.708,
+15231.203,
+15729.885,
+15873.838,
+16005.054,
+16621.818,
+16669.355,
+16885.251,
+17015.951,
+17339.453,
+17714.787,
+17717.025,
+20812.021,
+21598.643,
+21812.562,
+22012.393,
+22195.088,
+22705.832,
+22881.607,
+22974.369,
+23687.035,
+24290.67]
 
 range_dict={}
 
@@ -39,10 +63,10 @@ for i in raies:
     # zoom_lines({"":[i]}, "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/syntspec/BD-221742b/", 
     #         {"Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_19750-22900_BD-221742_Feabu_-20.conv":"no Fe", 
     #         "Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_19750-22900_BD-221742_Feabu_7.2.conv":"7.2"},stardata,5,lines_BD22,range=range_dict)
-
+    range=str(i-5)+"-"+str(i+5)
     zoom_lines({"":[i]}, "/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/BD-221742/synth_margaux/",
-               {"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_Tiabu_5.conv":"avec Ti",
-                "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_Tiabu_-20.conv":"sans Ti"}, stardata, 5, lines_BD22, range=range_dict)
+               {"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_Tiabu_4.5.conv":"avec Ti",
+                "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_Tiabu_-20.conv":"sans Ti"}, stardata, 5, lines_BD22, range=range_dict)
 print(range_dict)
 
 # with open('plages_raies_Fe.txt', 'w') as f:

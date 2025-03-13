@@ -125,32 +125,26 @@ def get_nearest(x_query, x_vals):
     return np.abs(x_vals - x_query).argmin()
 
 
-def normalisation(z_wavelen, flux, wavelength):
+def normalisation(z_wavelen, flux, wavelength, window_size=20):
     """
     Normalisation du flux observé sur interval de 20 Å. 
     Le flux est divisé par la médiane des 5% plus grandes valeurs sur cet interval.
     """
-    # k = []
-    h = []
-    # for i in z_wavelen:
-    #     if 0 < i-wavelength:
-    #         k.append(i)
-    # centre = z_wavelen.index(min(k))
 
-    centre = get_nearest(wavelength, np.array(z_wavelen))
+    window_min = wavelength - window_size/2
+    window_max = wavelength + window_size/2
 
-    mediane = mediane_5(flux[centre-160:centre+160])
+    flux=np.array(flux)
+    z_wavelen=np.array(z_wavelen)
 
-    flux_normalised = []
-    for h in flux[centre-160:centre+160] :
-        flux_normalised.append(h/mediane)
-    # flux_normalised = np.array()
+    mask = (z_wavelen >= window_min) & (z_wavelen <= window_max)
+    window_flux = flux[mask]
+    window_wavelen = z_wavelen[mask]
 
-    # tolerance = 0.05
-    # index_closest_with_tolerance = next((i for i, x in enumerate(flux_normalised[160:]) if abs(x - 1) <= tolerance), None)
+    mediane = mediane_5(window_flux)
 
-    # taille = z_wavelen[centre+index_closest_with_tolerance] - z_wavelen[centre]
+    flux_normalised = np.array(window_flux) / mediane
     
-    return {"z_wavelen" : z_wavelen[centre-160:centre+160], "flux_normalised" : flux_normalised, 
+    return {"z_wavelen" : window_wavelen, "flux_normalised" : flux_normalised, 
             # "taille" : taille,
             }

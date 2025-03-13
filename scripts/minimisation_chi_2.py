@@ -217,7 +217,7 @@ def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, siz
             ax_.axvline(x=start, ymin=0, ymax=1.4, color='gray', linewidth=1)
             ax_.axvline(x=end, ymin=0, ymax=1.4, color='gray', linewidth=1)
         ax_.tick_params(axis='x', pad=11)
-    ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5, ncol=2)
+    ax[0].legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5, loc='lower left')
     # plt.tight_layout()
     if save is not None:
         plt.savefig(save + '.pdf', dpi=400, transparent=True, bbox_inches
