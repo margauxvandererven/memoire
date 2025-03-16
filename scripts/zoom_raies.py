@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, ScalarFormatter
 from wavelen_work import *
+import os 
 from scipy.signal import find_peaks
 # lines = {
 #     "S": [15478.48, 22507.60],
@@ -209,6 +210,14 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         plt.show()
         
         if save:
+            # Extraire le chemin du dossier depuis le chemin complet
+            save_dir = os.path.dirname(save)
+            
+            # Créer le dossier s'il n'existe pas
+            if save_dir and not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+                
+            plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
             plt.savefig(save, dpi=200)
          
 

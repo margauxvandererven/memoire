@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from wavelen_work import *
+from zoom_raies import *
 from matplotlib.ticker import MultipleLocator, ScalarFormatter
 from scipy.interpolate import interp1d
 from scipy.interpolate import griddata
@@ -34,19 +35,21 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
         end=raies.get(str(wavelength))[1]
 
         wavelength=np.float64(wavelength)
-        range=str(wavelength-11)+"-"+str(wavelength+11)
+        range=str(wavelength-2)+"-"+str(wavelength+2)
         synth={}
         for abu in ABU:
             synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
         if abu_to_plot:
             synth_plot={}
             for abu2 in abu_to_plot:
+                synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
-                synth_plot["../../syntspec/BD-221742b/toutsans_"+name]= "sans "+name
-            plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
+            # plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
+            zoom_lines({"":[wavelength]}, path_to_synth, synth_plot, stardata,1.5, spectral_lines)
         if minimisation is not None: 
             chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
-            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final, plot=True, save="/Users/margauxvandererven/Unif/memoire_local/présentation/images/OH_"+str(wavelength)+".pdf")
+            dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
+            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, save="/Users/margauxvandererven/Unif/memoire_local/présentation/images/OH_"+str(wavelength)+".pdf")
     if minimisation is not None:
         abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)
         if save:
@@ -231,8 +234,21 @@ def get_nearest(x_query, x_vals):
     return nearest_index
 
 
-def chi_squared(synth, observed):
-    return np.sum((synth - observed) ** 2 / observed)
+def chi_squared(synth, observed, errors=None):
+    """
+    Calcule le chi carré entre un spectre synthétique et observé
+    
+    Args:
+        synth: flux du spectre synthétique
+        observed: flux du spectre observé
+        errors: incertitudes sur les observations (optionnel)
+    """
+    # if errors is None:
+    #     # Si pas d'erreurs fournies, on suppose une erreur uniforme
+    #     errors = np.ones_like(observed) * np.std(observed)
+    #     print(errors)
+    errors=0.01
+    return np.sum(((observed - synth)** 2 /errors**2 ))
 
 
 def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, name=None, plot=None, save=None, size_police=None, axes=(None,None)):
@@ -252,8 +268,9 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
     wavelength_observed_filtered = wavelength_observed[mask_observed]
     flux_observed_filtered = flux_observed[mask_observed]
 
-    chi_final[k]=[start, end]
-    
+    # chi_final[k]=[start, end]
+    chi_final[k]=[wavelength_observed_filtered[0],wavelength_observed_filtered[-1]]
+
     synthetic_spectra = []
     observed_spectra_interpolated =[]
     observed_spectra_w_interpolated =[]
@@ -269,29 +286,27 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
             wavelength_synthetic_filtered = synt_w[mask_synthetic]
             flux_synthetic_filtered = synt_flux[mask_synthetic]
 
-            synthetic_spectra.append(flux_synthetic_filtered)
-            synthetic_spectra_w.append(wavelength_synthetic_filtered)
+            interpolator = interp1d(synt_w, synt_flux, kind='linear', fill_value="extrapolate")
+            flux_synthetic_interpolated = interpolator(wavelength_observed_filtered)
 
-            interpolator = interp1d(wavelength_observed_filtered, flux_observed_filtered, kind='linear', fill_value="extrapolate")
-            flux_observed_interpolated = interpolator(wavelength_synthetic_filtered)
+            chi2 = chi_squared(flux_synthetic_interpolated, flux_observed_filtered)
+            chi2_reduce = chi2 / (len(flux_observed_filtered)-1)
+            chi_squared_values.append(chi2_reduce)
 
-            chi2 = chi_squared(flux_synthetic_filtered, flux_observed_interpolated)
-            chi_squared_values.append(chi2)
-
-            observed_spectra_interpolated.append(flux_observed_interpolated)
-            observed_spectra_w_interpolated.append(wavelength_synthetic_filtered)
+            synthetic_spectra.append(flux_synthetic_interpolated)
+            synthetic_spectra_w.append(wavelength_observed_filtered)
 
     if plot is True:
         plot_zone_chi2(k, path, synthetics, normal, spectral_lines, size_police=size_police,
                         save=save, start=start, end=end, name=name, axes=axes)
 
-    return {"chi_squared_values":chi_squared_values}
+    return {"chi_squared_values":chi_squared_values, "dof":len(flux_observed_filtered)-1}
 
 
 def quadratic(x, a, b, c):
     return a * x**2 + b * x + c
 
-def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, plot=None, save=None):
+def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot=None, save=None):
     abu = np.array(abu)
     params, _ = curve_fit(quadratic, abu, chi_squared)
     a, b, c = params  
@@ -313,20 +328,50 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, plot=Non
         ax.scatter(abu, chi_squared, color="darkblue", marker="x", label=f"Raie de {raie} en {k} Å")  # Data points
         ax.plot(fit_x, fit_y, color="lightgray")  # Quadratic fit line
         ax.scatter(min_log_e, min_chi_squared, color="red", marker="x", label=f"Minimum en {min_log_e:.2f}")  # Minimum point
-        ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
-        ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
+        ax.xaxis.set_tick_params(direction = 'in', length = 5, which = 'major', top=True, bottom=True)
+        ax.yaxis.set_tick_params(direction = 'in', length = 5, which = 'major',top=True, bottom=True)
         ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
         ax.tick_params(axis = 'both', labelsize = 16)
         # Labeling
         ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
         # ax.set_xlabel(element, fontsize=16)
-        ax.set_ylabel(r"$\chi^2$", fontsize=16)
+        ax.set_ylabel(r"$\chi^2_{red}$", fontsize=16)
+        discriminant = b**2 - 4*a*(c - (min_chi_squared + 1/dof))
+        if discriminant >= 0:
+            x1 = (-b - np.sqrt(discriminant))/(2*a)
+            x2 = (-b + np.sqrt(discriminant))/(2*a)
+            
+            if plot is not None:
+                # ...existing plotting code...
+                # Ajouter les lignes verticales aux intersections
+                ax.axvline(x=x1, color='darkseagreen', linestyle='--', alpha=0.5)
+                ax.axvline(x=x2, color='darkseagreen', linestyle='--', alpha=0.5)
+                ax.hlines(min_chi_squared+1/dof, x1-0.01, x2+0.01, color="darkseagreen", label="Minimum + 1/dof")
+
+                # Ajouter le texte pour l'incertitude
+                # ax.text(0.05, 0.95, f'Δ = {abs(x2-x1):.2f}', 
+                #     transform=ax.transAxes, fontsize=14,
+                #     verticalalignment='top')
+                half_width = abs(x2-x1)/2
+                # ax.text(0.05, 0.95, f'σ = {half_width}', 
+                #     transform=ax.transAxes, fontsize=14,
+                #     verticalalignment='top')
+                ax.text(0.05, 0.15, f'log $\epsilon$ = {min_log_e:.3f} $\pm$ {half_width:.3f}', 
+                    transform=ax.transAxes, fontsize=14,
+                    verticalalignment='top')
+                # ax.text(0.50, min_chi_squared+1/dof+0.01, f'$\chi^2_{{red,min}}$ + 1/dof', 
+                #     transform=ax.transAxes, fontsize=14,color="darkseagreen",
+                #     verticalalignment='top')
+                ax.text(0.05, 0.1, f'$\chi^2_{{red,min}}$ = {min_chi_squared:.3f}', 
+                    transform=ax.transAxes, fontsize=14,
+                    verticalalignment='top')
         # plt.legend(loc="upper left", fontsize=16)
     if save is not None:
         plt.savefig(save, dpi=400, transparent=True, bbox_inches='tight')
         plt.show()
 
     chi_final.get(k).append(min_log_e)
+    chi_final.get(k).append(half_width)
     chi_final.get(k).append(min_chi_squared)
 
 
@@ -486,7 +531,7 @@ def plot_chi2_simple_ABU(path, dossier_element, stardata, raie_propre, lines_BD2
 def abu_plot(raies_element, element_abu, save=None, size_police=None):
     x_vals = np.array([np.float64(line) for line in raies_element.keys()])
     # print(x_vals)
-    y_vals = np.array([val[-2] for val in raies_element.values()])
+    y_vals = np.array([val[-3] for val in raies_element.values()])
     # print(y_vals)
     # y_vals= list(raies_element.values())
     f = plt.figure(figsize=(10, 7))

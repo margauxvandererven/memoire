@@ -18,7 +18,7 @@ with open(spectre_visible) as f:
 # lecture des spectres fichiers .fits
 read_spec_h = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
 read_spec_k = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
-print(read_spec_h['header'])
+# print(read_spec_h['header'])
 
 stardata = {
     "starname"  : starname,

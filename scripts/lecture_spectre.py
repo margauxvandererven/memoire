@@ -19,7 +19,7 @@ with fits.open(spectre) as hdul:
     header = hdul[0].header
     for card in header.cards:
         print(card)
-    print(data)
+    print(len(data))
     # keywords_of_interest = ['DATE-OBS', 'EXPTIME', 'TELESCOP', 'OBJECT']
     # print("\n=== Mots-clés spécifiques ===")
     # for keyword in keywords_of_interest:
