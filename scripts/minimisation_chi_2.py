@@ -44,14 +44,13 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             for abu2 in abu_to_plot:
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
-            # plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
-            zoom_lines({"":[wavelength]}, path_to_synth, synth_plot, stardata,1.5, spectral_lines)
+            plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end)
         if minimisation is not None: 
             chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
             dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
-            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, save="/Users/margauxvandererven/Unif/memoire_local/présentation/images/OH_"+str(wavelength)+".pdf")
+            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/minimisation")
     if minimisation is not None:
-        abu_plot(chi_final,variable,size_police=20,save=variable+"_abu_"+round)
+        abu_plot(chi_final,variable,size_police=20,save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round)
         if save:
             with open(save, "w") as fichier:
                 json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
@@ -229,6 +228,112 @@ def plot_zone_chi2(k, path, synthetics, stardata, spectral_lines, axes=None, siz
         # plt.savefig(save + '.pgf', backend='pgf')
 
 
+def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_police=None,size_trace=(None,None), save=None, start=None, end=None, name=None):
+    if k < 18500:
+        j="h"
+    else :
+        j="k"
+    normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
+    
+    f = plt.figure(figsize=(6,4))
+    gs = f.add_gridspec(1, hspace=0.2)
+    ax = gs.subplots(sharex=False, sharey=True)
+    cid = f.canvas.mpl_connect('button_press_event', on_click)
+    colors = ['#3e92f7',  '#faaa2e','#db2f2f','#a39cf3', '#92c124']
+    plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
+    line_styles = [
+    {'linestyle': '-', 'linewidth': 2},      # ligne continue épaisse
+    {'linestyle': '--', 'linewidth': 2},     # tirets épais
+    {'linestyle': '-.', 'linewidth': 2},     # point-tiret épais
+    {'linestyle': ':', 'linewidth': 2.5},    # pointillés épais
+    {'linestyle': '-', 'linewidth': 1.5}     # ligne continue fine
+    ]
+    ax.set_xlim(k-2,k+2)
+    ax.set_ylim(0.2, 1.4)
+    if size_police is None:
+        size_police = 10
+    if size_trace[0] is not None:
+        linewidth_trace=size_trace[0]
+    else:
+        linewidth_trace=2.4
+    if size_trace[1] is not None:
+        marker_size=size_trace[1]
+    else:
+        marker_size=14
+
+    ax.set_xlabel("$\lambda$ [Å]", fontsize  = size_police)
+    ax.set_ylabel("F$_{\mathrm{norm}}$", fontsize  = size_police)
+
+    ax.xaxis.set_major_locator(MultipleLocator(1))
+    ax.xaxis.set_minor_locator(MultipleLocator(0.1))
+
+    all_wavelengths = []
+    for element, wavelengths in spectral_lines.items():
+        for wavelength in wavelengths:
+            all_wavelengths.append((wavelength, element))
+
+    all_wavelengths.sort()  
+  
+    text_height_base = 1.2
+    text_height = text_height_base  
+
+    raies_filtrees=[]
+    for i, (z, element) in enumerate(all_wavelengths):
+        closest_index = (np.abs(np.array(normal['z_wavelen']) - z)).argmin()
+        if normal['flux_normalised'][closest_index] <= 0.9:
+            raies_filtrees.append((z, element))
+        else:
+            pass
+
+    for i, (z, element) in enumerate(raies_filtrees):
+        if i > 0 and abs(z - raies_filtrees[i - 1][0]) < 0.7:
+            text_height += 0.07  
+        else:
+            text_height = text_height_base  
+
+        if k - 2 <= z <= k + 2:
+            ax.axvline(x=z,   ymin=0.75, ymax=0.8, color='black', linewidth=1.)
+            ax.text(z, text_height, s=element, color='black', fontsize=size_police-5, ha='center')
+    
+    ax.scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=marker_size+4, 
+        facecolors='none', 
+        color='black',
+        linewidths=2 
+    #    label="Spectre observé : " + stardata.get("starname")
+        )
+    
+    for i, synth in enumerate(synthetics) : 
+        AX2 = syntspec(path+synth)
+        ax.plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=linewidth_trace+0.6
+        # **line_styles[i % len(line_styles)],
+        )
+
+    
+    ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
+    ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
+    ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
+    ax.xaxis.get_major_formatter().set_scientific(False)
+    ax.xaxis.get_major_formatter().set_useOffset(False)
+    ax.tick_params(axis = 'both', labelsize = size_police)
+    if start is not None and end is not None:
+        ax.axvspan(start, end, color='lightgray', alpha=0.15)
+        ax.axvline(x=start, ymin=0, ymax=1.4, color='gray', linewidth=1)
+        ax.axvline(x=end, ymin=0, ymax=1.4, color='gray', linewidth=1)
+    ax.tick_params(axis='x', pad=11)
+    ax.legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5, loc='lower left')
+    # plt.tight_layout()
+    if save is not None:
+        # Extraire le chemin du dossier depuis le chemin complet
+        save_dir = os.path.dirname(save)
+        
+        # Créer le dossier s'il n'existe pas
+        if save_dir and not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+            
+        plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+    plt.close()
+
+
 def get_nearest(x_query, x_vals):
     nearest_index = np.argmin(np.abs(x_vals - x_query))
     return nearest_index
@@ -367,8 +472,17 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot
                     verticalalignment='top')
         # plt.legend(loc="upper left", fontsize=16)
     if save is not None:
-        plt.savefig(save, dpi=400, transparent=True, bbox_inches='tight')
-        plt.show()
+        # Extraire le chemin du dossier depuis le chemin complet
+        save_dir = os.path.dirname(save)
+        
+        # Créer le dossier s'il n'existe pas
+        if save_dir and not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+            
+        plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+    plt.close()
+    # plt.show(block=False)
+    # plt.pause(0.1)
 
     chi_final.get(k).append(min_log_e)
     chi_final.get(k).append(half_width)
@@ -586,8 +700,8 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     plt.legend(fontsize=size_police)
     
     if save is not None:
-        plt.savefig("../rédaction/images/plot_abu/"+ save + '.pdf', dpi=400, transparent=True, bbox_inches
-                        ='tight')
+        plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+        
     plt.show()
     # Return filtered mean and standard deviation
     return filtered_mean, filtered_std

@@ -176,9 +176,16 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
             f.canvas.mpl_connect('button_press_event', on_click_range)
         else:
             cid = f.canvas.mpl_connect('button_press_event', on_click)
-        plt.show()
-        if save:
-            plt.savefig(save, dpi=200)
+        if save is not None:
+            # Extraire le chemin du dossier depuis le chemin complet
+            save_dir = os.path.dirname(save)
+            
+            # Créer le dossier s'il n'existe pas
+            if save_dir and not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+                
+            plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+        plt.close()
     else:
         ax[l].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=5,facecolors='none', color='black', label="Spectre observé : " + stardata.get("starname"))
         for mol in synthetics:
@@ -207,9 +214,8 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         ax[l].set_ylim(0.2, 1.3)
         ax[l].legend(loc='lower right')
         cid = f.canvas.mpl_connect('button_press_event', on_click)
-        plt.show()
         
-        if save:
+        if save is not None:
             # Extraire le chemin du dossier depuis le chemin complet
             save_dir = os.path.dirname(save)
             
@@ -218,11 +224,13 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
                 os.makedirs(save_dir)
                 
             plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
-            plt.savefig(save, dpi=200)
+        plt.close()
+        # plt.show(block=False)
+        # plt.pause(0.1)
          
 
 
-def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, save=None, interactive=False, raies_validees=None, range=None) :
+def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, save, interactive=False, raies_validees=None, range=None) :
     """
     lines : raies que l'on souhaite observer
     path : chemin vers spectres synthétiques
@@ -243,7 +251,7 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, s
                 plot_lines(ax,f,l, path, synthetics, stardata, n, k, i, "h", "", taille_zoom, spectral_lines, save, range)
             else:
                 plot_lines(ax,f,l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save, range)
-        
+        plt.close()
 
 
 def zoom_lines_analyse(ax, path, synthetics, molecules, stardata, j, m, k, i) : 

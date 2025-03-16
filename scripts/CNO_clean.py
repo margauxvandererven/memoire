@@ -16,7 +16,8 @@ with open("../data_lines/raies_moleculaires.txt", "r") as fichier:
 OH_raies=config["OH_lines"]
 
 O_ABU = [
-    8.54, 8.55, 
+    # 8.54, 
+    8.55, 
     8.56, 
     8.57, 
     8.58,
