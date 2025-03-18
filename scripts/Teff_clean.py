@@ -47,7 +47,7 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
     y_vals3 = []
     for i in lines_data:
         x_vals.append(lines_data.get(i)[2])
-        y_vals.append(chi_final_data.get(i)[2])
+        y_vals.append(chi_final_data3.get(i)[2])
         y_vals2.append(chi_final_data2.get(i)[2])
         y_vals3.append(chi_final_data3.get(i)[2])
 

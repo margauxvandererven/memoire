@@ -44,7 +44,7 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             for abu2 in abu_to_plot:
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
-            plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=20,size_trace=(1.8, 10),name=name, start=start,end=end,
+            plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
                                   save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
         if minimisation is not None: 
             chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
@@ -236,7 +236,7 @@ def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_po
         j="k"
     normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
     
-    f = plt.figure(figsize=(6,4))
+    f = plt.figure(figsize=(8,4))
     gs = f.add_gridspec(1, hspace=0.2)
     ax = gs.subplots(sharex=False, sharey=True)
     cid = f.canvas.mpl_connect('button_press_event', on_click)
@@ -249,7 +249,7 @@ def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_po
     {'linestyle': ':', 'linewidth': 2.5},    # pointillés épais
     {'linestyle': '-', 'linewidth': 1.5}     # ligne continue fine
     ]
-    ax.set_xlim(k-2,k+2)
+    ax.set_xlim(k-1.5,k+1.5)
     ax.set_ylim(0.2, 1.4)
     if size_police is None:
         size_police = 10
@@ -462,13 +462,13 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot
                 # ax.text(0.05, 0.95, f'σ = {half_width}', 
                 #     transform=ax.transAxes, fontsize=14,
                 #     verticalalignment='top')
-                ax.text(0.05, 0.15, f'log $\epsilon$ = {min_log_e:.3f} $\pm$ {half_width:.3f}', 
+                ax.text(0.4, 0.95, f'log $\epsilon_{element}$ = {min_log_e:.3f} $\pm$ {half_width:.3f}', 
                     transform=ax.transAxes, fontsize=14,
                     verticalalignment='top')
                 # ax.text(0.50, min_chi_squared+1/dof+0.01, f'$\chi^2_{{red,min}}$ + 1/dof', 
                 #     transform=ax.transAxes, fontsize=14,color="darkseagreen",
                 #     verticalalignment='top')
-                ax.text(0.05, 0.1, f'$\chi^2_{{red,min}}$ = {min_chi_squared:.3f}', 
+                ax.text(0.4, 0.9, f'$\chi^2_{{red,min}}$ = {min_chi_squared:.3f}', 
                     transform=ax.transAxes, fontsize=14,
                     verticalalignment='top')
         # plt.legend(loc="upper left", fontsize=16)

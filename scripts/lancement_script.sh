@@ -1,7 +1,8 @@
 #!/bin/bash
 
 serveur="student@10.149.144.46"
-script_com="/home/student/SPECTRUM/Turbospectrum_NLTE-20.0/COM/script-IR_BD-221742_OH.com"
+# script_com="/home/student/SPECTRUM/Turbospectrum_NLTE-20.0/COM/script-IR_BD-221742_OH.com"
+script_com="/home/student/SPECTRUM/Turbospectrum_NLTE-20.0/COM/script-IR_BD-221742_CO.com"
 
 # Connexion SSH et exécution du script .com
 echo "Exécution du script sur le serveur distant..."
