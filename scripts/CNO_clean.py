@@ -51,7 +51,7 @@ C_ABU=[7.50, 7.85, 7.90, 7.95, 8.00, 8.10, 8.20, 8.30, 8.40, 7.70, 7.80, 7.65]
 
 analyse_chi2(raies_12CO, C_ABU, "C", "first", stardata, lines_BD22,
              minimisation=True,
-            #  abu_to_plot=[7.9, 8.0, 7.8],
+             abu_to_plot=[7.9, 8.0, 7.8, 7.7],
              name="12C16O", 
              save="../results/12CO_final_first.txt"
              )

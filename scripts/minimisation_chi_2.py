@@ -31,45 +31,36 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
     chi_final={}
     path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
     for wavelength in raies:
-        start=raies.get(str(wavelength))[0]
-        end=raies.get(str(wavelength))[1]
+        try:
+            print(f"Processing wavelength: {wavelength}")
+            start=raies.get(str(wavelength))[0]
+            end=raies.get(str(wavelength))[1]
 
-        wavelength=np.float64(wavelength)
-        range=str(wavelength-2)+"-"+str(wavelength+2)
-        synth={}
-        model='4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod'
-        for abu in ABU:
-            try:
-                # Premier format avec {:.2f}
-                filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{round}.conv"
-                if os.path.exists(os.path.join(path_to_synth, filename)):
-                    synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
-                else:
-                    # Deuxième format sans {:.2f}
-                    filename = f"{model}_{range}_{variable}abu_{str(abu)}_{round}.conv"
+            wavelength=np.float64(wavelength)
+            start = wavelength - 2
+            end = wavelength + 2
+            
+            def format_number(num):
+                # Convertir en chaîne avec 2 décimales
+                str_num = f"{num:.2f}"
+                
+                # Si la dernière décimale est 0, retourner avec une seule décimale
+                if str_num.endswith('0'):
+                    return f"{num:.1f}"
+                return str_num
+            
+            range = f"{format_number(start)}-{format_number(end)}"
+            synth={}
+            model='4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod'
+            for abu in ABU:
+                try:
+                    filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{round}.conv"
                     if os.path.exists(os.path.join(path_to_synth, filename)):
                         synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
                     else:
-                        print(f"Fichier non trouvé pour abu={abu}: {filename}")
-                        continue
-            except Exception as e:
-                print(f"Erreur avec abu={abu}: {str(e)}")
-                continue
-
-        if abu_to_plot:
-            synth_plot={}
-            for abu2 in abu_to_plot:
-                synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
-                try:
-                    # Premier format avec {:.2f}
-                    filename = f"{model}_{range}_{variable}abu_{abu2:.2f}_{round}.conv"
-                    if os.path.exists(os.path.join(path_to_synth, filename)):
-                        synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
-                    else:
-                        # Deuxième format sans {:.2f}
-                        filename = f"{model}_{range}_{variable}abu_{str(abu2)}_{round}.conv"
+                        filename = f"{model}_{range}_{variable}abu_{str(abu)}_{round}.conv"
                         if os.path.exists(os.path.join(path_to_synth, filename)):
-                            synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                            synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
                         else:
                             print(f"Fichier non trouvé pour abu={abu}: {filename}")
                             continue
@@ -77,17 +68,39 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
                     print(f"Erreur avec abu={abu}: {str(e)}")
                     continue
 
-            plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
-                                  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
-        if minimisation is not None: 
-            chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
-            dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
-            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation")
+            if abu_to_plot:
+                synth_plot={}
+                for abu2 in abu_to_plot:
+                    # synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
+                    try:
+                        filename = f"{model}_{range}_{variable}abu_{abu2:.2f}_{round}.conv"
+                        if os.path.exists(os.path.join(path_to_synth, filename)):
+                            synth_plot[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                        else:
+                            filename = f"{model}_{range}_{variable}abu_{str(abu2)}_{round}.conv"
+                            if os.path.exists(os.path.join(path_to_synth, filename)):
+                                synth_plot[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                            else:
+                                print(f"Fichier non trouvé pour abu={abu2}: {filename}")
+                                continue
+                    except Exception as e:
+                        print(f"Erreur avec abu={abu2}: {str(e)}")
+                        continue
+                plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
+                                    save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
+            if minimisation is not None: 
+                chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
+                dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
+                chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation")
+        except Exception as e:
+            print(f"Error processing wavelength {wavelength}: {str(e)}")
+            continue
     if minimisation is not None:
         abu_plot(chi_final,variable,size_police=20,save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round)
-        if save:
-            with open(save, "w") as fichier:
-                json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
+    if save:
+        with open(save, "w") as fichier:
+            json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
+        
 
 
 def analyse_chi2_CO(raies, ABU, variable,round,stardata,spectral_lines,minimisation=None, abu_to_plot=None, name=None,save=None):
@@ -365,7 +378,8 @@ def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_po
             os.makedirs(save_dir)
             
         plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
-    plt.close()
+    # plt.close()
+    plt.show()
 
 
 def get_nearest(x_query, x_vals):
@@ -374,18 +388,6 @@ def get_nearest(x_query, x_vals):
 
 
 def chi_squared(synth, observed, errors=None):
-    """
-    Calcule le chi carré entre un spectre synthétique et observé
-    
-    Args:
-        synth: flux du spectre synthétique
-        observed: flux du spectre observé
-        errors: incertitudes sur les observations (optionnel)
-    """
-    # if errors is None:
-    #     # Si pas d'erreurs fournies, on suppose une erreur uniforme
-    #     errors = np.ones_like(observed) * np.std(observed)
-    #     print(errors)
     errors=0.01
     return np.sum(((observed - synth)** 2 /errors**2 ))
 
@@ -398,10 +400,6 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
     normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + j), stardata.get("v_" + j)), stardata.get("flux_" + j), k)
     wavelength_observed = np.array(normal['z_wavelen'])
     flux_observed = np.array(normal['flux_normalised'])
-
-    # common_grid = np.linspace(start, end, num=10000)
-    # interpolator_observed = interp1d(wavelength_observed, flux_observed, kind='linear', fill_value="extrapolate")
-    # flux_observed_interpolated = interpolator_observed(common_grid)
 
     mask_observed = (wavelength_observed >= start) & (wavelength_observed <= end)
     wavelength_observed_filtered = wavelength_observed[mask_observed]
@@ -514,7 +512,8 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot
             os.makedirs(save_dir)
             
         plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
-    plt.close()
+    # plt.close()
+    plt.show()
     # plt.show(block=False)
     # plt.pause(0.1)
 
