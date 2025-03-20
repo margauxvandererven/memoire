@@ -45,9 +45,16 @@ round="first"
 # Carbone
 # -------------------------------------------------------------------------------------
 raies_12CO = config["12C16O_lines"]
-for i in raies_12CO:
-    print(i)
-C_ABU=[7.5, 7.85, 7.9, 7.95, 8.0, 8.1, 8.2, 8.3, 8.4, 7.7, 7.8, 7.65]
+# for i in raies_12CO:
+#     print(i)
+C_ABU=[7.50, 7.85, 7.90, 7.95, 8.00, 8.10, 8.20, 8.30, 8.40, 7.70, 7.80, 7.65]
+
+analyse_chi2(raies_12CO, C_ABU, "C", "first", stardata, lines_BD22,
+             minimisation=True,
+            #  abu_to_plot=[7.9, 8.0, 7.8],
+             name="12C16O", 
+             save="../results/12CO_final_first.txt"
+             )
 
 # analyse_chi2_CO(raies_12CO,C_ABU, "C", "first", stardata, lines_BD22,minimisation=True,abu_to_plot=[7.9, 8.0, 7.8],name="12CO",save="../results/CO_first.txt")
 

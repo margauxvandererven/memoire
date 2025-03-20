@@ -37,13 +37,46 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
         wavelength=np.float64(wavelength)
         range=str(wavelength-2)+"-"+str(wavelength+2)
         synth={}
+        model='4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod'
         for abu in ABU:
-            synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+            try:
+                # Premier format avec {:.2f}
+                filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{round}.conv"
+                if os.path.exists(os.path.join(path_to_synth, filename)):
+                    synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+                else:
+                    # Deuxième format sans {:.2f}
+                    filename = f"{model}_{range}_{variable}abu_{str(abu)}_{round}.conv"
+                    if os.path.exists(os.path.join(path_to_synth, filename)):
+                        synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+                    else:
+                        print(f"Fichier non trouvé pour abu={abu}: {filename}")
+                        continue
+            except Exception as e:
+                print(f"Erreur avec abu={abu}: {str(e)}")
+                continue
+
         if abu_to_plot:
             synth_plot={}
             for abu2 in abu_to_plot:
                 synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
-                synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_"+variable+"abu_"+"{:.2f}".format(abu2)+"_"+round+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                try:
+                    # Premier format avec {:.2f}
+                    filename = f"{model}_{range}_{variable}abu_{abu2:.2f}_{round}.conv"
+                    if os.path.exists(os.path.join(path_to_synth, filename)):
+                        synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                    else:
+                        # Deuxième format sans {:.2f}
+                        filename = f"{model}_{range}_{variable}abu_{str(abu2)}_{round}.conv"
+                        if os.path.exists(os.path.join(path_to_synth, filename)):
+                            synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                        else:
+                            print(f"Fichier non trouvé pour abu={abu}: {filename}")
+                            continue
+                except Exception as e:
+                    print(f"Erreur avec abu={abu}: {str(e)}")
+                    continue
+
             plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
                                   save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
         if minimisation is not None: 

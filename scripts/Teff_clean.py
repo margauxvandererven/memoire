@@ -35,7 +35,7 @@ raie_Fe=config["Fe_lines"]
 #      save="Fe_abu_bacchus_4258"
 #     )
 
-def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
+def plot_Teff(lines_data, chi_final_data, size_police=12, save=None, chi_exc_range=None):
     """
     lines_data : {line:[start, end, exc pot, log gf]}
     chi_final_data : {line:[start, end, log $\epsilon$, $\chi2$]}
@@ -43,19 +43,15 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
     element_abu="Fe"
     x_vals = []
     y_vals = []
-    y_vals2 = []
-    y_vals3 = []
     for i in lines_data:
-        x_vals.append(lines_data.get(i)[2])
-        y_vals.append(chi_final_data3.get(i)[2])
-        y_vals2.append(chi_final_data2.get(i)[2])
-        y_vals3.append(chi_final_data3.get(i)[2])
+        exc_pot = lines_data.get(i)[2]
+        if chi_exc_range is None or (chi_exc_range[0] <= exc_pot <= chi_exc_range[1]):
+            x_vals.append(exc_pot)
+            y_vals.append(chi_final_data.get(i)[2])
 
     x_vals= np.array(x_vals)
     errors=np.ones(len(y_vals))*0.1
     y_vals=np.array(y_vals)
-    y_vals2=np.array(y_vals2)
-    y_vals3=np.array(y_vals3)
 
     f = plt.figure(figsize=(12, 5))
     gs = f.add_gridspec(1)
@@ -65,7 +61,7 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
     confidence = 0.95
     degrees_of_freedom = len(x_vals) - 2
     t_value = stats.t.ppf((1 + confidence) / 2, degrees_of_freedom)
-        # Calcul des intervalles de confiance pour la pente et l'ordonnée
+    # Calcul des intervalles de confiance pour la pente et l'ordonnée
     slope_ci = t_value * std_err
 
     # Calcul de la ligne de régression et des intervalles de confiance
@@ -87,8 +83,6 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
     r_squared_adj = 1 - (1 - r_squared) * (n - 1) / (n - p - 1)
 
     ax.errorbar(x_vals, y_vals,yerr=errors, color="gray", label=f"IR : 4000 K", capsize=5,  fmt='o')
-    # ax.scatter(x_vals, y_vals2, color="gray", label=f"Vis : 4307 K",marker='x', linewidths=0.5)
-    # ax.scatter(x_vals, y_vals3, color="gray", label=f"Vis : 4258 K",marker='+', linewidths=1.2)
 
     ax.plot(x_line, y_line, color='darkblue', 
             label=f'Régression: y = ({slope:.3f}±{slope_ci:.3f})x + {intercept:.3f}')
@@ -111,47 +105,13 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
     ax.xaxis.set_tick_params(direction='in', length=5, which='minor', top=True, bottom=True)
     ax.yaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
 
-    # model = LinearRegression()
-    # model.fit(x_vals, y_vals)
-    # X_line = np.linspace(min(x_vals), max(x_vals), 100).reshape(-1, 1) 
-    # Y_line = model.predict(X_line) 
-    # slope = model.coef_[0]  
-    # intercept = model.intercept_
-
-    # coeffs, cov = np.polyfit(x_vals, y_vals, 1, cov=True)
-    # m, b = coeffs  # Pente et ordonnée à l'origine
-    # err_m, err_b = np.sqrt(np.diag(cov)) 
-    # X_line = np.linspace(min(x_vals), max(x_vals), 100).reshape(-1, 1) 
-    # Y_line = m * X_line + b 
-
-    # ax.plot(X_line, Y_line, color='darkblue', label=f"Régression: y = {m:.2f}x + {b:.2f}")
-
-    # plt.fill_between(X_line, (m - err_m) * X_line + (b - err_b), 
-    #                       (m + err_m) * X_line + (b + err_b), 
-    #                       color='red', alpha=0.2, label="Incertitude sur la régression")
-
-    # model2 = LinearRegression()
-    # model2.fit(x_vals, y_vals2)
-    # Y_line2 = model2.predict(X_line) 
-    # slope2 = model2.coef_[0]  
-    # intercept2 = model2.intercept_ 
-    # ax.plot(X_line, Y_line2, color='brown', label=f'Vis : 4307 K - 2.29')
-
-    # model3 = LinearRegression()
-    # model3.fit(x_vals, y_vals3)
-    # Y_line3 = model3.predict(X_line) 
-    # slope3 = model3.coef_[0]  
-    # intercept3 = model3.intercept_ 
-    # ax.plot(X_line, Y_line3, color='orange', label=f'Vis : 4258 K - 2.04')
-
     ax.tick_params(axis = 'both', labelsize = size_police)
 
-    # plt.legend(ncol=2, framealpha=0.2, fontsize=size_police)
     if save:
         plt.savefig(save+".pdf", dpi=600, bbox_inches='tight', transparent=True)
     plt.show()
 
-        # Afficher les résultats détaillés
+    # Afficher les résultats détaillés
     print("\nRésultats de la régression linéaire:")
     print(f"Pente = {slope:.3f} ± {slope_ci:.3f}")
     print(f"Ordonnée à l'origine = {intercept:.3f}")
@@ -168,11 +128,10 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None):
         'std_residuals': std_residuals,
         'normality_p_value': normality_p_value
     }
-    # return f'y = {slope:.2f}x + {intercept:.2f}'
 
 
 plot_Teff(raie_Fe, chi_final_data, size_police=18, 
-          save="../présentation/images/comparaison_modèles"
+          save="../présentation/images/comparaison_modèles", chi_exc_range=(4.5, 7)
           )
 
 # data = get_ew_atom(ew_limit=1e-10, Teff=4000, particular_element="Fe I")["data"]
