@@ -33,12 +33,12 @@ O_ABU = [
     ]
 round="first"
 
-analyse_chi2(OH_raies, O_ABU, "O", round,stardata,lines_BD22,
-             minimisation=True,
-             abu_to_plot=[8.57, 8.60,8.63],
-             name="OH", 
-            #   save="../results/OH_final_"+round+".txt"
-              )
+# analyse_chi2(OH_raies, O_ABU, "O", round,stardata,lines_BD22,
+#              minimisation=True,
+#              abu_to_plot=[8.57, 8.60,8.63],
+#              name="OH", 
+#               save="../results/OH_final_"+round
+#               )
 
 
 # raies_OH_final={14661.144: [14660.6, 14661.59, -5.989],
@@ -88,3 +88,22 @@ analyse_chi2(OH_raies, O_ABU, "O", round,stardata,lines_BD22,
 #     #                                 # save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone"
 #     #                                 )
 # abu_plot(chi_final_OH_1,"C",size_police=20)
+
+
+# -------------------------------------------------------------------------------------
+# Carbone
+# -------------------------------------------------------------------------------------
+raies_12CO = config["12C16O_lines"]
+# for i in raies_12CO:
+#     print(i)
+C_ABU=[7.50,7.65,7.70, 7.80, 7.85, 7.90, 7.95, 8.00, 8.10, 8.20, 
+    #    8.30, 
+    #    8.40,
+    ]
+
+analyse_chi2(raies_12CO, C_ABU, "C", "first", stardata, lines_BD22,
+             minimisation=True,
+             abu_to_plot=[7.9, 8.0, 7.8, 7.7],
+             name="12C16O", 
+             save="../results/12CO_final_first"
+             )

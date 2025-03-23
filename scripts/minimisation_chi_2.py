@@ -1,15 +1,5 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from wavelen_work import *
-from zoom_raies import *
-from matplotlib.ticker import MultipleLocator, ScalarFormatter
-from scipy.interpolate import interp1d
-from scipy.interpolate import griddata
-from scipy.optimize import curve_fit
-from scipy.optimize import minimize
-import os
-import re
-import json
+from imports import *
+from scipy import stats
 
 def on_click(event):
     if event.xdata is not None and event.ydata is not None:
@@ -40,12 +30,19 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             start_range = wavelength - 2
             end_range = wavelength + 2
             
+            #OH
+            # def format_number(num):
+            #     str_num = f"{num:.3f}"
+            #     if str_num.endswith('00'): 
+            #         return f"{num:.1f}"
+            #     elif str_num.endswith('0'): 
+            #         return f"{num:.2f}"
+            #     return str_num
+            #CO
             def format_number(num):
-                str_num = f"{num:.3f}"
-                if str_num.endswith('00'): 
+                str_num = f"{num:.2f}"
+                if str_num.endswith('0'): 
                     return f"{num:.1f}"
-                elif str_num.endswith('0'): 
-                    return f"{num:.2f}"
                 return str_num
             
             range = f"{format_number(start_range)}-{format_number(end_range)}"
@@ -90,17 +87,31 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             if minimisation is not None: 
                 chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
                 dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
-                chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation")
+                chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, 
+                                     save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
+                                     )
         except Exception as e:
             print(f"Error processing wavelength {wavelength}: {str(e)}")
             continue
     if minimisation is not None:
-        abu_plot(chi_final,variable,size_police=20,save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round)
+        abu_plot(chi_final,variable,size_police=20,
+                #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
+                 save="../rédaction/images/plot_abu/"+name+"_final_"+round+".pdf")
+    
+    df = pd.DataFrame({
+    'wavelength': list(chi_final.keys()),
+    'start': [val[0] for val in chi_final.values()],
+    'end': [val[1] for val in chi_final.values()],
+    'abundance': [val[2] for val in chi_final.values()],
+    'error_abu': [val[3] for val in chi_final.values()],
+    'chi2_red': [val[4] for val in chi_final.values()],
+    '$R^2$': [val[5] for val in chi_final.values()],
+    'p_value': [val[6] for val in chi_final.values()],
+    })
     if save:
-        with open(save, "w") as fichier:
+        with open(save+".txt", "w") as fichier:
             json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
-        
-
+        df.to_csv(save+".csv", index=False)
 
 def analyse_chi2_CO(raies, ABU, variable,round,stardata,spectral_lines,minimisation=None, abu_to_plot=None, name=None,save=None):
     """
@@ -353,8 +364,6 @@ def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_po
         ax.plot(AX2['wavelen'], AX2['flux'], label=synthetics.get(synth), color=colors[i % len(colors)], linewidth=linewidth_trace+0.6
         # **line_styles[i % len(line_styles)],
         )
-
-    
     ax.xaxis.set_tick_params(direction = 'in', length = 10, which = 'major', top=True, bottom=True)
     ax.yaxis.set_tick_params(direction = 'in', length = 10, which = 'major',top=True, bottom=True)
     ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
@@ -369,13 +378,9 @@ def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_po
     ax.legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5, loc='lower left')
     # plt.tight_layout()
     if save is not None:
-        # Extraire le chemin du dossier depuis le chemin complet
         save_dir = os.path.dirname(save)
-        
-        # Créer le dossier s'il n'existe pas
         if save_dir and not os.path.exists(save_dir):
             os.makedirs(save_dir)
-            
         plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
     # plt.close()
     plt.show()
@@ -426,8 +431,8 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
             flux_synthetic_interpolated = interpolator(wavelength_observed_filtered)
 
             chi2 = chi_squared(flux_synthetic_interpolated, flux_observed_filtered)
-            chi2_reduce = chi2 / (len(flux_observed_filtered)-1)
-            chi_squared_values.append(chi2_reduce)
+            # chi2_reduce = chi2 / (len(flux_observed_filtered)-1)
+            chi_squared_values.append(chi2)
 
             synthetic_spectra.append(flux_synthetic_interpolated)
             synthetic_spectra_w.append(wavelength_observed_filtered)
@@ -442,9 +447,89 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
 def quadratic(x, a, b, c):
     return a * x**2 + b * x + c
 
-def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot=None, save=None):
+def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, dof, plot=None, save=None):
+    start=chi_final[k][0]
+    end=chi_final[k][1]
+
     abu = np.array(abu)
-    params, _ = curve_fit(quadratic, abu, chi_squared)
+    chi_squared_red = np.array(chi_squared)/dof
+    
+    def chi2_func(x):
+        interp = interp1d(abu, chi_squared_red, kind='cubic')
+        return interp(x)
+    
+    try:
+        # Minimisation
+        result = minimize(chi2_func, 
+                        x0=abu[np.argmin(chi_squared_red)],
+                        bounds=[(abu.min(), abu.max())],
+                        method='Nelder-Mead')
+        
+        min_log_e = result.x[0]
+        min_chi_squared = result.fun
+        
+        # Calcul des erreurs avec chi_min + 1/dof
+        x_fine = np.linspace(abu.min(), abu.max(), 1000)
+        interp = interp1d(abu, chi_squared_red, kind='cubic')
+        y_fine = interp(x_fine)
+        
+        # Trouver les intersections avec chi_min + 1/dof
+        mask = y_fine <= min_chi_squared + 1/dof
+        x_masked = x_fine[mask]
+        error_minus = min_log_e - x_masked[0]
+        error_plus = x_masked[-1] - min_log_e
+        
+        if plot:
+            plt.figure(figsize=(8, 6))
+            # Points de données
+            plt.scatter(abu, chi_squared_red, color='darkblue', marker='x', 
+                       label=f"Raie de {raie} en {k} Å")
+            
+            # Courbe interpolée
+            plt.plot(x_fine, y_fine, 'gray', alpha=0.5)
+            
+            # Ligne chi_min + 1/dof
+            plt.axhline(y=min_chi_squared + 1/dof,xmin=x_masked[0]-0.01,xmax= x_masked[1]+0.01,color='darkseagreen', linestyle='--', alpha=0.5,
+                       label=r'$\chi^2_{min} + 1/dof$')
+            plt.axvline(x=x_masked[0], color='darkseagreen', linestyle='--', alpha=0.5)
+            plt.axvline(x=x_masked[1], color='darkseagreen', linestyle='--', alpha=0.5)
+            
+            # Point minimum et erreurs
+            plt.scatter(min_log_e, min_chi_squared, color='red', marker='x',
+                       label=f"Minimum: {min_log_e:.3f}$\pm^{{{error_plus:.3f}}}_{{{error_minus:.3f}}}$")
+    
+            
+            plt.ylabel("$\\chi^2$ réduit")
+            # plt.legend()
+            plt.xaxis.set_tick_params(direction = 'in', length = 5, which = 'major', top=True, bottom=True)
+            plt.yaxis.set_tick_params(direction = 'in', length = 5, which = 'major',top=True, bottom=True)
+            plt.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
+            plt.tick_params(axis = 'both', labelsize = 16)
+            plt.xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
+            plt.ylabel(r"$\chi^2_{red}$", fontsize=16)
+            plt.text(0.4, 0.95, f'log $\epsilon_{element}$ = {min_log_e:.3f}$\pm^{{{error_plus:.3f}}}_{{{error_minus:.3f}}}$', 
+                transform=plt.transAxes, fontsize=14,
+                verticalalignment='top')
+            plt.text(0.4, 0.9, f'$\chi^2_{{red,min}}$ = {min_chi_squared:.3f}', 
+                transform=plt.transAxes, fontsize=14,
+                verticalalignment='top')
+            
+            if save:
+                save_dir = os.path.dirname(save)
+                if save_dir and not os.path.exists(save_dir):
+                    os.makedirs(save_dir)
+                plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+            plt.show()
+            
+        chi_final[k] = [start, end, min_log_e, error_minus, error_plus, min_chi_squared, r_squared, p_value]
+        
+    except Exception as e:
+        print(f"Erreur lors de la minimisation pour la raie {k}: {str(e)}")
+
+def chi_minimisation_ABU_ancien(abu, chi_squared, element, k, raie, chi_final, dof, plot=None, save=None):
+    abu = np.array(abu)
+    chi_squared_red = np.array(chi_squared)/dof
+    params, _ = curve_fit(quadratic, abu, chi_squared_red)
     a, b, c = params  
     fit_x = np.linspace(abu.min(), abu.max(), 100)
     fit_y = quadratic(fit_x, a, b, c)
@@ -452,22 +537,26 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot
     min_log_e = -b / (2 * a)  
     min_chi_squared = quadratic(min_log_e, a, b, c)
 
-        # Calcul du R² pour évaluer la qualité de l'ajustement
-    residuals = chi_squared - quadratic(abu, a, b, c)
+    residuals = chi_squared_red - quadratic(abu, a, b, c)
     ss_res = np.sum(residuals**2)
-    ss_tot = np.sum((chi_squared - np.mean(chi_squared))**2)
+    ss_tot = np.sum((chi_squared_red - np.mean(chi_squared_red))**2)
     r_squared = 1 - (ss_res / ss_tot)
     print(f"R² de l'ajustement : {r_squared:.3f}")
-    # if min_chi_squared < 0:
-    #     print(f"Attention : Chi² négatif détecté pour la raie {k} Å")
-    #     print(f"Chi² minimum calculé : {min_chi_squared}")
-    #     min_chi_squared = 0
+    
+    p_value = 1 - stats.chi2.cdf(min_chi_squared*dof, dof)
+    print(f"p-value : {p_value:.3f}")
+    if p_value < 0.05:
+        print("p-value < 0.05 : ajustement potentiellement problématique")
+        if min_chi_squared > 3:
+            print("Chi² réduit > 3 : mauvais ajustement")
+        elif min_chi_squared < 0.1:
+            print("Chi² réduit < 0.1 : possible sur-ajustement")
 
     if plot is not None:
         f = plt.figure(figsize=(8, 6))
         gs = f.add_gridspec(1, hspace=0.2)
         ax = gs.subplots(sharex=False, sharey=True)
-        ax.scatter(abu, chi_squared, color="darkblue", marker="x", label=f"Raie de {raie} en {k} Å")  # Data points
+        ax.scatter(abu, chi_squared_red, color="darkblue", marker="x", label=f"Raie de {raie} en {k} Å")  # Data points
         ax.plot(fit_x, fit_y, color="lightgray")  # Quadratic fit line
         ax.scatter(min_log_e, min_chi_squared, color="red", marker="x", label=f"Minimum en {min_log_e:.2f}")  # Minimum point
         ax.xaxis.set_tick_params(direction = 'in', length = 5, which = 'major', top=True, bottom=True)
@@ -525,7 +614,8 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot
     chi_final.get(k).append(min_log_e)
     chi_final.get(k).append(half_width)
     chi_final.get(k).append(min_chi_squared)
-
+    chi_final.get(k).append(r_squared)
+    chi_final.get(k).append(p_value)
 
 def interpolated_chi_squared(x, data1, data2, chi_squared_values):
     ab, mt = x
@@ -681,20 +771,30 @@ def plot_chi2_simple_ABU(path, dossier_element, stardata, raie_propre, lines_BD2
             chi_2(target_path, synth, stardata, k, lines_BD22,start,end, plot=True)
 
 def abu_plot(raies_element, element_abu, save=None, size_police=None):
-    x_vals = np.array([np.float64(line) for line in raies_element.keys()])
-    # print(x_vals)
-    y_vals = np.array([val[-3] for val in raies_element.values()])
-    # print(y_vals)
-    # y_vals= list(raies_element.values())
+    x_vals=[]
+    y_vals=[]
+    errors=[]
+    for key in raies_element.keys():
+        val=raies_element[key]
+        p_value=np.float64(val[-1])
+        if 0.05<p_value<0.95:
+            x_vals.append(np.float64(key))
+            y_vals.append(val[-5])
+            errors.append(val[-4])
+
+    x_vals = np.array(x_vals)
+    y_vals = np.array(y_vals)
+    errors = np.array(errors)
+
     f = plt.figure(figsize=(10, 7))
     gs = f.add_gridspec(1)
     ax = gs.subplots(sharex=False, sharey=True)
     if size_police is None:
         size_police = 10
     # Scatter plot for raies
-    ax.scatter(x_vals, y_vals, color="darkblue", marker="x")
+    ax.errorbar(x_vals, y_vals, yerr=errors, color="darkblue",capsize=5,  fmt='o')
     ax.set_xlabel("$\\lambda$ [Å]", fontsize=size_police)
-    ax.set_ylabel(f"$\\log {{\\epsilon_{{{element_abu}}}}}$", fontsize=size_police)
+    ax.set_ylabel(f"log $\\epsilon_{{\\mathrm{{{element_abu}}}}}$", fontsize=size_police)
     
     # Set tick parameters
     ax.xaxis.set_tick_params(direction='in', length=8, which='major', top=True, bottom=True)
@@ -722,7 +822,7 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     print("Standard deviation of filtered points:", filtered_std)
     
     # Plot horizontal line for the filtered mean
-    ax.hlines(y=y_mean, xmin=14500, xmax=23500, color="indianred", linestyle="--", linewidth=1, label=f"$\mu$ = {y_mean:.2f}")
+    ax.hlines(y=y_mean, xmin=14500, xmax=23500, color="indianred", linestyle="--", linewidth=1.8, label=f"$\mu$ = {y_mean:.2f}")
 
     # Plot original shaded error band
     ax.fill_between(
@@ -735,8 +835,11 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     )
     ax.set_xlim(14500, 23500)
     # Display legend
-    plt.legend(fontsize=size_police)
-    
+    # plt.legend(fontsize=size_police)
+    plt.text(0.4, 0.95, f"log $\\epsilon_{{\\mathrm{{{element_abu}}}}}$ = {y_mean:.2f} $\pm$ {y_std:.2f}", 
+    transform=ax.transAxes, fontsize=size_police,
+    verticalalignment='top')
+
     if save is not None:
         plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
         
