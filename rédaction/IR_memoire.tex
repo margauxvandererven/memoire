@@ -23,6 +23,8 @@
 \usepackage{array}
 \usepackage[table, dvipsnames]{xcolor}
 \usepackage{textcomp}
+\usepackage{booktabs}  % Pour de meilleurs tableaux
+\usepackage{siunitx} 
 
 \definecolor{darkblue}{rgb}{0.0, 0.0, 0.8}
 \pgfplotsset{compat=1.9}
@@ -568,6 +570,14 @@ Y I, Zr I, Ba I, Ce II, Ce III, Er II, Yb II.
 
 \clearpage
 \appendix
+\clearpage
+\newpage
+\input{results/table_OH.tex}
+\newpage
+\clearpage
+
+\includegraphics[width=15cm]{images/plot_abu/OH_final_first.pdf.pdf}
+ 
 \section{Table}
 \begin{table}[h!]
   %\caption{Listes de molécules et contribution de chacune d'elle dans la bande H et K}
