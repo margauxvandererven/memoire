@@ -1,11 +1,16 @@
-\frametitle{La suite ?}
-\begin{itemize}
-        \item finir détermination paramètres stellaires
-        \item comparaison avec abondances déterminées dans le visible à partir de spectre HERMES
-        \item détermination  d'abondances d'éléments lourds ETL et non-ETL
-        \begin{itemize}
-            \item [-] besoin de listes non-ETL
-            \item [-] besoin d'interpoler modèles et coefficients d'écarts non-ETL
-        \end{itemize}
-        \item comparaison profil d'abondances avec modèles de nucléosynthèse
-    \end{itemize}
+\frametitle{Mécanisme de production dans AGB}
+\begin{columns}
+        \begin{column}{0.3\textwidth}
+            Instabilités thermiques durant combustion de la couche He $\rightarrow$ réajustement, engloutissement enveloppe convective. \\
+            \vspace{2cm}
+            Source neutronique : \\
+            $^{12}$C(p,$\gamma$)$^{13}$N($\beta^+$)$^{13}$C($\alpha$,\textcolor{red}{n})$^{16}$O \\
+             $^{22}$Ne($\alpha$,\textcolor{red}{n})$^{25}$Mg
+        \end{column}
+        \begin{column}{0.7\textwidth}
+            \begin{center}
+                \includegraphics[width=8cm]{images/pmz.png}
+                \vspace{2cm}
+            \end{center}
+        \end{column}
+    \end{columns}

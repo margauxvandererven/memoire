@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.8)  2 MAR 2025 13:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.8)  18 MAR 2025 11:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -847,7 +847,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 209--210
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 211--213
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
 
  []
 
@@ -855,16 +855,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 211--213
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 296.
+(Font)              <14.4> on input line 298.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Package caption Warning: \label without proper reference on input line 400.
+Package caption Warning: \label without proper reference on input line 402.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `itération_CNO' on page 2 undefined on input line 368.
+LaTeX Warning: Reference `itération_CNO' on page 2 undefined on input line 370.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -875,24 +875,24 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 <../output/test4.pdf, id=133, 749.38399pt x 537.5221pt>
 File: ../output/test4.pdf Graphic file (type pdf)
 <use ../output/test4.pdf>
-Package pdftex.def Info: ../output/test4.pdf  used on input line 439.
+Package pdftex.def Info: ../output/test4.pdf  used on input line 441.
 (pdftex.def)             Requested size: 250.8166pt x 179.90082pt.
 File: ../output/test4.pdf Graphic file (type pdf)
 <use ../output/test4.pdf>
-Package pdftex.def Info: ../output/test4.pdf  used on input line 445.
+Package pdftex.def Info: ../output/test4.pdf  used on input line 447.
 (pdftex.def)             Requested size: 250.8166pt x 179.90082pt.
 File: ../output/test4.pdf Graphic file (type pdf)
 <use ../output/test4.pdf>
-Package pdftex.def Info: ../output/test4.pdf  used on input line 453.
+Package pdftex.def Info: ../output/test4.pdf  used on input line 455.
 (pdftex.def)             Requested size: 250.8166pt x 179.90082pt.
 File: ../output/test4.pdf Graphic file (type pdf)
 <use ../output/test4.pdf>
-Package pdftex.def Info: ../output/test4.pdf  used on input line 459.
+Package pdftex.def Info: ../output/test4.pdf  used on input line 461.
 (pdftex.def)             Requested size: 250.8166pt x 179.90082pt.
 <images/plot_abu/abu_Fe.pdf, id=134, 626.23965pt x 451.74585pt>
 File: images/plot_abu/abu_Fe.pdf Graphic file (type pdf)
 <use images/plot_abu/abu_Fe.pdf>
-Package pdftex.def Info: images/plot_abu/abu_Fe.pdf  used on input line 472.
+Package pdftex.def Info: images/plot_abu/abu_Fe.pdf  used on input line 474.
 (pdftex.def)             Requested size: 284.52756pt x 205.24828pt.
  [3] [4 </Users/margauxvandererven/Unif/memoire_local/rédaction/../output/test4.pdf> </Users/margauxvandererven/Unif/memoire_local/rédaction/images/plot_abu/abu_Fe.pdf>] [5] [6] (/Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.bbl
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 14.
@@ -902,7 +902,7 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 ]
 
-LaTeX Warning: Float too large for page by 428.23915pt on input line 741.
+LaTeX Warning: Float too large for page by 428.23915pt on input line 743.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -933,7 +933,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  83i,14n,131p,779b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (10 pages, 550584 bytes).
+Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (10 pages, 550598 bytes).
 PDF statistics:
  380 PDF objects out of 1000 (max. 8388607)
  254 compressed objects within 3 object streams

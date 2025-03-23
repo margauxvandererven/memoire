@@ -37,19 +37,18 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             end=raies.get(str(wavelength))[1]
 
             wavelength=np.float64(wavelength)
-            start = wavelength - 2
-            end = wavelength + 2
+            start_range = wavelength - 2
+            end_range = wavelength + 2
             
             def format_number(num):
-                # Convertir en chaîne avec 2 décimales
-                str_num = f"{num:.2f}"
-                
-                # Si la dernière décimale est 0, retourner avec une seule décimale
-                if str_num.endswith('0'):
+                str_num = f"{num:.3f}"
+                if str_num.endswith('00'): 
                     return f"{num:.1f}"
+                elif str_num.endswith('0'): 
+                    return f"{num:.2f}"
                 return str_num
             
-            range = f"{format_number(start)}-{format_number(end)}"
+            range = f"{format_number(start_range)}-{format_number(end_range)}"
             synth={}
             model='4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod'
             for abu in ABU:
@@ -68,7 +67,7 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
                     print(f"Erreur avec abu={abu}: {str(e)}")
                     continue
 
-            if abu_to_plot:
+            if abu_to_plot is not None:
                 synth_plot={}
                 for abu2 in abu_to_plot:
                     # synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
@@ -86,8 +85,8 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
                     except Exception as e:
                         print(f"Erreur avec abu={abu2}: {str(e)}")
                         continue
-                plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
-                                    save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
+            plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
+                                save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
             if minimisation is not None: 
                 chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
                 dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
@@ -435,7 +434,7 @@ def chi_2(path, synthetics, stardata, k, spectral_lines,chi_final, start, end, n
 
     if plot is True:
         plot_zone_chi2(k, path, synthetics, normal, spectral_lines, size_police=size_police,
-                        save=save, start=start, end=end, name=name, axes=axes)
+                        save=save, start=wavelength_observed_filtered[0], end=wavelength_observed_filtered[-1], name=name, axes=axes)
 
     return {"chi_squared_values":chi_squared_values, "dof":len(flux_observed_filtered)-1}
 
@@ -453,6 +452,12 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final,dof, plot
     min_log_e = -b / (2 * a)  
     min_chi_squared = quadratic(min_log_e, a, b, c)
 
+        # Calcul du R² pour évaluer la qualité de l'ajustement
+    residuals = chi_squared - quadratic(abu, a, b, c)
+    ss_res = np.sum(residuals**2)
+    ss_tot = np.sum((chi_squared - np.mean(chi_squared))**2)
+    r_squared = 1 - (ss_res / ss_tot)
+    print(f"R² de l'ajustement : {r_squared:.3f}")
     # if min_chi_squared < 0:
     #     print(f"Attention : Chi² négatif détecté pour la raie {k} Å")
     #     print(f"Chi² minimum calculé : {min_chi_squared}")
