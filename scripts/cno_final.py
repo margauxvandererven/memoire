@@ -107,3 +107,4 @@ analyse_chi2(raies_12CO, C_ABU, "C", "first", stardata, lines_BD22,
              name="12C16O", 
              save="../results/12CO_final_first"
              )
+ 

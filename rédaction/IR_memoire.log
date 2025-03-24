@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.8)  23 MAR 2025 18:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.8)  24 MAR 2025 11:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -955,22 +955,12 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 14
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )) [7
 
-] (/Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_OH.tex
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-) [8]
-<images/plot_abu/OH_final_first.pdf.pdf, id=253, 647.60071pt x 451.74585pt>
+] (/Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_OH.tex) [8]
+<images/plot_abu/OH_final_first.pdf.pdf, id=253, 636.27715pt x 451.74585pt>
 File: images/plot_abu/OH_final_first.pdf.pdf Graphic file (type pdf)
 <use images/plot_abu/OH_final_first.pdf.pdf>
 Package pdftex.def Info: images/plot_abu/OH_final_first.pdf.pdf  used on input line 579.
-(pdftex.def)             Requested size: 426.79134pt x 297.71202pt.
+(pdftex.def)             Requested size: 426.79134pt x 303.02658pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1009,10 +999,16 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  83i,14n,131p,779b,990s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (12 pages, 564619 bytes).
+Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (12 pages, 568166 bytes).
 PDF statistics:
- 429 PDF objects out of 1000 (max. 8388607)
+ 428 PDF objects out of 1000 (max. 8388607)
  274 compressed objects within 3 object streams
+ 40 named destinations out of 1000 (max. 500000)
+ 158 worb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
+Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (12 pages, 567811 bytes).
+PDF statistics:
+ 419 PDF objects out of 1000 (max. 8388607)
+ 265 compressed objects within 3 object streams
  40 named destinations out of 1000 (max. 500000)
  158 words of extra memory for PDF output out of 10000 (max. 10000000)
 
