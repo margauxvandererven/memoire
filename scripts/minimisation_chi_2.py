@@ -30,44 +30,51 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             start_range = wavelength - 2
             end_range = wavelength + 2
             
-            #OH
-            # def format_number(num):
-            #     str_num = f"{num:.3f}"
-            #     if str_num.endswith('00'): 
-            #         return f"{num:.1f}"
-            #     elif str_num.endswith('0'): 
-            #         return f"{num:.2f}"
-            #     return str_num
-            #CO
-            def format_number(num):
-                str_num = f"{num:.2f}"
-                if str_num.endswith('0'): 
-                    return f"{num:.1f}"
-                return str_num
-            
+            if name=="OH":
+                def format_number(num):
+                    str_num = f"{num:.3f}"
+                    if str_num.endswith('00'): 
+                        return f"{num:.1f}"
+                    elif str_num.endswith('0'): 
+                        return f"{num:.2f}"
+                    return str_num
+            elif name=="12C16O":
+                def format_number(num):
+                    str_num = f"{num:.2f}"
+                    if str_num.endswith('0'): 
+                        return f"{num:.1f}"
+                    return str_num
+            else:
+                return f"Aucun fichier de synthèse pour {name}"
+        
             range = f"{format_number(start_range)}-{format_number(end_range)}"
             synth={}
             model='4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod'
-            for abu in ABU:
-                try:
-                    filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{round}.conv"
-                    if os.path.exists(os.path.join(path_to_synth, filename)):
-                        synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
-                    else:
-                        filename = f"{model}_{range}_{variable}abu_{str(abu)}_{round}.conv"
+            if minimisation is not None: 
+                for abu in ABU:
+                    try:
+                        filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{round}.conv"
                         if os.path.exists(os.path.join(path_to_synth, filename)):
                             synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
                         else:
-                            print(f"Fichier non trouvé pour abu={abu}: {filename}")
-                            continue
-                except Exception as e:
-                    print(f"Erreur avec abu={abu}: {str(e)}")
-                    continue
+                            filename = f"{model}_{range}_{variable}abu_{str(abu)}_{round}.conv"
+                            if os.path.exists(os.path.join(path_to_synth, filename)):
+                                synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+                            else:
+                                print(f"Fichier non trouvé pour abu={abu}: {filename}")
+                                continue
+                    except Exception as e:
+                        print(f"Erreur avec abu={abu}: {str(e)}")
+                        continue
+                chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
+                dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
+                chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, 
+                                     save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
+                                     )
 
             if abu_to_plot is not None:
                 synth_plot={}
                 for abu2 in abu_to_plot:
-                    # synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
                     try:
                         filename = f"{model}_{range}_{variable}abu_{abu2:.2f}_{round}.conv"
                         if os.path.exists(os.path.join(path_to_synth, filename)):
@@ -82,32 +89,32 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
                     except Exception as e:
                         print(f"Erreur avec abu={abu2}: {str(e)}")
                         continue
+                synth_plot["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_"+range+"_sans_"+name+".conv"]= "sans "+name
             plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
                                 save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone")
-            if minimisation is not None: 
-                chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
-                dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
-                chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=True, 
-                                     save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
-                                     )
         except Exception as e:
             print(f"Error processing wavelength {wavelength}: {str(e)}")
             continue
+
     if minimisation is not None:
         abu_plot(chi_final,variable,size_police=20,
                 #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
                  save="../rédaction/images/plot_abu/"+name+"_final_"+round+".pdf")
+   
+    # chi_final[k] = [start, end, min_log_e, error_minus, error_plus, min_chi_squared, r_squared, p_value]
     
     df = pd.DataFrame({
     'wavelength': list(chi_final.keys()),
     'start': [val[0] for val in chi_final.values()],
     'end': [val[1] for val in chi_final.values()],
     'abundance': [val[2] for val in chi_final.values()],
-    'error_abu': [val[3] for val in chi_final.values()],
-    'chi2_red': [val[4] for val in chi_final.values()],
-    '$R^2$': [val[5] for val in chi_final.values()],
-    'p_value': [val[6] for val in chi_final.values()],
+    'error_abu_minus': [val[3] for val in chi_final.values()],
+    'error_abu_plus': [val[4] for val in chi_final.values()],
+    'chi2_red': [val[5] for val in chi_final.values()],
+    '$R^2$': [val[6] for val in chi_final.values()],
+    'p_value': [val[7] for val in chi_final.values()],
     })
+
     if save:
         with open(save+".txt", "w") as fichier:
             json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
@@ -459,7 +466,6 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, dof, plo
         return interp(x)
     
     try:
-        # Minimisation
         result = minimize(chi2_func, 
                         x0=abu[np.argmin(chi_squared_red)],
                         bounds=[(abu.min(), abu.max())],
@@ -468,50 +474,49 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, dof, plo
         min_log_e = result.x[0]
         min_chi_squared = result.fun
         
-        # Calcul des erreurs avec chi_min + 1/dof
         x_fine = np.linspace(abu.min(), abu.max(), 1000)
         interp = interp1d(abu, chi_squared_red, kind='cubic')
         y_fine = interp(x_fine)
+
+        y_pred = interp(abu)
+        residuals = chi_squared_red - y_pred
+        ss_res = np.sum(residuals**2)
+        ss_tot = np.sum((chi_squared_red - np.mean(chi_squared_red))**2)
+        r_squared = 1 - (ss_res / ss_tot)
+        p_value = 1 - stats.chi2.cdf(min_chi_squared * dof, dof)
         
-        # Trouver les intersections avec chi_min + 1/dof
         mask = y_fine <= min_chi_squared + 1/dof
         x_masked = x_fine[mask]
         error_minus = min_log_e - x_masked[0]
         error_plus = x_masked[-1] - min_log_e
         
         if plot:
-            plt.figure(figsize=(8, 6))
-            # Points de données
-            plt.scatter(abu, chi_squared_red, color='darkblue', marker='x', 
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.scatter(abu, chi_squared_red, color='darkblue', marker='x', 
                        label=f"Raie de {raie} en {k} Å")
             
-            # Courbe interpolée
-            plt.plot(x_fine, y_fine, 'gray', alpha=0.5)
+            ax.plot(x_fine, y_fine, 'gray', alpha=0.5)
             
-            # Ligne chi_min + 1/dof
-            plt.axhline(y=min_chi_squared + 1/dof,xmin=x_masked[0]-0.01,xmax= x_masked[1]+0.01,color='darkseagreen', linestyle='--', alpha=0.5,
+            ax.hlines(min_chi_squared+1/dof,x_masked[0]-0.01,x_masked[-1]+0.01,color='darkseagreen', linestyle='-', alpha=0.8,
                        label=r'$\chi^2_{min} + 1/dof$')
-            plt.axvline(x=x_masked[0], color='darkseagreen', linestyle='--', alpha=0.5)
-            plt.axvline(x=x_masked[1], color='darkseagreen', linestyle='--', alpha=0.5)
+            ax.axvline(x=x_masked[0], color='darkseagreen', linestyle='--', alpha=0.8)
+            ax.axvline(x=x_masked[-1], color='darkseagreen', linestyle='--', alpha=0.8)
             
-            # Point minimum et erreurs
-            plt.scatter(min_log_e, min_chi_squared, color='red', marker='x',
+            ax.scatter(min_log_e, min_chi_squared, color='red', marker='x',
                        label=f"Minimum: {min_log_e:.3f}$\pm^{{{error_plus:.3f}}}_{{{error_minus:.3f}}}$")
     
-            
-            plt.ylabel("$\\chi^2$ réduit")
             # plt.legend()
-            plt.xaxis.set_tick_params(direction = 'in', length = 5, which = 'major', top=True, bottom=True)
-            plt.yaxis.set_tick_params(direction = 'in', length = 5, which = 'major',top=True, bottom=True)
-            plt.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
-            plt.tick_params(axis = 'both', labelsize = 16)
-            plt.xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
-            plt.ylabel(r"$\chi^2_{red}$", fontsize=16)
-            plt.text(0.4, 0.95, f'log $\epsilon_{element}$ = {min_log_e:.3f}$\pm^{{{error_plus:.3f}}}_{{{error_minus:.3f}}}$', 
-                transform=plt.transAxes, fontsize=14,
+            ax.xaxis.set_tick_params(direction = 'in', length = 5, which = 'major', top=True, bottom=True)
+            ax.yaxis.set_tick_params(direction = 'in', length = 5, which = 'major',top=True, bottom=True)
+            ax.xaxis.set_tick_params(direction = 'in', length = 6, which = 'minor',top=True, bottom=True)
+            ax.tick_params(axis = 'both', labelsize = 16)
+            ax.set_xlabel(f"$\\log \\epsilon_{{\\mathrm{{{element}}}}}$", fontsize=16)
+            ax.set_ylabel(r"$\chi^2_{red}$", fontsize=16)
+            ax.text(0.4, 0.95, f'$\\log \\epsilon_{{\\mathrm{{{element}}}}}$ = {min_log_e:.3f}$\pm^{{{error_plus:.3f}}}_{{{error_minus:.3f}}}$', 
+                transform=ax.transAxes, fontsize=14,
                 verticalalignment='top')
-            plt.text(0.4, 0.9, f'$\chi^2_{{red,min}}$ = {min_chi_squared:.3f}', 
-                transform=plt.transAxes, fontsize=14,
+            ax.text(0.4, 0.9, f'$\chi^2_{{red,min}}$ = {min_chi_squared:.3f}', 
+                transform=ax.transAxes, fontsize=14,
                 verticalalignment='top')
             
             if save:
@@ -519,6 +524,7 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, dof, plo
                 if save_dir and not os.path.exists(save_dir):
                     os.makedirs(save_dir)
                 plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+            
             plt.show()
             
         chi_final[k] = [start, end, min_log_e, error_minus, error_plus, min_chi_squared, r_squared, p_value]
@@ -773,18 +779,20 @@ def plot_chi2_simple_ABU(path, dossier_element, stardata, raie_propre, lines_BD2
 def abu_plot(raies_element, element_abu, save=None, size_police=None):
     x_vals=[]
     y_vals=[]
-    errors=[]
+    errors_minus = [] 
+    errors_plus = [] 
     for key in raies_element.keys():
         val=raies_element[key]
         p_value=np.float64(val[-1])
         if 0.05<p_value<0.95:
             x_vals.append(np.float64(key))
-            y_vals.append(val[-5])
-            errors.append(val[-4])
+            y_vals.append(val[2])
+            errors_minus.append(val[3])  
+            errors_plus.append(val[4]) 
 
     x_vals = np.array(x_vals)
     y_vals = np.array(y_vals)
-    errors = np.array(errors)
+    errors = np.array([errors_minus, errors_plus])
 
     f = plt.figure(figsize=(10, 7))
     gs = f.add_gridspec(1)
