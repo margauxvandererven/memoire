@@ -6,7 +6,8 @@ from scipy import stats
 plt.rcParams.update(fonts.neurips2021())
 
 
-filename = "Fe_lines_"+stardata.get("starname")+".txt"
+# filename = "Fe_lines_"+stardata.get("starname")+".txt"
+filename = "Fe_final.txt"
 filename2 = "Fe_lines_"+stardata.get("starname")+"_bacchus_4307.txt"
 filename3 = "Fe_lines_"+stardata.get("starname")+"_bacchus_4258.txt"
 
@@ -20,8 +21,9 @@ with open("../results/"+filename3, "r") as fichier:
 
 with open("../data_lines/raies.txt", "r") as fichier:
     config=json.load(fichier)
-
 raie_Fe=config["Fe_lines"]
+# print(raie_Fe)
+
 # print(raie_Fe)
 
 # abu_plot(chi_final_data,"Fe",size_police=20,
@@ -130,9 +132,9 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None, chi_exc_ran
     }
 
 
-plot_Teff(raie_Fe, chi_final_data, size_police=18, 
-          save="../présentation/images/comparaison_modèles", chi_exc_range=(4.5, 7)
-          )
+# plot_Teff(raie_Fe, chi_final_data, size_police=18, 
+#           save="../présentation/images/comparaison_modèles", chi_exc_range=(4.5, 7)
+#           )
 
 # data = get_ew_atom(ew_limit=1e-10, Teff=4000, particular_element="Fe I")["data"]
 # excitation_dict = {item[0]: [item[1], item[3]] for item in data}
@@ -143,45 +145,96 @@ model="4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod"
 # model="4258g2.04m1.0z-0.45_BD221742.int"
 # model="4307g2.29m1.0z-0.37_BD221742.int"
 
-# ABU=[7.35, 7.3, 7.4, 7.5, 7.0, 7.2, 6.9, 7.1, 7.25, 7.7, 7.6]
+ABU=[6.9, 6.85, 7.35, 7.3, 7.4, 7.5, 7.0, 7.2, 7.1, 7.25, 7.7, 7.24, 7.23, 7.22, 7.21, 7.19]
+# analyse_chi2(raie_Fe, ABU, "Fe", "final", stardata, lines_BD22,
+#              minimisation=True,
+#              abu_to_plot=[7.2],
+#              name="Fe", 
+#              save="../results/Fe_final", plot=True
+#              )
 # abu_to_plot=[7.2]
 
-def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None):
+def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None, plot=None):
+
     chi_final={}
     variable="Fe"
     spectral_lines=lines_BD22
     name="log $\epsilon_{Fe}$"
     path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
 
+    synth={}
+    range="14630-22900"
+
+    for abu in ABU:
+        synth[model+"_"+range+"_"+variable+"abu_"+str(abu)+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+    # print(synth)
+
     for wavelength in raies:
+        print(f"Processing line {wavelength}")
         wavelength=np.float64(wavelength)
-        range="14630-22900"
-        if minimisation is not None:
-            synth={}
-            for abu in ABU:
-                synth[model+"_"+range+"_"+variable+"abu_"+str(abu)+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
-            chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(str(wavelength))[0],end=raies.get(str(wavelength))[1])["chi_squared_values"]
-            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,
-                                #   plot=True
-                                )
-    if abu_to_plot is not None:
-            synth_plot={}
-            for abu2 in abu_to_plot:
-                synth_plot[model+"_"+range+"_"+variable+"abu_"+str(abu2)+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
-                if wavelength < 18500:
-                    synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_BD-221742_Feabu_-20.conv"]= "sans Fe"
-                else:
-                    synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_19750-22900_BD-221742_Feabu_-20.conv"]= "sans Fe"
-            plot_zone_chi2(wavelength, path_to_synth, synth_plot, stardata, spectral_lines,axes=(True,True), size_police=20,size_trace=(1.8, 10),name=name, start=raies.get(str(wavelength))[0],end=raies.get(str(wavelength))[1])
         
+        if minimisation is not None:
+            chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(str(wavelength))[0],end=raies.get(str(wavelength))[1])["chi_squared_values"]
+            dof = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(str(wavelength))[0],end=raies.get(str(wavelength))[1])["dof"]
+            chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=plot, 
+                                     save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
+                                )
+        if abu_to_plot is not None:
+                synth_plot={}
+                for abu2 in abu_to_plot:
+                    synth_plot[model+"_"+range+"_"+variable+"abu_"+str(abu2)+".conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                    if wavelength < 18500:
+                        synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_BD-221742_Feabu_-20.conv"]= "sans Fe"
+                    else:
+                        synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_19750-22900_BD-221742_Feabu_-20.conv"]= "sans Fe"
+                
+                start=raies.get(str(wavelength))[0]
+                end=raies.get(str(wavelength))[1]       
+                plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
+                                    # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+                                    save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+                                    )
+
+
+    keys_to_remove = []
+    for k, v in chi_final.items():
+        if len(v) != 8:
+            keys_to_remove.append(k)
+    
+    for k in keys_to_remove:
+        del chi_final[k]
+
+    if minimisation is not None:
+        abu_plot(chi_final,variable,size_police=20,
+                #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
+                    save="../rédaction/images/plot_abu/Fe_final.pdf")
+
     if save:
-        with open(save, "w") as fichier:
+        with open(save+".txt", "w") as fichier:
             json.dump(chi_final, fichier, indent=4, ensure_ascii=False)
 
+        df = pd.DataFrame({
+        'wavelength_center': list(chi_final.keys()),
+        'wavelength_start': [val[0] for val in chi_final.values()],
+        'wavelength_end': [val[1] for val in chi_final.values()],
+        'abundance': [val[2] for val in chi_final.values()],
+        'error_abu_minus': [val[3] for val in chi_final.values()],
+        'error_abu_plus': [val[4] for val in chi_final.values()],
+        'chi2_red': [val[5] for val in chi_final.values()],
+        # '$R^2$': [val[6] for val in chi_final.values()],
+        'p_value': [val[7] for val in chi_final.values()],
+        })
+        df.to_csv(save+".csv", index=False)
+
+# print(raie_Fe.get(str(22493.67)))
+
+analyse_abu_Fe(raie_Fe,save="Fe_final", abu_to_plot=[7.2],minimisation=True, plot=True)
 # print(raie_Fe.get(str(17012.729)))
 # analyse_abu({"22493.67": raie_Fe.get(str(22493.67))}, abu_to_plot=abu_to_plot)
 
-
+# abu_plot(chi_final_data,"Fe",size_police=20,
+#                 #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
+#                     save="../rédaction/images/plot_abu/Fe_final.pdf")
 
 # Afficher une notification avec pync
 pync.notify("Votre script a terminé son exécution.", title="Script terminé")

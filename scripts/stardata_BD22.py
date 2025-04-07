@@ -50,3 +50,6 @@ path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibr
 
 with open("../data_lines/raies_BD-221742_new.txt", "r") as fichier:
     lines_BD22 = json.load(fichier)
+
+with open("../data_lines/lines_BD22_vis.json", "r") as fichier:
+    lines_BD22_vis = json.load(fichier)

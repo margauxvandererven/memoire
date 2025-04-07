@@ -23,6 +23,8 @@ def syntspec(pathtofile):
                 if len(i) >= 2:
                     wavelen.append(float(i[0]))
                     flux.append(float(i[1]))             
+    # wavelen = np.array(wavelen)
+    # flux = np.array(flux)
     return {
         'wavelen': wavelen, 
         'flux': flux,

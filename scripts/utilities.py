@@ -2,33 +2,45 @@ from imports import *
 from collections import defaultdict
 
 
-def get_ew_atom(ew_limit, Teff, particular_element=None):
-    base_path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/Linelists/Sophie_IGRINS/"
-    files = ["9000-15000_10042024.bsyn",
-        "turbo_atoms.20180901_TS2020_transitions_mod_xx_ABO.txt",
-        "17000-25000_10042024.bsyn"]
+def get_ew_atom(ew_limit, Teff, gamme="IR", particular_element=None):
+    if gamme == "IR":
+        base_path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/Linelists/Sophie_IGRINS/"
+        files = ["9000-15000_10042024.bsyn",
+            "turbo_atoms.20180901_TS2020_transitions_mod_xx_ABO.txt",
+            "17000-25000_10042024.bsyn"]
+        element_place=11
+        wavelen = 14500
+    elif gamme == "visible":
+        # base_path="/Users/margauxvandererven/MARGAUX/"
+        # files = ["nlte_ges_linelist_jmg17feb2022_I_II"]
+        base_path="/Users/margauxvandererven/MARGAUX/atoms/"
+        files = [
+            "3000-4500_Nov11_sansmodif.list",
+            "4500-6500_Nov12_GES.list",
+            "6500-8900_Nov12_GES.list",
+            "8900-10000_Nov12_GES.list"
+            ]
+        element_place=10
+        wavelen = 4000
     data = []
     for file in files:
-        # print(f"Processing file: {file}")
         with open(base_path + file, "r", encoding="utf8") as f:
             for line in f:
                 parts = line.split()
                 if len(parts) > 5:
-                    element_name = parts[11][1].upper() + parts[11][2:].lower() + " " + parts[12]
-                    # Cas 1: particular_element spécifié
+                    element_name = parts[element_place][1].upper() + parts[element_place][2:].lower() + " " + parts[element_place+1]
                     if particular_element and particular_element==element_name:
-                        # print(f"Found line with {atom}: {line.strip()}")
+                        # print(parts)
                         wavelength, excitation_potential, loggf = map(float, parts[:3])
                         ew = 10**(loggf - (5040 / Teff) * excitation_potential)
-                        element_name = parts[11][1].upper() + parts[11][2:].lower() + " " + parts[12]
-                        if ew > ew_limit and wavelength > 14500:
+                        element_name = parts[element_place][1].upper() + parts[element_place][2:].lower() + " " + parts[element_place+1]
+                        if ew > ew_limit and wavelength > wavelen:
                             data.append((wavelength, excitation_potential, ew, loggf, element_name))
                     
-                    # Cas 2: pas de particular_element spécifié
                     elif particular_element is None:
                         wavelength, excitation_potential, loggf = map(float, parts[:3])
                         ew = 10**(loggf - (5040 / Teff) * excitation_potential)
-                        element_name = parts[11][1].upper() + parts[11][2:].lower() + " " + parts[12]
+                        element_name = parts[element_place][1].upper() + parts[element_place][2:].lower() + " " + parts[element_place+1]
                         if ew > ew_limit and wavelength > 14500:
                             data.append((wavelength, excitation_potential, ew, loggf, element_name))
 

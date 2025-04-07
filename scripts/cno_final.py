@@ -17,28 +17,24 @@ with open("../data_lines/raies_moleculaires.txt", "r") as fichier:
 
 OH_raies=config["OH_lines"]
 
-O_ABU = [
-    # 8.54, 
-    8.55, 
-    8.56, 
-    8.57, 
-    8.58,
-    8.59, 
-    8.60,
-    8.61,
-    8.62,
-    8.63,
-    8.64,
-    8.65
-    ]
-round="first"
-
-# analyse_chi2(OH_raies, O_ABU, "O", round,stardata,lines_BD22,
+# analyse_chi2(OH_raies, [
+#     # 8.54, 
+#     8.55, 8.56, 8.57, 8.58,8.59, 8.60, 8.61,8.62,8.63,8.64,8.65
+#     ], "O", "first",stardata,lines_BD22,
 #              minimisation=True,
 #              abu_to_plot=[8.57, 8.60,8.63],
 #              name="OH", 
-#               save="../results/OH_final_"+round
+#               save="../results/OH_final_first", 
 #               )
+
+analyse_chi2(OH_raies, [
+       8.1,8.2, 8.3,8.4,8.5
+    ], "O", "dernier",stardata,lines_BD22,
+             minimisation=True,
+             abu_to_plot=[8.3],
+             name="OH", 
+              save="../results/OH_final_dernier", plot=True
+              )
 
 
 # raies_OH_final={14661.144: [14660.6, 14661.59, -5.989],
@@ -96,15 +92,17 @@ round="first"
 raies_12CO = config["12C16O_lines"]
 # for i in raies_12CO:
 #     print(i)
-C_ABU=[7.50,7.65,7.70, 7.80, 7.85, 7.90, 7.95, 8.00, 8.10, 8.20, 
+C_ABU=[7.45, 7.50,7.6,7.65,7.70, 7.80, 7.85, 7.90, 7.95, 8.00, 8.10, 8.20, 
     #    8.30, 
     #    8.40,
     ]
 
-analyse_chi2(raies_12CO, C_ABU, "C", "first", stardata, lines_BD22,
-             minimisation=True,
-             abu_to_plot=[7.9, 8.0, 7.8, 7.7],
-             name="12C16O", 
-             save="../results/12CO_final_first"
-             )
+# analyse_chi2(raies_12CO, C_ABU, "C", "first", stardata, lines_BD22,
+#              minimisation=True,
+#              abu_to_plot=[7.9, 8.0, 7.8, 7.7],
+#              name="12C16O", 
+#              save="../results/12CO_final_first"
+#              )
+ 
+
  

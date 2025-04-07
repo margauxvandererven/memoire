@@ -171,12 +171,36 @@ raie_ti=[14631.66,
 22974.369,
 23687.035,
 24290.67]
+
+raie_fe_vis = [4005.242,
+ 4045.812,
+ 4063.594,
+ 4071.738,
+ 4132.058,
+ 4143.868,
+ 4202.029,
+ 4250.787,
+ 4260.474,
+ 4271.76,
+ 4294.125,
+ 4307.902,
+ 4325.762,
+ 4383.545,
+ 4404.75,
+ 4415.122,
+ 4427.31,
+ 5167.487,
+ 5269.537,
+ 5328.038,
+ 5371.489]
 raies_validees = []
 range_dict={}
 
-for i in raie_ti:
-    if i > 14600:
-        path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
+for i in raie_fe_vis:
+    print("Processing wavelength:", i)
+    path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
+
+    if 4010 < i < 6000:
         # path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/syntspec/BD-221742b/CO_/"
         # synth={ "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14550-24500_avec_CN.conv":"avec CN",
         #     "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14550-24500_sans_CN.conv":"sans CN"}
@@ -184,11 +208,22 @@ for i in raie_ti:
         #     "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_BD-221742_2_Cabu_8.44_ratio_90.conv":"ratio 90",
         #         "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_BD-221742_2_Cabu_8.44_ratio_4.conv":"ratio 4"
                 # }
-        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14820-23200_Tiabu_-20.conv":"no Ti",
-               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14820-23200_Tiabu_4.5.conv":"Ti 5",}
-        zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22)
+        # synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14820-23200_Tiabu_-20.conv":"no Ti",
+        #        "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14820-23200_Tiabu_4.5.conv":"Ti 5",}
+        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_-20.conv":"no Fe",
+               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_7.2.conv":"Fe 7.2"}
+        zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22_vis,gamme="visible")
         create_validation_window(i, raies_validees)
         print(raies_validees)
+    elif 6000 < i < 8000:
+        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_-20.conv":"no Fe",
+               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_7.2.conv":"Fe 7.2"}
+        zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22_vis, gamme="visible")
+        create_validation_window(i, raies_validees)
+        print(raies_validees)
+    else:
+        pass
+
 
 # range_dict={}
 # for i in C1317O_raies:

@@ -17,6 +17,7 @@ from utilities import *
 from tueplots import fonts
 plt.rcParams.update(fonts.neurips2021())
 from scipy import stats
+import scipy.interpolate as interp
 from pprint import pprint
 
 from wavelen_work import *
