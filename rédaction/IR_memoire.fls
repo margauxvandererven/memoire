@@ -374,10 +374,10 @@ INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
-OUTPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
 OUTPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
+OUTPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 INPUT /usr/local/texlive/2024/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
@@ -513,6 +513,9 @@ INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/images/plot_abu/OH
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/images/plot_abu/OH_final_first.pdf.pdf
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/images/plot_abu/OH_final_first.pdf.pdf
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/images/plot_abu/OH_final_first.pdf.pdf
+INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_12CO.tex
+INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_12CO.tex
+INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_12CO.tex
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.aux
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out
 INPUT /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.out

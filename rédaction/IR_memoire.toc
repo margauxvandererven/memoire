@@ -13,4 +13,4 @@
 \contentsline {section}{\numberline {12}NLTE}{6}{section.12}%
 \contentsline {section}{\numberline {13}abondance d'éléments lourds}{6}{section.13}%
 \contentsline {section}{\numberline {14}détermination d'abondance}{6}{section.14}%
-\contentsline {section}{\numberline {A}Table}{9}{appendix.A}%
+\contentsline {section}{\numberline {A}Table}{11}{appendix.A}%
