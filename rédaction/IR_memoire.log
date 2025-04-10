@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.8)  24 MAR 2025 15:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.8)  10 APR 2025 15:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -827,7 +827,7 @@ Package caption Info: End \AtBeginDocument code.
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 78.
-<LOGO_Universite__libre_bruxelles.png, id=7, 1627.07875pt x 506.89375pt>
+<LOGO_Universite__libre_bruxelles.png, id=67, 1627.07875pt x 506.89375pt>
 File: LOGO_Universite__libre_bruxelles.png Graphic file (type png)
 <use LOGO_Universite__libre_bruxelles.png>
 Package pdftex.def Info: LOGO_Universite__libre_bruxelles.png  used on input line 85.
@@ -847,8 +847,6 @@ File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 86.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for sdern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10> on input line 86.
@@ -957,50 +955,20 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 14
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )) [7
 
-] (/Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_OH.tex
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-) [8]
-<images/plot_abu/OH_final_first.pdf.pdf, id=253, 636.27715pt x 451.74585pt>
-File: images/plot_abu/OH_final_first.pdf.pdf Graphic file (type pdf)
-<use images/plot_abu/OH_final_first.pdf.pdf>
-Package pdftex.def Info: images/plot_abu/OH_final_first.pdf.pdf  used on input line 579.
-(pdftex.def)             Requested size: 426.79134pt x 303.02658pt.
- [9
-
-
-
- </Users/margauxvandererven/Unif/memoire_local/rédaction/images/plot_abu/OH_final_first.pdf.pdf>] (/Users/margauxvandererven/Unif/memoire_local/rédaction/results/table_12CO.tex
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 8.
-
-
-LaTeX Warning: Float too large for page by 80.10161pt on input line 52.
-
-) [10]
+]
 
 LaTeX Warning: Float too large for page by 428.23915pt on input line 759.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[11
+[8
 
 
-] [12] (/Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.aux)
+
+
+
+] [9] (/Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -1012,25 +980,22 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `IR_memoire.out' has not changed.
 (rerunfilecheck)             Checksum: 15413BDAE4911E452F1C8C4A71D6B968;1624.
  ) 
 Here is how much of TeX's memory you used:
- 40505 strings out of 474116
- 968169 string characters out of 5743683
+ 40478 strings out of 474116
+ 967186 string characters out of 5743683
  1966187 words of memory out of 5000000
- 62145 multiletter control sequences out of 15000+600000
+ 62131 multiletter control sequences out of 15000+600000
  643931 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,14n,131p,779b,990s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri9.pfb></umi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (13 pages, 564996 bytes).
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
+Output written on /Users/margauxvandererven/Unif/memoire_local/rédaction/IR_memoire.pdf (10 pages, 550598 bytes).
 PDF statistics:
- 379 PDF objects out of 1000 (max. 8388607)
- 224 compressed objects within 3 object streams
- 42 named destinations out of 1000 (max. 500000)
- 38 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 380 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
+ 37 named destinations out of 1000 (max. 500000)
+ 153 words of extra memory for PDF output out of 10000 (max. 10000000)
 

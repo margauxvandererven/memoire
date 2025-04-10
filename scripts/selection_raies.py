@@ -172,27 +172,13 @@ raie_ti=[14631.66,
 23687.035,
 24290.67]
 
-raie_fe_vis = [4005.242,
- 4045.812,
- 4063.594,
- 4071.738,
- 4132.058,
- 4143.868,
- 4202.029,
- 4250.787,
- 4260.474,
- 4271.76,
- 4294.125,
- 4307.902,
- 4325.762,
- 4383.545,
- 4404.75,
- 4415.122,
- 4427.31,
- 5167.487,
- 5269.537,
- 5328.038,
- 5371.489]
+# with open("../data_lines/lines_BD22_vis.json", "r") as f:
+#     lines_BD22_vis = json.load(f)
+# raie_fe_vis = lines_BD22_vis["Fe I"]
+raie_fe_vis=[
+    7389.398, 7418.667, 7443.022,7461.263,7498.530,7540.430,7568.899,7586.018,7832.196 , 7937.139
+]
+
 raies_validees = []
 range_dict={}
 
@@ -210,19 +196,21 @@ for i in raie_fe_vis:
                 # }
         # synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14820-23200_Tiabu_-20.conv":"no Ti",
         #        "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14820-23200_Tiabu_4.5.conv":"Ti 5",}
-        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_-20.conv":"no Fe",
-               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_7.2.conv":"Fe 7.2",
-               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_5.conv":"Fe 5"}
+        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_-20.conv":"$\epsilon_{Fe}$=0",
+               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_7.2.conv":"log$\epsilon_{Fe}$=7.2",
+            #    "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_sans_call.conv":"log$\epsilon_{Fe}$=sans_call",
+               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Feabu_5.conv":"log$\epsilon_{Fe}$= 5"}
         zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22_vis,gamme="visible")
-        create_validation_window(i, raies_validees)
-        print(raies_validees)
+        # create_validation_window(i, raies_validees)
+        # print(raies_validees)
     elif 6000 < i < 8000:
-        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_-20.conv":"no Fe",
-               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_7.2.conv":"Fe 7.2",
-               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_5.conv":"Fe 5"}
+        synth={"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_-20.conv":"$\epsilon_{Fe}$=0",
+               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_7.2.conv":"log$\epsilon_{Fe}$= 7.2",
+            #    "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_sans_call.conv":"log$\epsilon_{Fe}$= sans call",
+               "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_Feabu_5.conv":"log$\epsilon_{Fe}$= 5"}
         zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22_vis, gamme="visible")
-        create_validation_window(i, raies_validees)
-        print(raies_validees)
+        # create_validation_window(i, raies_validees)
+        # print(raies_validees)
     else:
         pass
 

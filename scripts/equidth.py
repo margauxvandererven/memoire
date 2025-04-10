@@ -15,17 +15,17 @@ def calculate_equivalent_width(wavelength: np.ndarray, normalised_flux: np.ndarr
         normalised_flux = normalised_flux[np.logical_and(wavelength >= left_bound, wavelength <= right_bound)]
         wavelength = wavelength[np.logical_and(wavelength >= left_bound, wavelength <= right_bound)]
     except TypeError:
-        return -99991
+        return {"EW": -9999, "error": None}
     
     line_func = interp1d(wavelength, normalised_flux, kind='linear', assume_sorted=True, fill_value=1, bounds_error=False)
     total_area = (right_bound - left_bound) * 1.0   # continuum
     try:
         integration_points = wavelength[np.logical_and.reduce((wavelength > left_bound, wavelength < right_bound))]
-        area_under_line = integrate.quad(line_func, left_bound, right_bound, points=integration_points, limit=len(integration_points) * 5)
+        area_under_line, error = integrate.quad(line_func, left_bound, right_bound, points=integration_points, limit=len(integration_points) * 5)
     except ValueError:
-        return -9999
+        return {"EW": -9999, "error": None}
 
-    return total_area - area_under_line[0]
+    return {"EW": total_area - area_under_line, "error": error}
 
 data="../results/Fe_final.txt"
 
@@ -34,6 +34,7 @@ with open(data, "r") as fichier:
 
 ABU=[]
 EW=[]
+error_EW=[]
 
 for line in data_lines:
     print("Processing line:", line) 
@@ -44,25 +45,44 @@ for line in data_lines:
         synth_name = f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_Feabu_{abu}.conv"
         synth_name_blend = f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_Feabu_-20.conv"
         synth = syntspec(path_to_synth + synth_name)
+        
         synth_blend=syntspec(path_to_synth + synth_name_blend)
         synth_plot={synth_name:str(abu), synth_name_blend:str(-20)}
+        
         start=data_lines[line][0]
         end=data_lines[line][1]
-        plot_zone_chi2_simple(np.float64(line), path_to_synth, synth_plot, stardata, lines_BD22, size_police=14,size_trace=(1., 8),name="Fe", start=start,end=end,
-                                # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
-                                save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone_bestfit", plot=True
-                                )
 
-        ew = calculate_equivalent_width(np.array(synth['wavelen']), np.array(synth['flux']), data_lines[line][0], data_lines[line][1])-calculate_equivalent_width(np.array(synth_blend['wavelen']), np.array(synth_blend['flux']), data_lines[line][0], data_lines[line][1])
+        # plot_zone_chi2_simple(np.float64(line), path_to_synth, synth_plot, stardata, lines_BD22, size_police=14,size_trace=(1., 8),name="Fe", start=start,end=end,
+        #                         # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+        #                         save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone_bestfit", plot=True
+        #                         )
+
+        ew_line = calculate_equivalent_width(np.array(synth['wavelen']), 
+                                   np.array(synth['flux']), 
+                                   data_lines[line][0], 
+                                   data_lines[line][1])
+        ew_blend = calculate_equivalent_width(np.array(synth_blend['wavelen']), 
+                                    np.array(synth_blend['flux']), 
+                                    data_lines[line][0], 
+                                    data_lines[line][1])
+        ew = ew_line["EW"] - ew_blend["EW"]        
+        
+        if ew_line["error"] is not None and ew_blend["error"] is not None:
+            error_ew = np.sqrt(ew_line["error"]**2 + ew_blend["error"]**2)
+        else:
+            error_ew = None        
+            
         ew_red = ew / np.float64(line)
 
         ABU.append(abu)
         EW.append(ew_red)
+        error_EW.append(error_ew)
     
     except ValueError as e:
         print(f"Erreur sur la raie {line}: {e}")  # Afficher l'erreur pour debug
         ABU.append(abu)  # On enregistre quand même la raie
         EW.append(None) 
+        error_EW.append(None)
 
 for i in EW:
     print(i)
@@ -72,21 +92,25 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
     element_abu="Fe"
     x_vals = []
     y_vals = []
+    errors_x=[]
 
     for i, val in enumerate(ABU):  
         ew_val = np.float64(ew[i]) 
         if ew_val is not None and not np.isnan(ew_val):
             y_vals.append(np.float64(val))  
             x_vals.append(ew_val) 
+            errors_x.append(error_EW[i])
 
     x_vals= np.array(x_vals)
     y_vals=np.array(y_vals)
+    errors_x=np.array(errors_x)
 
-    x_min = 1e-6
-    x_max = 1.75e-5
-    mask = (x_vals > x_min) & (x_vals < x_max)  # Définir x_min et x_max
-    x_vals = x_vals[mask]
-    y_vals = y_vals[mask]
+    # x_min = 1e-6
+    # x_max = 1.75e-5
+    # mask = (x_vals > x_min) & (x_vals < x_max)  # Définir x_min et x_max
+    # x_vals = x_vals[mask]
+    # y_vals = y_vals[mask]
+    # errors_x = errors_x[mask]
 
     errors=np.ones(len(y_vals))*0.1
 
@@ -121,7 +145,7 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
     p = 1  # nombre de variables explicatives
     r_squared_adj = 1 - (1 - r_squared) * (n - 1) / (n - p - 1)
 
-    ax.errorbar(x_vals, y_vals,yerr=errors, color="gray", label=f"IR : 4000 K", capsize=5,  fmt='o')
+    ax.errorbar(x_vals, y_vals,yerr=errors,xerr=errors_x, color="gray", label=f"IR : 4000 K", capsize=5,  fmt='o')
 
     ax.plot(x_line, y_line, color='darkblue', 
             label=f'Régression: y = ({slope:.3f}±{slope_ci:.3f})x + {intercept:.3f}')
@@ -168,4 +192,4 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
         'normality_p_value': normality_p_value
     }
 
-plot_eq(ABU, EW, data_lines.keys(), size_police=12)
+plot_eq(ABU, EW, data_lines.keys(), size_police=15)

@@ -1,6 +1,7 @@
 from readmultispec import *
 import json
 import numpy as np
+from astropy.io import fits
     
 starname = "BD-221742" # nom de l'étoile
 starnameb = "BD-221742b" # même étoile, mais normalisation du continu différente 
@@ -16,8 +17,23 @@ with open(spectre_visible) as f:
         flux_visible.append(np.float64(line.split()[1]))
 
 # lecture des spectres fichiers .fits
-read_spec_h = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
-read_spec_k = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
+# read_spec_h = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
+# read_spec_k = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
+
+def read_fits_spectrum(filename):
+    with fits.open(filename) as hdul:
+        flux = hdul[0].data[0]  # Premier spectre
+        header = hdul[0].header
+        # Calcul automatique des longueurs d'onde
+        wavelen = header['CRVAL1'] + header['CDELT1'] * np.arange(header['NAXIS1'])
+        return {'wavelen': wavelen, 'flux': flux}
+
+# Lecture des spectres FITS
+read_spec_h = read_fits_spectrum("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
+read_spec_k = read_fits_spectrum("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
+
+
+
 # print(read_spec_h['header'])
 
 stardata = {
@@ -33,18 +49,18 @@ stardata = {
     "flux_visible" : flux_visible
 }
 
-read_spec_h_b = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starnameb+"H.cont.fits")
-read_spec_k_b = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starnameb+"K.cont.fits")
+# read_spec_h_b = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starnameb+"H.cont.fits")
+# read_spec_k_b = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starnameb+"K.cont.fits")
 
-stardatab = {
-    "starname"  : starnameb,
-    "wavelen_h" : list(read_spec_h_b['wavelen']),
-    "flux_h" : read_spec_h_b['flux'], 
-    "wavelen_k" : list(read_spec_k_b['wavelen']), 
-    "flux_k" : read_spec_k_b['flux'], 
-    "v_h" : 176.8 * 1e3, # redshift déterminé pour la bande H
-    "v_k" : 177.5* 1e3 # redshift déterminé pour la bande K
-}
+# stardatab = {
+#     "starname"  : starnameb,
+#     "wavelen_h" : list(read_spec_h_b['wavelen']),
+#     "flux_h" : read_spec_h_b['flux'], 
+#     "wavelen_k" : list(read_spec_k_b['wavelen']), 
+#     "flux_k" : read_spec_k_b['flux'], 
+#     "v_h" : 176.8 * 1e3, # redshift déterminé pour la bande H
+#     "v_k" : 177.5* 1e3 # redshift déterminé pour la bande K
+# }
 
 path = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/syntspec/"+starname+"b/" # chemin vers le dossier des spectres synthétiques
 

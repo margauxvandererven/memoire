@@ -811,7 +811,7 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     for key in raies_element.keys():
         val=raies_element[key]
         p_value=np.float64(val[-1])
-        if 0.05<p_value<0.95:
+        if 0.05<p_value<0.95 and val[3]>0 and val[4]>0:
             x_vals.append(np.float64(key))
             y_vals.append(val[2])
             errors_minus.append(val[3])  

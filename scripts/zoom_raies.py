@@ -47,7 +47,7 @@ def find_peaks_element(path, fichier1, fichier2, plot=None):
     longueur_onde = np.array(syntspec(path+fichier1)['wavelen'])
     flux = 1-np.abs(residu)
 
-    minima, _ = find_peaks(-flux, prominence=0.05)
+    minima, _ = find_peaks(-flux, prominence=0.05) #seul les pics qui dépassent leur voisins de plus de 5% sont pris en compte
     if plot:
         plt.figure(figsize=(8, 5))
         plt.plot(longueur_onde, flux, label="Spectre")
