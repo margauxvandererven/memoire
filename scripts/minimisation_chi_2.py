@@ -404,11 +404,11 @@ def plot_zone_chi2_simple(k, path, synthetics, stardata, spectral_lines, size_po
     ax.tick_params(axis='x', pad=11)
     ax.legend(fontsize = size_police, framealpha=0.8, facecolor='white', markerscale=0.2,edgecolor='white',numpoints=5, loc='lower left')
     # plt.tight_layout()
-    if save is not None:
-        save_dir = os.path.dirname(save)
-        if save_dir and not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-        plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+    # if save is not None:
+    save_dir = os.path.dirname(save)
+    if save_dir and not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
 
     if plot:
         plt.show()
@@ -486,7 +486,7 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, dof, plo
     chi_squared_red = np.array(chi_squared)/dof
     
     def chi2_func(x):
-        interp = interp1d(abu, chi_squared_red, kind='cubic')
+        interp = interp1d(abu, chi_squared_red, kind='quadratic')
         return interp(x)
     
     try:
@@ -499,7 +499,7 @@ def chi_minimisation_ABU(abu, chi_squared, element, k, raie, chi_final, dof, plo
         min_chi_squared = result.fun
         
         x_fine = np.linspace(abu.min(), abu.max(), 1000)
-        interp = interp1d(abu, chi_squared_red, kind='linear')
+        interp = interp1d(abu, chi_squared_red, kind='quadratic')
         y_fine = interp(x_fine)
 
         y_pred = interp(abu)

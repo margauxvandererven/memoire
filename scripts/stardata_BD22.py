@@ -17,20 +17,20 @@ with open(spectre_visible) as f:
         flux_visible.append(np.float64(line.split()[1]))
 
 # lecture des spectres fichiers .fits
-# read_spec_h = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
-# read_spec_k = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
+read_spec_h = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
+read_spec_k = readmultispec("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
 
-def read_fits_spectrum(filename):
-    with fits.open(filename) as hdul:
-        flux = hdul[0].data[0]  # Premier spectre
-        header = hdul[0].header
-        # Calcul automatique des longueurs d'onde
-        wavelen = header['CRVAL1'] + header['CDELT1'] * np.arange(header['NAXIS1'])
-        return {'wavelen': wavelen, 'flux': flux}
+# def read_fits_spectrum(filename):
+#     with fits.open(filename) as hdul:
+#         flux = hdul[0].data[0]  # Premier spectre
+#         header = hdul[0].header
+#         # Calcul automatique des longueurs d'onde
+#         wavelen = header['CRVAL1'] + header['CDELT1'] * np.arange(header['NAXIS1'])
+#         return {'wavelen': wavelen, 'flux': flux}
 
-# Lecture des spectres FITS
-read_spec_h = read_fits_spectrum("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
-read_spec_k = read_fits_spectrum("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
+# # Lecture des spectres FITS
+# read_spec_h = read_fits_spectrum("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/H_Sneden/"+starname+"H.cont.fits")
+# read_spec_k = read_fits_spectrum("/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/spectra/K_Sneden/"+starname+"K.cont.fits")
 
 
 

@@ -17,8 +17,19 @@ repertory_memoire="/Users/margauxvandererven/Library/CloudStorage/OneDrive-Unive
 #         zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22_vis,gamme="visible")
 
 path_to_synth = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
-Cabu=[7.88, 7.9, 7.8, 8.0, 7.7]
+Cabu=[7.88, 7.9, 7.8]
 synth={}
+# synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sans12CH.conv"]= "sans 12CH"
+synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4600-4800_vis_sans_C2.conv"]= "sans 12C12C"
+
 for abu in Cabu:
-    synth[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4200-4400_vis_Cabu_{abu}.conv"]=f"log$\epsilon_{{O}}$={abu}"
-print(synth)
+    synth[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4200-4400_vis_Cabu_{abu}.conv"]=f"log $\epsilon_{{O}}$={abu}"
+
+# zoom_lines({"":[4700]}, path_to_synth, synth,stardata,10,lines_BD22_vis,gamme="visible")
+
+fig = plot_lines_interactive(path_to_synth, synth, stardata, 4700, 10, lines_BD22_vis, gamme="visible")
+fig.show()
+
+# 4302.42,4306.06
+# 4310.69 4312.45
+# 4322.76 4324.62
