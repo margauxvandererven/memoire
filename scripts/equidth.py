@@ -28,6 +28,7 @@ def calculate_equivalent_width(wavelength: np.ndarray, normalised_flux: np.ndarr
     return {"EW": total_area - area_under_line, "error": error}
 
 data="../results/Fe_final.txt"
+prefix=""
 
 with open(data, "r") as fichier:
     data_lines = json.load(fichier)
@@ -41,9 +42,9 @@ for line in data_lines:
     try : 
         range = str(np.float64(line) - 2) + "-" + str(np.float64(line) + 2)
         abu = data_lines[line][2]
-        path_to_synth = "/Users/margauxvandererven/Unif/memoire_local/Turbospectrum_NLTE-master/COM/syntspec/synth_margaux/"
-        synth_name = f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_Feabu_{abu}.conv"
-        synth_name_blend = f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_Feabu_-20.conv"
+        path_to_synth = "/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/syntspec_TS_local/synth_margaux/"
+        synth_name = f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_Feabu_{abu}{prefix}.conv"
+        synth_name_blend = f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_Feabu_-20{prefix}.conv"
         synth = syntspec(path_to_synth + synth_name)
         
         synth_blend=syntspec(path_to_synth + synth_name_blend)
@@ -54,7 +55,7 @@ for line in data_lines:
 
         # plot_zone_chi2_simple(np.float64(line), path_to_synth, synth_plot, stardata, lines_BD22, size_police=14,size_trace=(1., 8),name="Fe", start=start,end=end,
         #                         # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
-        #                         save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone_bestfit", plot=True
+        #                         # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone_bestfit", plot=True
         #                         )
 
         ew_line = calculate_equivalent_width(np.array(synth['wavelen']), 
@@ -160,7 +161,11 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
             transform=ax.transAxes,
             verticalalignment='top',
             bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-
+    
+    confidence_band = stats.t.ppf(0.975, len(x_vals)-2) * std_residuals
+    ax.fill_between(x_line, y_line - confidence_band, y_line + confidence_band, 
+                color='gray', alpha=0.1)
+    
     ax.set_xlabel("W$_{\lambda}$/$\lambda$", fontsize=size_police)
     ax.set_ylabel(f"$\\log{{\\epsilon_{{{element_abu}}}}}$", fontsize=size_police)
 

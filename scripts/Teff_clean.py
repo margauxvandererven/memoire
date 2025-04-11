@@ -5,6 +5,7 @@ from tueplots import fonts
 from scipy import stats
 plt.rcParams.update(fonts.neurips2021())
 
+prefix=""
 
 # filename = "Fe_lines_"+stardata.get("starname")+".txt"
 filename = "Fe_final.txt"
@@ -18,23 +19,25 @@ with open("../results/"+filename2, "r") as fichier:
 with open("../results/"+filename3, "r") as fichier:
     chi_final_data3 = json.load(fichier)
 
-with open("Fe_final_4125.txt", "r") as fichier:
-    chi_final_data_4125 = json.load(fichier)
+# with open("Fe_final_4125.txt", "r") as fichier:
+#     chi_final_data_4125 = json.load(fichier)
 
-with open("Fe_final_3875.txt", "r") as fichier:
-    chi_final_data_3875 = json.load(fichier)
+# with open("Fe_final_3875.txt", "r") as fichier:
+#     chi_final_data_3875 = json.load(fichier)
 
-with open("Fe_final_3800.txt", "r") as fichier:
-    chi_final_data_3800 = json.load(fichier)
+# with open("Fe_final_3800.txt", "r") as fichier:
+#     chi_final_data_3800 = json.load(fichier)
 
 
-with open("Fe_final_4000_micro_2.txt", "r") as fichier:
-    chi_final_data_4000_micro_2 = json.load(fichier)
+# with open("Fe_final_4000_micro_2.txt", "r") as fichier:
+#     chi_final_data_4000_micro_2 = json.load(fichier)
 
 
 with open("../data_lines/raies.txt", "r") as fichier:
     config=json.load(fichier)
 raie_Fe=config["Fe_lines"]
+
+
 # print(raie_Fe)
 
 # print(raie_Fe)
@@ -154,7 +157,7 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None, chi_exc_ran
         'normality_p_value': normality_p_value
     }
 
-plot_Teff(raie_Fe, chi_final_data_4000_micro_2, size_police=18, save="../output/Teff_4000_micro_2")
+# plot_Teff(raie_Fe, chi_final_data_4000_micro_2, size_police=18, save="../output/Teff_4000_micro_2")
 
 # plot_Teff(raie_Fe, chi_final_data, size_police=18, 
 #           save="../présentation/images/comparaison_modèles", chi_exc_range=(4.5, 7)
@@ -173,8 +176,9 @@ model="4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod"
 # model="4307g2.29m1.0z-0.37_BD221742.int"
 
 ABU=[6.9, 6.85, 7.35, 7.3, 7.4, 7.5, 7.0, 7.2, 7.1, 7.25, 7.7, 
-    #  7.24, 7.23, 7.22, 7.21, 7.19
+     7.24, 7.23, 7.22, 7.21, 7.19
      ]
+
 # analyse_chi2(raie_Fe, ABU, "Fe", "final", stardata, lines_BD22,
 #              minimisation=True,
 #              abu_to_plot=[7.2],
@@ -189,13 +193,13 @@ def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None, plot=No
     variable="Fe"
     spectral_lines=lines_BD22
     name="log $\epsilon_{Fe}$"
-    path_to_synth2="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
-    path_to_synth="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/syntspec_TS_local/synth_margaux/"
+    path_to_synth="/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
+    # path_to_synth="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/syntspec_TS_local/synth_margaux/"
     synth={}
     range="14630-22900"
 
     for abu in ABU:
-        synth[model+"_"+range+"_"+variable+"abu_"+str(abu)+"_micro_2.conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
+        synth[f"{model}_{range}_{variable}abu_{str(abu)}{prefix}.conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
     # print(synth)
 
     for wavelength in raies:
@@ -206,12 +210,12 @@ def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None, plot=No
             chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(str(wavelength))[0],end=raies.get(str(wavelength))[1])["chi_squared_values"]
             dof = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=raies.get(str(wavelength))[0],end=raies.get(str(wavelength))[1])["dof"]
             chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=plot, 
-                                     save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final_Fe_4000_micro_2/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
+                                     save=f"/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final_Fe{prefix}/{str(wavelength)}/{str(wavelength)}_minimisation"
                                 )
         if abu_to_plot is not None:
                 synth_plot={}
                 for abu2 in abu_to_plot:
-                    synth_plot[model+"_"+range+"_"+variable+"abu_"+str(abu2)+"_micro_2.conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
+                    synth_plot[f"{model}_{range}_{variable}abu_{str(abu2)}{prefix}.conv"]= f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
                     if wavelength < 18500:
                         synth_plot["../../../../../../../../Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_BD-221742_Feabu_-20.conv"]= "sans Fe"
                     else:
@@ -221,7 +225,7 @@ def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None, plot=No
                 end=raies.get(str(wavelength))[1]       
                 plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
                                     # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
-                                    save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe_4000_micro_2/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+                                    save=f"/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe{prefix}/{str(wavelength)}/{str(wavelength)}_zone", plot=plot
                                     )
     keys_to_remove = []
     for k, v in chi_final.items():
@@ -234,7 +238,7 @@ def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None, plot=No
     if minimisation is not None:
         abu_plot(chi_final,variable,size_police=20,
                 #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
-                    save="../rédaction/images/plot_abu/Fe_final_4000_micro_2.pdf")
+                    save=f"../rédaction/images/plot_abu/Fe_final{prefix}.pdf")
 
     if save:
         with open(save+".txt", "w") as fichier:
@@ -256,7 +260,7 @@ def analyse_abu_Fe(raies,save=None, abu_to_plot=None, minimisation=None, plot=No
 # print(raie_Fe.get(str(22493.67)))
 
 # analyse_abu_Fe({"14826.408":raie_Fe.get(str(14826.408))},save="Fe_final_4000_micro_2", abu_to_plot=[7.2],minimisation=True, plot=True)
-# analyse_abu_Fe(raie_Fe,save="Fe_final_4000_micro_2", abu_to_plot=[7.2],minimisation=True)
+analyse_abu_Fe(raie_Fe,save=f"Fe_final{prefix}", abu_to_plot=[7.2],minimisation=True)
 
 
 # print(raie_Fe.get(str(17012.729)))
