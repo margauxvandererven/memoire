@@ -20,7 +20,7 @@ path_to_synth = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-Univers
 Cabu=[7.88, 7.9, 7.8]
 synth={}
 # synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sans12CH.conv"]= "sans 12CH"
-synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4600-4800_vis_sans_C2.conv"]= "sans 12C12C"
+synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sans_C2.conv"]= "sans 12C12C"
 
 for abu in Cabu:
     synth[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4200-4400_vis_Cabu_{abu}.conv"]=f"log $\epsilon_{{O}}$={abu}"

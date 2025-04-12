@@ -27,8 +27,8 @@ def calculate_equivalent_width(wavelength: np.ndarray, normalised_flux: np.ndarr
 
     return {"EW": total_area - area_under_line, "error": error}
 
-data="../results/Fe_final.txt"
-prefix=""
+data="../results/Fe_final_4000_micro_2.txt"
+prefix="_micro_2"
 
 with open(data, "r") as fichier:
     data_lines = json.load(fichier)
@@ -106,6 +106,24 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
     y_vals=np.array(y_vals)
     errors_x=np.array(errors_x)
 
+    errors_minus = [] 
+    errors_plus = []
+
+    # for i in chi_final_data:
+    #     val=chi_final_data.get(i)
+    #     p_value=np.float64(val[-1])
+    #     if 0.05<p_value<0.95 and val[3]>0 and val[4]>0:
+    #         exc_pot = lines_data.get(i)[2]
+    #         if chi_exc_range is None or (chi_exc_range[0] <= exc_pot <= chi_exc_range[1]):
+    #             x_vals.append(exc_pot)
+    #             y_vals.append(val[2])
+    #             errors_minus.append(0.07)  
+    #             errors_plus.append(0.07) 
+
+    # x_vals= np.array(x_vals)
+    # errors = np.array([errors_minus, errors_plus])
+    # y_vals=np.array(y_vals)
+
     # x_min = 1e-6
     # x_max = 1.75e-5
     # mask = (x_vals > x_min) & (x_vals < x_max)  # Définir x_min et x_max
@@ -146,9 +164,9 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
     p = 1  # nombre de variables explicatives
     r_squared_adj = 1 - (1 - r_squared) * (n - 1) / (n - p - 1)
 
-    ax.errorbar(x_vals, y_vals,yerr=errors,xerr=errors_x, color="gray", label=f"IR : 4000 K", capsize=5,  fmt='o')
+    ax.errorbar(x_vals, y_vals,yerr=errors,xerr=errors_x, color="darkblue", label=f"IR : 4000 K", capsize=5,  fmt='o')
 
-    ax.plot(x_line, y_line, color='darkblue', 
+    ax.plot(x_line, y_line, color='firebrick', 
             label=f'Régression: y = ({slope:.3f}±{slope_ci:.3f})x + {intercept:.3f}')
     
     # Ajout des statistiques sur le graphique
@@ -156,7 +174,7 @@ def plot_eq(ABU, ew, chi_final_data, size_police=12, save=None, chi_exc_range=No
     stats_text += f'p-value = {p_value:.3e}\n'
     stats_text += f'Erreur std = {std_residuals:.3f}\n'
     stats_text += f'Normalité p-value = {normality_p_value:.3e}'
-    ax.hlines(7.2, min(x_vals), max(x_vals), color='indianred', linestyle='--', label="Abondance moyenne")
+    ax.hlines(np.mean(y_vals), min(x_vals), max(x_vals), color='chocolate', linestyle='--', label="Abondance moyenne")
     ax.text(0.05, 0.95, stats_text,
             transform=ax.transAxes,
             verticalalignment='top',
