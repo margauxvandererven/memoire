@@ -9,7 +9,7 @@ def calculate_O_abu(iteration, abundances_str):
         data = json.load(f)
     raies=data["OH_lines"]
 
-    analyse_chi2(raies, ABU, "O",stardata,lines_BD22,minimisation=True, abu_to_plot=None,plot=None, name="OH",save=f"chi_OH_{iteration}")
+    analyse_chi2(raies, ABU, "O",stardata,lines_BD22,iteration,minimisation=True, abu_to_plot=None,plot=None, name="OH",save=f"chi_OH_{iteration}")
 
     with open(f"chi_OH_{iteration}.txt", "r") as fichier:
         raies_element = json.load(fichier)

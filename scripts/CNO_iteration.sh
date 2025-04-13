@@ -50,25 +50,26 @@ iterate_CNO() {
         # # Création du range pour O
         O_range=($(create_abundance_range $initial_O))
         
-        # Boucle sur les abondances de O
-        for O_abu in "${O_range[@]}"; do
-            # Boucle sur chaque raie OH
-            for raie in "${OH_lines[@]}"; do
-                run_remote_script "$script_OH" "$raie" "$O_abu" "$initial_C" "$iteration"
-            done
-        done
+        # # Boucle sur les abondances de O
+        # for O_abu in "${O_range[@]}"; do
+        #     # Boucle sur chaque raie OH
+        #     for raie in "${OH_lines[@]}"; do
+        #         run_remote_script "$script_OH" "$raie" "$O_abu" "$initial_C" "$iteration"
+        #     done
+        # done
 
         bash "$transfert_script"
 
         O_range_str=$(IFS=,; echo "${O_range[*]}")
         echo "Abondances O: $O_range_str"
-        new_O=$(python3 calculate_O_abundance.py "$iteration" "$O_range_str")
-        echo $new_O
-        
+        new_O=$(python3 calculate_O_abundance.py "$iteration" "$O_range_str" 2>/dev/null | tail -n 1)
+
+        echo "abuO : $new_O"
+
         # Création du range pour C
         C_range=($(create_abundance_range $initial_C))
         
-        # # Boucle sur les abondances de C
+        # Boucle sur les abondances de C
         # for C_abu in "${C_range[@]}"; do
         #     # Boucle sur chaque raie CO
         #     for raie in "${CO_lines[@]}"; do
@@ -79,16 +80,17 @@ iterate_CNO() {
         # bash "$transfert_script"
 
         
-        # C_range_str=$(IFS=,; echo "${C_range[*]}")
-        # new_C=$(python3 calculate_C_abundance.py "$iteration" "$C_range_str")
+        C_range_str=$(IFS=,; echo "${C_range[*]}")
+        new_C=$(python3 calculate_C_abundance.py "$iteration" "$C_range_str" 2>/dev/null | tail -n 1)
+        echo "abuC : $new_C"
         
-        # # Vérification de la convergence
-        # if (( $(bc <<< "sqrt(($new_O - $initial_O)^2 + ($new_C - $initial_C)^2) < $tolerance") )); then
-        #     echo "Convergence atteinte!"
-        #     echo "Abondance finale O: $new_O"
-        #     echo "Abondance finale C: $new_C"
-        #     break
-        # fi
+        # Vérification de la convergence
+        if (( $(bc <<< "sqrt(($new_O - $initial_O)^2 + ($new_C - $initial_C)^2) < $tolerance") )); then
+            echo "Convergence atteinte!"
+            echo "Abondance finale O: $new_O"
+            echo "Abondance finale C: $new_C"
+            break
+        fi
         
         # initial_O=$new_O
         # initial_C=$new_C

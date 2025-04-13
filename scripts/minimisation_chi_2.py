@@ -9,7 +9,7 @@ def on_click(event):
         import pyperclip
         pyperclip.copy(coords)
 
-def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None, abu_to_plot=None,plot=None, name=None,save=None):
+def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,iteration,minimisation=None, abu_to_plot=None,plot=None, name=None,save=None):
     """
     raies : dictionnaire des raies {raie:[start, end]}
     ABU : liste des abondances à tester
@@ -55,12 +55,12 @@ def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None,
                 for abu in ABU:
                     try:
                         # filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{round}.conv"
-                        filename = f"{model}_{range}_{variable}abu_{abu:.2f}.conv"
+                        filename = f"{model}_{range}_{variable}abu_{abu:.2f}_{iteration}.conv"
                         if os.path.exists(os.path.join(path_to_synth, filename)):
                             synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
                         else:
                             # filename = f"{model}_{range}_{variable}abu_{str(abu)}_{round}.conv"
-                            filename = f"{model}_{range}_{variable}abu_{str(abu)}.conv"
+                            filename = f"{model}_{range}_{variable}abu_{str(abu)}_{iteration}.conv"
                             if os.path.exists(os.path.join(path_to_synth, filename)):
                                 synth[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu)}"
                             else:
@@ -69,7 +69,7 @@ def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None,
                     except Exception as e:
                         print(f"Erreur avec abu={abu}: {str(e)}")
                         continue
-                    print(synth)
+                    # print(synth)
                 chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
                 dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
                 chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=plot, 
@@ -82,12 +82,12 @@ def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None,
                 for abu2 in abu_to_plot:
                     try:
                         # filename = f"{model}_{range}_{variable}abu_{abu2:.2f}_{round}.conv"
-                        filename = f"{model}_{range}_{variable}abu_{abu2:.2f}.conv"
+                        filename = f"{model}_{range}_{variable}abu_{abu2:.2f}_{iteration}.conv"
                         if os.path.exists(os.path.join(path_to_synth, filename)):
                             synth_plot[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
                         else:
                             # filename = f"{model}_{range}_{variable}abu_{str(abu2)}_{round}.conv"
-                            filename = f"{model}_{range}_{variable}abu_{str(abu2)}.conv"
+                            filename = f"{model}_{range}_{variable}abu_{str(abu2)}_{iteration}.conv"
                             if os.path.exists(os.path.join(path_to_synth, filename)):
                                 synth_plot[filename] = f"log$\\epsilon_{{{variable}}}$ = {str(abu2)}"
                             else:
@@ -101,19 +101,19 @@ def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None,
                     synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_14500-18500_BD-221742_Feabu_-20.conv"]= "sans Fe"
                 else:
                     synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_19750-22900_BD-221742_Feabu_-20.conv"]= "sans Fe"
-            plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
-                                # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
-                                # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
-                                )
+                plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
+                                    # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+                                    # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+                                    )
         except Exception as e: 
             print(f"Error processing wavelength {wavelength}: {str(e)}")
             continue
     # print(chi_final)
-    if minimisation is not None:
-        abu_plot(chi_final,variable,size_police=20,
-                #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
-                #  save="../rédaction/images/plot_abu/"+name+"_final_"+round+".pdf"
-                 )
+    # if minimisation is not None:
+    #     abu_plot(chi_final,variable,size_police=20,
+    #             #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
+    #             #  save="../rédaction/images/plot_abu/"+name+"_final_"+round+".pdf"
+    #              )
    
     # chi_final[k] = [start, end, min_log_e, error_minus, error_plus, min_chi_squared, r_squared, p_value]
     keys_to_remove = []
@@ -854,8 +854,8 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
     # Recalculate the mean and standard deviation for filtered points
     filtered_mean = round(np.mean(filtered_y_vals), 2)
     filtered_std = round(np.std(filtered_y_vals), 2)
-    print("Mean of filtered points:", filtered_mean)
-    print("Standard deviation of filtered points:", filtered_std)
+    # print("Mean of filtered points:", filtered_mean)
+    # print("Standard deviation of filtered points:", filtered_std)
     
     # Plot horizontal line for the filtered mean
     ax.hlines(y=y_mean, xmin=14500, xmax=23500, color="indianred", linestyle="--", linewidth=1.8, label=f"$\mu$ = {y_mean:.2f}")
@@ -880,5 +880,6 @@ def abu_plot(raies_element, element_abu, save=None, size_police=None):
         plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
         
     plt.show()
+    # plt.close()
     # Return filtered mean and standard deviation
-    return filtered_mean, filtered_std
+    # return filtered_mean, filtered_std
