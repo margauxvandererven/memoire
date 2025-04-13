@@ -72,8 +72,8 @@ def plot_Teff(lines_data, chi_final_data, size_police=12, save=None, chi_exc_ran
             if chi_exc_range is None or (chi_exc_range[0] <= exc_pot <= chi_exc_range[1]):
                 x_vals.append(exc_pot)
                 y_vals.append(val[2])
-                errors_minus.append(0.07)  
-                errors_plus.append(0.07) 
+                errors_minus.append(val[3])
+                errors_plus.append(val[4])  
 
     x_vals= np.array(x_vals)
     errors = np.array([errors_minus, errors_plus])

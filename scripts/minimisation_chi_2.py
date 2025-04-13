@@ -9,7 +9,7 @@ def on_click(event):
         import pyperclip
         pyperclip.copy(coords)
 
-def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation=None, abu_to_plot=None,plot=None, name=None,save=None):
+def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None, abu_to_plot=None,plot=None, name=None,save=None):
     """
     raies : dictionnaire des raies {raie:[start, end]}
     ABU : liste des abondances à tester
@@ -47,8 +47,8 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
             # else:
             #     return f"Aucun fichier de synthèse pour {name}"
         
-            # range = f"{format_number(start_range)}-{format_number(end_range)}"
-            range="14630-22900"
+            range = f"{format_number(start_range)}-{format_number(end_range)}"
+            # range="14630-22900"
             synth={}
             model='4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod'
             if minimisation is not None: 
@@ -74,7 +74,7 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
                 dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
                 chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=plot, 
                                     #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
-                                     save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
+                                    #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
                                      )
 
             if abu_to_plot is not None:
@@ -103,7 +103,7 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
                     synth_plot["../../syntspec/BD-221742b/Fe/4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_19750-22900_BD-221742_Feabu_-20.conv"]= "sans Fe"
             plot_zone_chi2_simple(wavelength, path_to_synth, synth_plot, stardata, spectral_lines, size_police=14,size_trace=(1., 8),name=name, start=start,end=end,
                                 # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
-                                save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
+                                # save="/Users/margauxvandererven/OneDrive  - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_zone", plot=plot
                                 )
         except Exception as e: 
             print(f"Error processing wavelength {wavelength}: {str(e)}")
@@ -112,7 +112,8 @@ def analyse_chi2(raies, ABU, variable,round,stardata,spectral_lines,minimisation
     if minimisation is not None:
         abu_plot(chi_final,variable,size_police=20,
                 #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/Oabu_"+round,
-                 save="../rédaction/images/plot_abu/"+name+"_final_"+round+".pdf")
+                #  save="../rédaction/images/plot_abu/"+name+"_final_"+round+".pdf"
+                 )
    
     # chi_final[k] = [start, end, min_log_e, error_minus, error_plus, min_chi_squared, r_squared, p_value]
     keys_to_remove = []
