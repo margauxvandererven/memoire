@@ -30,22 +30,22 @@ def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,minimisation=None,
             start_range = wavelength - 2
             end_range = wavelength + 2
             
-            # if name=="OH":
-            #     def format_number(num):
-            #         str_num = f"{num:.3f}"
-            #         if str_num.endswith('00'): 
-            #             return f"{num:.1f}"
-            #         elif str_num.endswith('0'): 
-            #             return f"{num:.2f}"
-            #         return str_num
-            # elif name=="12C16O":
-            #     def format_number(num):
-            #         str_num = f"{num:.2f}"
-            #         if str_num.endswith('0'): 
-            #             return f"{num:.1f}"
-            #         return str_num
-            # else:
-            #     return f"Aucun fichier de synthèse pour {name}"
+            if name=="OH":
+                def format_number(num):
+                    str_num = f"{num:.3f}"
+                    if str_num.endswith('00'): 
+                        return f"{num:.1f}"
+                    elif str_num.endswith('0'): 
+                        return f"{num:.2f}"
+                    return str_num
+            elif name=="12C16O":
+                def format_number(num):
+                    str_num = f"{num:.2f}"
+                    if str_num.endswith('0'): 
+                        return f"{num:.1f}"
+                    return str_num
+            else:
+                return f"Aucun fichier de synthèse pour {name}"
         
             range = f"{format_number(start_range)}-{format_number(end_range)}"
             # range="14630-22900"

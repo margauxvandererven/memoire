@@ -44,24 +44,26 @@ iterate_CNO() {
     IFS=',' read -ra OH_lines <<< "$wavelengths_OH"
     IFS=',' read -ra CO_lines <<< "$wavelengths_CO"
     
-    while true; do
+    # while true; do
         echo "Itération $iteration"
         
         # # Création du range pour O
-        # O_range=($(create_abundance_range $initial_O))
+        O_range=($(create_abundance_range $initial_O))
         
-        # # Boucle sur les abondances de O
-        # for O_abu in "${O_range[@]}"; do
-        #     # Boucle sur chaque raie OH
-        #     for raie in "${OH_lines[@]}"; do
-        #         run_remote_script "$script_OH" "$raie" "$O_abu" "$initial_C" "$iteration"
-        #     done
-        # done
+        # Boucle sur les abondances de O
+        for O_abu in "${O_range[@]}"; do
+            # Boucle sur chaque raie OH
+            for raie in "${OH_lines[@]}"; do
+                run_remote_script "$script_OH" "$raie" "$O_abu" "$initial_C" "$iteration"
+            done
+        done
 
-        # bash "$transfert_script"
+        bash "$transfert_script"
 
         O_range_str=$(IFS=,; echo "${O_range[*]}")
+        echo "Abondances O: $O_range_str"
         new_O=$(python3 calculate_O_abundance.py "$iteration" "$O_range_str")
+        echo $new_O
         
         # Création du range pour C
         C_range=($(create_abundance_range $initial_C))
@@ -96,7 +98,7 @@ iterate_CNO() {
         #     echo "Maximum d'itérations atteint"
         #     break
         # fi
-    done
+    # done
 }
 
 main() {
