@@ -69,15 +69,15 @@ iterate_CNO() {
         # Création du range pour C
         C_range=($(create_abundance_range $initial_C))
         
-        # Boucle sur les abondances de C
-        # for C_abu in "${C_range[@]}"; do
-        #     # Boucle sur chaque raie CO
-        #     for raie in "${CO_lines[@]}"; do
-        #         run_remote_script "$script_CO" "$raie" "$C_abu" "$new_O" "$iteration"
-        #     done
-        # done
+        Boucle sur les abondances de C
+        for C_abu in "${C_range[@]}"; do
+            # Boucle sur chaque raie CO
+            for raie in "${CO_lines[@]}"; do
+                run_remote_script "$script_CO" "$raie" "$C_abu" "$new_O" "$iteration"
+            done
+        done
 
-        # bash "$transfert_script"
+        bash "$transfert_script"
 
         
         C_range_str=$(IFS=,; echo "${C_range[*]}")

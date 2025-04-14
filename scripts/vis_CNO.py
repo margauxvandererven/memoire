@@ -17,9 +17,23 @@ synth={}
 # synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sans12CH.conv"]= "sans 12CH"
 synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_sansCN.conv"]= "sans CN"
 synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_tout.conv"]= "avec CN"
+synth_={}
+synth_["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sansCN.conv"]="sans CN"
+synth_["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_tout.conv"]= "avec CN"
 
-for i in minimum:
-    zoom_lines({"":[i]}, path_to_synth, synth,stardata,2,lines_BD22_vis,gamme="visible")
+list=list(np.arange(6050, 6550, 100))
+list_=np.arange(4000, 6000, 100)
+
+# for i in list:
+#     if i < 6000:
+#         synth_1=synth_
+#     else:
+#         synth_1=synth
+
+#     zoom_lines({"":[i]}, path_to_synth, synth_1,stardata,50,lines_BD22_vis,gamme="visible")
+
+zoom_lines({"":list}, path_to_synth, synth, stardata, 50,lines_BD22_vis,gamme="visible")
+
 
 # print(syntspec(path_to_synth + "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Cabu_-20.conv")["header"])
 
@@ -34,3 +48,7 @@ for i in minimum:
 # 4302.42,4306.06
 # 4310.69 4312.45
 # 4322.76 4324.62
+
+
+#bande de CN:
+#

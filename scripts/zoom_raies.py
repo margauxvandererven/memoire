@@ -270,12 +270,14 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         else:
             plt.close()
     else:
+        print("bonjour")
         if gamme == "IR":
             ax[l].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=5,facecolors='none', color='black', label="Spectre observé : " + stardata.get("starname"))
         if gamme == "visible":
             ax[l].plot(normal['z_wavelen'], normal['flux_normalised'], color='black', label="Spectre observé : " + stardata.get("starname") , linewidth=0.8)
         
         for mol in synthetics:
+            print("rebonjour")
             AXb = syntspec(path + mol + j)
             ax[l].plot(AXb['wavelen'], AXb['flux'], label="Synth: " + str(synthetics.get(mol)), linewidth=0.8)
 
@@ -303,18 +305,22 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
             ax[l].set_ylim(0., 1.3)
         elif gamme == "visible":
             ax[l].set_ylim(-0.2, 1.1)
-        ax[l].legend(loc='lower right')
+
+        if l == n-1:
+            ax[l].legend(loc='lower right')
+            
         cid = f.canvas.mpl_connect('button_press_event', on_click)
         
-        if save is not None:
-            save_dir = os.path.dirname(save)
-            if save_dir and not os.path.exists(save_dir):
-                os.makedirs(save_dir)
-            plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
-        if plot:
-            plt.show()
-        else:
-            plt.close()
+        # if save is not None:
+        #     save_dir = os.path.dirname(save)
+        #     if save_dir and not os.path.exists(save_dir):
+        #         os.makedirs(save_dir)
+        #     plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+
+        # if plot:
+        #     plt.show()
+        # else:
+        #     plt.close()
          
 
 def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, gamme="IR", save=None, interactive=False, raies_validees=None, range=None, plot=True):
@@ -329,11 +335,15 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, g
     for i in list(lines.keys()):
         n = len(lines.get(i))
         y_size = n*3
-        f = plt.figure(figsize=(10,y_size))
+        f = plt.figure(figsize=(20,y_size))
         gs = f.add_gridspec(n, hspace=0.2)
-        ax = gs.subplots(sharex=False, sharey=True)
-        for k in lines.get(i):
-            l = lines.get(i).index(k)
+        if n == 1:
+            ax = gs.subplots()  # Sans sharex et sharey pour un seul subplot
+            ax = [ax]  # Convertir en liste pour uniformiser le traitement
+        else:
+            ax = gs.subplots(sharex=False, sharey=True)
+        for l, k in enumerate(lines.get(i)):
+            print(l)
             # if gamme == "IR":
             if k < 18500:
                 plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "h", "", taille_zoom, spectral_lines, save, gamme, range, plot)
@@ -341,7 +351,12 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, g
                 plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save, gamme, range, plot)
             # elif gamme == "visible":
             #     plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "visible", "", taille_zoom, spectral_lines, save, gamme, range, plot)
-
+        save="CN"
+        save_dir = os.path.dirname(save)
+        if save_dir and not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+        plt.show()
 
 def zoom_lines_analyse(ax, path, synthetics, molecules, stardata, j, m, k, i) : 
     # AX = syntspec(path+filename)
