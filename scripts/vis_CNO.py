@@ -21,8 +21,14 @@ synth_={}
 synth_["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sansCN.conv"]="sans CN"
 synth_["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_tout.conv"]= "avec CN"
 
-list=list(np.arange(6050, 6550, 100))
-list_=np.arange(4000, 6000, 100)
+synth_2={}
+synth_2["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_3550-4050_vis_sansCN.conv"]="sans CN"
+synth_2["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_3550-4050_vis_tout.conv"]= "avec CN"
+
+list=list(np.arange(3600, 4050, 100))
+# list_=np.arange(5500, 6100, 100)
+
+CN_band=[[3860,3985],[4210,4240],[6320,6330]]
 
 # for i in list:
 #     if i < 6000:
@@ -32,7 +38,7 @@ list_=np.arange(4000, 6000, 100)
 
 #     zoom_lines({"":[i]}, path_to_synth, synth_1,stardata,50,lines_BD22_vis,gamme="visible")
 
-zoom_lines({"":list}, path_to_synth, synth, stardata, 50,lines_BD22_vis,gamme="visible")
+zoom_lines({"":list}, path_to_synth, synth_2, stardata, 50,lines_BD22_vis,gamme="visible", save=f"../output/mol_vis/CN_{list[0]}-{list[-1]}", mol_band=CN_band)
 
 
 # print(syntspec(path_to_synth + "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Cabu_-20.conv")["header"])

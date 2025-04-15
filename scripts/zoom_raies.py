@@ -169,7 +169,7 @@ def plot_lines_interactive(path, synthetics, stardata, k, taille, spectral_lines
 # fig.show()
 
 
-def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spectral_lines, save,gamme, range=None, plot=True):
+def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spectral_lines, save,gamme, range=None, plot=True, mol_band=None):
     """
     Ouvre et trace le spectre observé normalisé. Trace les spectres synthétiques "synthetics". Le tout centré sur les raies séléctionnées
     avec une largeur demandée (taille)
@@ -185,6 +185,14 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
     j : "", "2" ou "3"
     taille : taille du zoom
     """
+    colors = ['#3e92f7', 
+            #   '#faaa2e',
+               '#db2f2f','#a39cf3', '#92c124']
+    plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
+
+    fontsize=14
+    linesize=1.0
+
     if gamme == "IR":
         normal = normalisation(redshift_wavelen(stardata.get("wavelen_" + m), stardata.get("v_"+ m)), stardata.get("flux_" + m), k)
     elif gamme == "visible":
@@ -271,16 +279,18 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
             plt.close()
     else:
         print("bonjour")
+        
         if gamme == "IR":
             ax[l].scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=5,facecolors='none', color='black', label="Spectre observé : " + stardata.get("starname"))
         if gamme == "visible":
-            ax[l].plot(normal['z_wavelen'], normal['flux_normalised'], color='black', label="Spectre observé : " + stardata.get("starname") , linewidth=0.8)
+            ax[l].plot(normal['z_wavelen'], normal['flux_normalised'], color='black', label="Spectre observé : " + stardata.get("starname") , linewidth=linesize)
         
-        for mol in synthetics:
+        for idx, mol in enumerate(synthetics):
             print("rebonjour")
             AXb = syntspec(path + mol + j)
-            ax[l].plot(AXb['wavelen'], AXb['flux'], label="Synth: " + str(synthetics.get(mol)), linewidth=0.8)
-
+            ax[l].plot(AXb['wavelen'], AXb['flux'], label="Synth: " + str(synthetics.get(mol)), linewidth=linesize,color=colors[idx % len(colors)] )
+        
+        ax[l].hlines(y=1,xmin= k - taille,xmax= k+taille, color='gray', linewidth=0.5, alpha=0.8)
         ax[l].xaxis.set_major_locator(MultipleLocator(5))
         ax[l].xaxis.set_minor_locator(MultipleLocator(1))
         ax[l].xaxis.set_tick_params(direction='in', length=10, which='major')
@@ -290,25 +300,39 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         ax[l].xaxis.set_major_formatter(ScalarFormatter())
         ax[l].xaxis.get_major_formatter().set_scientific(False)
         ax[l].xaxis.get_major_formatter().set_useOffset(False)
+        ax[l].tick_params(axis = 'both', labelsize = fontsize)
         for element, wavelengths in spectral_lines.items():
             for z in wavelengths:
                 if k - taille <= z <=  k + taille:
                     # Tracé de la ligne verticale
-                    ax[l].axvline(x=z, ymin=0.8, ymax=0.9, color='black', linewidth=0.5)
+                    ax[l].axvline(x=z, ymin=0.8, ymax=0.9, color='darkgray', linewidth=1.)
                     # Ajout du texte de l'élément au-dessus de la ligne
-                    ax[l].text(z, 1.2, s=element, color='black', fontsize=12, ha='center')
+                    ax[l].text(z, 1.2, s=element, color='black', fontsize=fontsize, ha='center')
         ax[l].axvline(x=k, ymin=0.8, ymax=0.9, color='black', linewidth=0.5)
                     # Ajout du texte de l'élément au-dessus de la ligne
-        ax[l].text(k, 1.2, s=i, color='black', fontsize=12, ha='center')
+        ax[l].text(k, 1.1, s=i, color='black', fontsize=fontsize, ha='center')
         ax[l].set_xlim(k - taille, k + taille)
+
+        if mol_band is not None:
+            for band in mol_band:
+                if band[0] < k + taille and band[1] > k - taille:
+                    ax[l].axvspan(band[0], band[1], color='lightgray', alpha=0.7)
+                    ax[l].text((band[0] + band[1]) / 2, 1.05, "CN", color='black', fontsize=fontsize, ha='center')
+
         if gamme == "IR":
             ax[l].set_ylim(0., 1.3)
         elif gamme == "visible":
-            ax[l].set_ylim(-0.2, 1.1)
+            ax[l].set_ylim(-0.2, 1.2)
 
         if l == n-1:
-            ax[l].legend(loc='lower right')
-            
+            ax[l].legend(loc='lower right', fontsize=fontsize)
+            ax[l].set_xlabel("Longueur d'onde [Å]", fontsize=fontsize)
+        if l == n//2: 
+            ax[l].set_ylabel("Flux normalisé", fontsize=fontsize)
+        
+        
+
+
         cid = f.canvas.mpl_connect('button_press_event', on_click)
         
         # if save is not None:
@@ -323,7 +347,7 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         #     plt.close()
          
 
-def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, gamme="IR", save=None, interactive=False, raies_validees=None, range=None, plot=True):
+def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, gamme="IR", save=None, interactive=False, raies_validees=None, range=None, plot=True, mol_band=None):
     """
     lines : raies que l'on souhaite observer
     path : chemin vers spectres synthétiques
@@ -346,17 +370,17 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, g
             print(l)
             # if gamme == "IR":
             if k < 18500:
-                plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "h", "", taille_zoom, spectral_lines, save, gamme, range, plot)
+                plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "h", "", taille_zoom, spectral_lines, save, gamme, range, plot, mol_band)
             else:
-                plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save, gamme, range, plot)
+                plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save, gamme, range, plot, mol_band)
             # elif gamme == "visible":
             #     plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "visible", "", taille_zoom, spectral_lines, save, gamme, range, plot)
-        save="CN"
+        
         save_dir = os.path.dirname(save)
         if save_dir and not os.path.exists(save_dir):
             os.makedirs(save_dir)
         plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
-        plt.show()
+        plt.close()
 
 def zoom_lines_analyse(ax, path, synthetics, molecules, stardata, j, m, k, i) : 
     # AX = syntspec(path+filename)
