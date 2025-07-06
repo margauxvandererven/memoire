@@ -1,11 +1,11 @@
-This is BibTeX, Version 0.99d (TeX Live 2024)
+This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: IR_memoire.aux
 The style file: abbrvnat.bst
-Database file #1: bibtex.bib
+Database file #1: 22_bibtex.bib
 You've used 2 entries,
             2773 wiz_defined-function locations,
-            614 strings with 5301 characters,
+            614 strings with 5304 characters,
 and the built_in function-call counts, 1399 in all, are:
 = -- 125
 > -- 114

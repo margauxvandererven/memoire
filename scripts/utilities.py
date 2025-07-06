@@ -99,10 +99,11 @@ def get_ew_atom(ew_limit, Teff, gamme="IR", particular_element=None):
                             data.append((wavelength, excitation_potential, ew, loggf, element_name))
                     
                     elif particular_element is None:
+                        # print(parts)
                         wavelength, excitation_potential, loggf = map(float, parts[:3])
                         ew = 10**(loggf - (5040 / Teff) * excitation_potential)
                         element_name = parts[element_place][1].upper() + parts[element_place][2:].lower() + " " + parts[element_place+1]
-                        if ew > ew_limit and wavelength > 14500:
+                        if ew > ew_limit and wavelength > wavelen:
                             data.append((wavelength, excitation_potential, ew, loggf, element_name))
 
     return {

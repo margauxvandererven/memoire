@@ -199,13 +199,16 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         normal = normalisation(stardata.get("wavelen_visible"), stardata.get("flux_visible"), k, window_size=100)
        
     if n == 1:
+        print("test")
         if gamme == "IR":
             ax.scatter(normal['z_wavelen'], normal['flux_normalised'], marker='o',s=5,facecolors='none', color='black', label="Spectre observé : " + stardata.get("starname"))
         if gamme == "visible":
-            ax.plot(normal['z_wavelen'], normal['flux_normalised'], color='black', label="Spectre observé : " + stardata.get("starname"), linewidth=0.6, linestyle='--', alpha=0.8, dashes=(10, 4)) 
+            ax.plot(normal['z_wavelen'], normal['flux_normalised'], color='black', label="Spectre observé : " + stardata.get("starname") , linewidth=linesize)
+        
         for mol in synthetics:
             AXb = syntspec(path + mol + j)
             ax.plot(AXb['wavelen'], AXb['flux'], label= "Synth: " + str(synthetics.get(mol)), linewidth=1.)
+
         ax.xaxis.set_major_locator(MultipleLocator(5))
         ax.xaxis.set_minor_locator(MultipleLocator(1))
         ax.xaxis.set_tick_params(direction='in', length=10, which='major')
@@ -247,6 +250,7 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
             ax.set_ylim(-0.4, 1.1)
         # ax.axhline(y=0.3,xmin= k - 10,xmax= k+10, color='red', linewidth=0.5)
         ax.legend(loc='lower right')
+
         if range is not None:
             def on_click_range(event):
                 if event.xdata is not None:
@@ -314,10 +318,10 @@ def plot_lines(ax,f, l, path, synthetics, stardata, n, k, i, m, j, taille, spect
         ax[l].set_xlim(k - taille, k + taille)
 
         if mol_band is not None:
-            for band in mol_band:
+            for band in mol_band[1:]:
                 if band[0] < k + taille and band[1] > k - taille:
                     ax[l].axvspan(band[0], band[1], color='lightgray', alpha=0.7)
-                    ax[l].text((band[0] + band[1]) / 2, 1.05, "CN", color='black', fontsize=fontsize, ha='center')
+                    ax[l].text((band[0] + band[1]) / 2, 1.05, mol_band[0], color='black', fontsize=fontsize, ha='center')
 
         if gamme == "IR":
             ax[l].set_ylim(0., 1.3)
@@ -363,7 +367,7 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, g
         gs = f.add_gridspec(n, hspace=0.2)
         if n == 1:
             ax = gs.subplots()  # Sans sharex et sharey pour un seul subplot
-            ax = [ax]  # Convertir en liste pour uniformiser le traitement
+            # ax = [ax]  # Convertir en liste pour uniformiser le traitement
         else:
             ax = gs.subplots(sharex=False, sharey=True)
         for l, k in enumerate(lines.get(i)):
@@ -375,12 +379,12 @@ def zoom_lines(lines, path, synthetics, stardata, taille_zoom, spectral_lines, g
                 plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "k", "", taille_zoom, spectral_lines, save, gamme, range, plot, mol_band)
             # elif gamme == "visible":
             #     plot_lines(ax, f, l, path, synthetics, stardata, n, k, i, "visible", "", taille_zoom, spectral_lines, save, gamme, range, plot)
-        
-        save_dir = os.path.dirname(save)
-        if save_dir and not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-        plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
-        plt.close()
+        if n != 1:
+            save_dir = os.path.dirname(save)
+            if save_dir and not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+            plt.savefig(save + ".pdf", dpi=600, bbox_inches='tight', transparent=True)
+            plt.close()
 
 def zoom_lines_analyse(ax, path, synthetics, molecules, stardata, j, m, k, i) : 
     # AX = syntspec(path+filename)

@@ -72,7 +72,7 @@ def analyse_chi2(raies, ABU, variable,stardata,spectral_lines,iteration,minimisa
                     # print(synth)
                 chi_squared_values = chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["chi_squared_values"]
                 dof=chi_2(path_to_synth, synth, stardata, wavelength, spectral_lines,chi_final,name=name,start=start,end=end)["dof"]
-                chi_minimisation_ABU(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=plot, 
+                chi_minimisation_ABU_ancien(ABU, chi_squared_values, variable,wavelength, name, chi_final,dof=dof, plot=plot, 
                                     #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final/"+name+"/"+round+"/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
                                     #  save="/Users/margauxvandererven/OneDrive - Université Libre de Bruxelles/memoire/output/final_Fe/"+str(wavelength)+"/"+str(wavelength)+"_minimisation"
                                      )

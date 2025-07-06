@@ -1,0 +1,76 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc} % Encodage pour les caractères spéciaux
+\usepackage[T1]{fontenc}  
+\usepackage{graphicx}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{pgf}
+\usepackage{lmodern}
+\usepackage{bold-extra}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{todonotes}
+\usepackage{setspace} 
+\usepackage{titlesec}
+\usepackage{gensymb}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage{natbib} 
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{lipsum}  
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage[table, dvipsnames]{xcolor}
+\usepackage{textcomp}
+\usepackage{booktabs}  % Pour de meilleurs tableaux
+\usepackage{siunitx} 
+
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.8}
+\pgfplotsset{compat=1.9}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\usepgfplotslibrary{ternary}
+\setlength{\headheight}{12.80502pt}
+
+
+\setcitestyle{authoryear,open={},close={}, color = 'blue'}
+
+\hypersetup{colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue}}  
+
+\DeclareCaptionFormat{custom}
+{%
+    \textbf{#1{.}} \small{#3}
+}
+\captionsetup{format=custom}
+
+\renewcommand{\contentsname}{Contenu}
+
+\titleformat{\section}
+  {\Large\bfseries\scshape}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\large\scshape}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\scshape}{\thesubsubsection}{1em}{}
+
+%\setlength{\arrayrulewidth}{1mm}
+%\setlength{\tabcolsep}{9pt}
+\renewcommand{\arraystretch}{1.5}
+%\newcolumntype{s}{>{\columncolor[HTML]{AAACED}} p{3cm}}
+
+\renewcommand{\abstractname}{\sc \large Résumé}
+
+\fancypagestyle{main}{
+  \fancyhf{}
+  \fancyfoot[L, RO]{\thepage}
+%  \fancyhead[LO]{\firstleftmark}
+  \fancyhead[C]{\sc Étude de spectres infrarouges de géantes rouges évoluées}
+}
+
+
+
+
+\pagestyle{main}

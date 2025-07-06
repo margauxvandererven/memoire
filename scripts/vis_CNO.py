@@ -13,32 +13,30 @@ minimum = find_peaks_element("/Users/margauxvandererven/Library/CloudStorage/One
 
 path_to_synth = "/Users/margauxvandererven/Library/CloudStorage/OneDrive-UniversitéLibredeBruxelles/memoire/BD-221742/synth_margaux/"
 Cabu=[7.88, 7.9, 7.8]
-synth={}
-# synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sans12CH.conv"]= "sans 12CH"
-synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_sansCN.conv"]= "sans CN"
-synth["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_6000-8000_vis_tout.conv"]= "avec CN"
-synth_={}
-synth_["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_sansCN.conv"]="sans CN"
-synth_["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_tout.conv"]= "avec CN"
 
-synth_2={}
-synth_2["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_3550-4050_vis_sansCN.conv"]="sans CN"
-synth_2["4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_3550-4050_vis_tout.conv"]= "avec CN"
+synth_C2={}
+# range="4000-6000"
+# range="6000-8000"
+range="8000-9000"
+synth_C2[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_vis_sans12C2.conv"]= "sans 12C2"
+synth_C2[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_vis_tout.conv"]= "avec 12C2"
 
-list=list(np.arange(3600, 4050, 100))
+synth_CH={}
+synth_CH[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_vis_sans12CH.conv"]= "sans 12CH"
+synth_CH[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_vis_tout.conv"]= "avec 12CH"
+
+synth_CN={}
+synth_CN[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_vis_sansCN.conv"]= "sans CN"
+synth_CN[f"4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_{range}_vis_tout.conv"]= "avec CN"
+
+list=list(np.arange(8550, 9050, 100))
 # list_=np.arange(5500, 6100, 100)
 
-CN_band=[[3860,3985],[4210,4240],[6320,6330]]
+CN_band=["CN", [3860,3985],[4210,4240],[6320,6330]]
+C2_band=["12C12C",[4725,4755], [4830,4890], [5150,5190]]
+CH_band=["CH",[3985,4050]]
 
-# for i in list:
-#     if i < 6000:
-#         synth_1=synth_
-#     else:
-#         synth_1=synth
-
-#     zoom_lines({"":[i]}, path_to_synth, synth_1,stardata,50,lines_BD22_vis,gamme="visible")
-
-zoom_lines({"":list}, path_to_synth, synth_2, stardata, 50,lines_BD22_vis,gamme="visible", save=f"../output/mol_vis/CN_{list[0]}-{list[-1]}", mol_band=CN_band)
+zoom_lines({"":list}, path_to_synth, synth_CH, stardata, 50,lines_BD22_vis,gamme="visible", save=f"../output/mol_vis/12CH_{list[0]}-{list[-1]}", mol_band=CH_band)
 
 
 # print(syntspec(path_to_synth + "4000g1.0z-0.50m1.0t02a+0.20c+0.346n+0.00o+0.20r+0.00s+0.00.mod_4000-6000_vis_Cabu_-20.conv")["header"])
